@@ -2,6 +2,8 @@
 
 
 ### File Structure:
+>[!Important]
+> the `.env` file will contain secrets that shouludn't be shared here... resort to discord for that. It will be apart of .gitignore and shouldn't be tracked
 ```
 panda-pos/
 │
