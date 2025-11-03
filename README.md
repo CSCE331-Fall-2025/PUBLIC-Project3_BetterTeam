@@ -1,5 +1,19 @@
 # better_team_project3
 
+### Development Environment Setup
+Quick lil dev env setup... don't have to follow. Meant for wsl/linux:
+- Need node and npm....
+  - Check if node is downloaded: `node -v`
+  - Check if npm is downloaded: 'npm -v`
+  - Install both with: `sudo apt install -y nodejs npm`
+    - Check if both were downloaded
+- Get other frameworks:
+  - `npm install express cors dotenv pg`
+    - `express` --> express.js
+    - 'cors`    --> something to help react & express integrate
+    - `dotenv`  --> automatically loads `.env` for environment variables in build
+    - `pg`      --> postgresql
+
 
 ### File Structure:
 >[!Important]
