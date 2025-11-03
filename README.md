@@ -1,48 +1,57 @@
-# better_team_project3
+#better_team_project3
+Full Stack POS web app built using React frontend & express, node, postgres backend. 
 
-### Development Environment Setup
-Quick lil dev env setup... don't have to follow. Meant for wsl/linux:
-- Need node and npm....
-  - Check if node is downloaded: `node -v`
-  - Check if npm is downloaded: 'npm -v`
-  - Install both with: `sudo apt install -y nodejs npm`
-    - Check if both were downloaded
-- Get other frameworks:
-  - `npm install express cors dotenv pg`
-    - `express` --> express.js
-    - 'cors`    --> something to help react & express integrate
-    - `dotenv`  --> automatically loads `.env` for environment variables in build
-    - `pg`      --> postgresql
-  - `npm install --save-dev nodemon` --> allows for hot reload the build
+## Development Environment Setup
+- Need to get node and npm on system... please just use wsl/linux
+    - `node -v` --> checks if node
+    - `npm -v` --> checks if npm
+    - if not, get both: `sudo apt install -y nodejs npm`
+- Clone the Repo if haven't already
+    - Get the most recent `git checkout main`, `get fetch origin main`, `git pull`
+- Get dependencies... these are local depencides for a project and hence will live in project dir
+    - Server stuff (express, node.js, and wtv dependices they use)
+        - `cd server`
+        - `npm install`
+        - `npm run dev` -- test; should start the backend
+    - Client stuff (react)
+        - `cd client`
+        - `npm install`
+        - `npm run dev` --> test; should start the frontend using vite
+- Make dev easy by adding support to run frontend and backend concurrently
+    - go to root of project
+    - `npm install concurrently` 
+    - `npm run dev` --> should've ran both the frontend and backend
+
+- Handle `.env` via discor
 
 
-### File Structure:
+
+
+## File Structure:
 >[!Important]
 > the `.env` file will contain secrets that shouludn't be shared here... resort to discord for that. It will be apart of .gitignore and shouldn't be tracked
 ```
 panda-pos/
 │
-├── client/                     # Frontend (React)
+├── client/                     # Frontend (React + Vite + TypeScript)
+│   ├── assets/                 # Static assets served directly
 │   ├── src/
-│   │   ├── components/         # UI blocks (Button, MenuItem, Navbar)
-│   │   ├── pages/              # Each page route (Home, Checkout, Manager)
-│   │   ├── App.jsx             # Main app entry
-│   │   └── index.jsx           # ReactDOM.render() entry point
-│   ├── package.json
-│   └── vite.config.js          # or CRA config
+│   │   ├── components/         # Reusable UI blocks (Button, MenuItem, Navbar)
+│   │   ├── pages/              # Page routes (Home, Checkout, Manager, Kitchen)
+│   │   ├── App.tsx             # Root React component
+│   │   └── main.tsx            # ReactDOM.createRoot() entry point
+│   ├── vite.config.ts          # Vite build & proxy config
+│   ├── tsconfig.json           # TypeScript compiler settings
+│   ├── package.json            # Frontend dependencies
+│   └── .gitignore              # Ignore local build files
 │
 ├── server/                     # Backend (Express + Node)
-│   ├── app.js                  # Express server setup
-│   ├── routes.js               # Define endpoints directly here (for simplicity)
-│   ├── db.js                   # Database connection
-│   └── package.json
+│   ├── app.js                  # Main Express server file
+│   └── package.json            # Backend dependencies
 │
-├── db/
-│   ├── schema.sql              # CREATE TABLE statements
-│   └── seed.sql                # Sample data
-│
-├── .env                        # secrets (db login, etc)
-│
-└── README.md
+├── .env                        # Environment variables (ignored)
+├── .gitignore                  # Global ignore rules
+└── README.md                   # Documentation
+
 ```
 

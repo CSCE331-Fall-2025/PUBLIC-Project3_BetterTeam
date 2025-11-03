@@ -1,3 +1,14 @@
 
 # Hide Environment Variables
 .env
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+.DS_Store
+
+# builds
+dist/
+build/
