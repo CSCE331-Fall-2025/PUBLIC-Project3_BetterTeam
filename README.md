@@ -1,11 +1,28 @@
-#better_team_project3
+# better_team_project3
 Full Stack POS web app built using React frontend & express, node, postgres backend. 
 
 ## Development Environment Setup
-- Need to get node and npm on system... please just use wsl/linux
-    - `node -v` --> checks if node
-    - `npm -v` --> checks if npm
-    - if not, get both: `sudo apt install -y nodejs npm`
+- Need to get node and npm on system... please just use wsl/linux. Since Node versions, npm version, and all the dependices... do the following:
+``` 
+# make sure curl is installed
+sudo apt update
+sudo apt install curl -y
+
+# install nvm (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+
+# reload your shell so nvm is available
+source ~/.bashrc
+
+# install Node (LTS version)
+nvm install --lts
+
+# verify
+node -v
+npm -v
+```
+
+
 - Clone the Repo if haven't already
     - Get the most recent `git checkout main`, `get fetch origin main`, `git pull`
 - Get dependencies... these are local depencides for a project and hence will live in project dir
