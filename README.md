@@ -2,6 +2,7 @@
 
 
 ### File Structure:
+```
 panda-pos/
 │
 ├── client/                     # Frontend (React)
@@ -26,4 +27,5 @@ panda-pos/
 ├── .env                        # secrets (db login, etc)
 │
 └── README.md
+```
 
