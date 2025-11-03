@@ -13,6 +13,7 @@ Quick lil dev env setup... don't have to follow. Meant for wsl/linux:
     - 'cors`    --> something to help react & express integrate
     - `dotenv`  --> automatically loads `.env` for environment variables in build
     - `pg`      --> postgresql
+  - `npm install --save-dev nodemon` --> allows for hot reload the build
 
 
 ### File Structure:
