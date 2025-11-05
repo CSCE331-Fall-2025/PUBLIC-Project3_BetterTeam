@@ -1,6 +1,5 @@
 import { React } from 'react'
-import StaffHeader from './StaffHeader.tsx'
-//import '../../server/ServerAppetizer.js'
+import StaffHeader from '../components/StaffHeaderComponents/StaffHeader.tsx'
 
 const page = {
     name: 'Server-Appetizer',
