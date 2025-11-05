@@ -1,15 +1,15 @@
 import { React } from 'react'
 import StaffHeader from './StaffHeader.tsx'
+//import '../../server/ServerAppetizer.js'
 
 const page = {
-    name: 'ServerAppetizer',
+    name: 'Server-Appetizer',
     user: 'Server',
-    
 };
 
 function ServerAppetizer() {
     return(
-        <StaffHeader />
+        <StaffHeader name={page.name}/>
     );
 }
 
