@@ -54,7 +54,34 @@ panda-pos/
 │   ├── assets/                 # Static assets served directly
 │   ├── src/
 │   │   ├── components/         # Reusable UI blocks (Button, MenuItem, Navbar)
+│   │   │   ├── StaffHeader/    # StaffHeader component files example
+│   │   │   │   ├── StaffHeader.tsx
+│   │   │   │   ├── StaffHeader.css
+│   │   │   │   ├── TimeUpdate.js
+│   │   │   ├── othercomponent/ # etc.
 │   │   ├── pages/              # Page routes (Home, Checkout, Manager, Kitchen)
+│   │   │   ├── guest/          # Guest pages, landing page
+│   │   │   │   ├── HomePage.tsx
+│   │   │   ├── customer/       # Pages accessable to customers
+│   │   │   │   ├── CustomerEntreeSide.tsx
+│   │   │   │   ├── CustomerAppetizer.tsx
+│   │   │   │   ├── CustomerDrink.tsx
+│   │   │   │   ├── CustomerCater.tsx
+│   │   │   │   ├── CustomerCheckout.tsx
+│   │   │   ├── cashier/        # Pages accessable only to cashiers
+│   │   │   │   ├── CashierEntreeSide.tsx
+│   │   │   │   ├── CashierAppetizer.tsx
+│   │   │   │   ├── CashierDrink.tsx
+│   │   │   │   ├── CashierCheckout.tsx
+│   │   │   ├── manager/        # Pages accessable only to manager
+│   │   │   │   ├── ManagerHome.tsx
+│   │   │   │   ├── OrderTrends.tsx
+│   │   │   │   ├── EmployeeData.tsx
+│   │   │   │   ├── Inventory.tsx
+│   │   │   ├── Kitchen.tsx
+│   │   │   ├── MenuBoard.tsx
+│   │   │   ├── Login.tsx
+│   │   │   ├── Signup.tsx
 │   │   ├── App.tsx             # Root React component
 │   │   └── main.tsx            # ReactDOM.createRoot() entry point
 │   ├── vite.config.ts          # Vite build & proxy config
