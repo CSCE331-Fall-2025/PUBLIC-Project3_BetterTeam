@@ -39,7 +39,7 @@ npm -v
     - `npm install concurrently` 
     - `npm run dev` --> should've ran both the frontend and backend
 
-- Handle `.env` via discor
+- Handle `.env` via discord
 
 
 
