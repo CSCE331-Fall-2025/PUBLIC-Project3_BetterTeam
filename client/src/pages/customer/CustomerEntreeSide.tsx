@@ -7,6 +7,8 @@ const page = {
     user: 'Customer',
 };
 
+
+/* this is just brute force added things to avoid database nonsense rn */
 const allEntrees: { name: string; price: number; imageUrl?: string }[] = [
   { name: "Orange Chicken", price: 7, imageUrl: "../../../assets/orangechick.PNG" },
   { name: "Beijing Beef", price: 7, imageUrl: "../../../assets/beijing.PNG" },
@@ -21,6 +23,8 @@ const allSides: { name: string; price: number; imageUrl?: string }[] = [
 ];
 
 interface Dish { name: string; price: number; imageUrl?: string }
+
+/* This is to get a visual on how the bowl/plate/big plate will look */
 
 function CustomerEntreeSide() {
     const [entreeCount, setEntreeCount] = useState(1);
@@ -44,6 +48,7 @@ function CustomerEntreeSide() {
     ));
 
     return (
+        /* This will be moved over to CustomerHome at some point */
         <div>
             <StaffHeader name={page.name} />
             <div style={{ padding: '10rem', display: 'flex', gap: '0.5rem' }}>

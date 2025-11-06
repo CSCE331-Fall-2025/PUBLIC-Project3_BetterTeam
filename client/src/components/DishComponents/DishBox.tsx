@@ -14,6 +14,7 @@ interface DishBoxProps {
     onSelect?: (dishes: Dish) => void;
 }
 
+/** */
 export const DishBox: React.FC<DishBoxProps> = ({ title, dishes, onSelect }) => {
     return (
         <div className="dish-box">
