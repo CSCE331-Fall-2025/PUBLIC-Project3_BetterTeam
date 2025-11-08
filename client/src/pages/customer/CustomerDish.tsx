@@ -1,6 +1,7 @@
 import React from 'react';
 import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
+import Button from "../../components/ButtonComponents/Button.tsx";
 import './CustomerDish.css';
 
 export type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
@@ -40,6 +41,11 @@ const allApps: Dish[] = [
   { name: "Veggie Spring Roll", price: 3, imageUrl: "../../../assets/veggieroll.PNG" },
 ];
 
+const handleAddToCart = () => {
+  console.log("Adding selected dishes to cart...");
+  // I need to make this work...
+};
+
 function CustomerDish({ type, entreeCount = 1, onBack }: CustomerDishProps){
     const handleSelect = (dish: Dish) => {
         console.log("Selected Dish:", dish.name);
@@ -77,10 +83,13 @@ function CustomerDish({ type, entreeCount = 1, onBack }: CustomerDishProps){
     return(
         <div className="meal-builder-wrapper">
             <GuestHeader name={title}/>
-            {boxes}
-            <button onClick={onBack} style = {{ marginTop: '2rem', padding: '1rem 2rem'}}>
-                Back to Menu
-            </button>
+            <div className="dish-box-row">
+                {boxes}
+            </div>
+            <div className="button-row">
+                <Button name="Cancel" onClick={(e) => onBack()}/>
+                <Button name="Add to Cart" onClick={(e) => handleAddToCart()}/>
+            </div>
         </div>
     );
 }
