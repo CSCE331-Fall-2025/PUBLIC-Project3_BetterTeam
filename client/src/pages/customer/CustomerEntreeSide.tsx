@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx';
+import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx'
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
 import './CustomerEntreeSide.css'
 

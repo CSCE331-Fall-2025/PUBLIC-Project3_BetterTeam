@@ -1,5 +1,5 @@
 import { React } from 'react'
-import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx'
+import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx'
 
 const page = {
     name: 'Login',
@@ -8,7 +8,7 @@ const page = {
 
 function Login() {
     return(
-        <StaffHeader name={page.name}/>
+        <GuestHeader name={page.name}/>
     );
 }
 
