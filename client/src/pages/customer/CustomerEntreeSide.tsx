@@ -65,7 +65,7 @@ function CustomerEntreeSide() {
     return (
         /* This will be moved over to CustomerHome at some point */
         <div>
-            <StaffHeader name={page.name} />
+            <GuestHeader name={page.name} />
             <div style={{ padding: '10rem', display: 'flex', gap: '0.5rem' }}>
                 <button onClick={() => setMealType('bowl')}>Bowl (1 Entree)</button>
                 <button onClick={() => setMealType('plate')}>Plate (2 Entrees)</button>
