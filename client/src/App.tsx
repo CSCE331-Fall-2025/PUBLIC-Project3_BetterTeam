@@ -27,23 +27,14 @@
 
 // export default App;
 
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Home from "./pages/any/Home";
-import CustomerHome from "./pages/customer/CustomerHome";
-import CustomerDish from "./pages/customer/CustomerDish";
+import React from 'react';
+import CustomerHome from './pages/customer/CustomerHome';
 
 function App() {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/customer" element={<CustomerHome />} />
-                <Route path="/customer/dish" element={<CustomerDish />} />
-            </Routes>
-        </BrowserRouter>
-    );
+  return (
+    <CustomerHome />
+  );
 }
 
 export default App;
+

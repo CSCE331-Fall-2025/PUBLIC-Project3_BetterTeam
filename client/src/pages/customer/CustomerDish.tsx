@@ -1,13 +1,20 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
 import './CustomerDish.css';
 
-interface Dish {
+export type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
+
+export interface Dish{
     name: string;
     price: number;
     imageUrl?: string;
+}
+
+interface CustomerDishProps{
+    type: DishType;
+    entreeCount?: number;
+    onBack: () => void;
 }
 
 const allEntrees: Dish[] = [
@@ -33,92 +40,47 @@ const allApps: Dish[] = [
   { name: "Veggie Spring Roll", price: 3, imageUrl: "../../../assets/veggieroll.PNG" },
 ];
 
-function CustomerDish() {
-    const location = useLocation();
-    const navigate = useNavigate();
-
-    const { type, entreeCount = 1 } = (location.state || {}) as {
-        type?: 'entree' | 'appetizer' | 'drink';
-        entreeCount?: number;
-    };
-
-    if(!type){
-        return(
-            <div>
-                <GuestHeader name="Menu" />
-                <p style={{ textAlign: 'center', marginTop: '2rem' }}>
-                    Please go through the main menu first.
-                </p>
-                <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem' }}>
-                    <button onClick={() => navigate('/customer')}> Back to Menu </button>
-                </div>
-            </div>
-        )
-    }
-
-    const handleDishSelect = (dish: Dish) => {
+function CustomerDish({ type, entreeCount = 1, onBack }: CustomerDishProps){
+    const handleSelect = (dish: Dish) => {
         console.log("Selected Dish:", dish.name);
     };
 
     let title = '';
-    let dishBoxes: React.ReactNode[] = [];
+    let boxes: React.ReactNode[] = [];
 
-    if (type === 'entree') {
-        title = 'Build Your Meal';
-        const entreeBoxes = Array.from({ length: entreeCount }, (_, i) => (
+    if(type == 'entree'){
+        title = 'Build your Meal';
+        const entreeBoxes = Array.from({ length: entreeCount }).map((_, i) => (
             <DishBox
-                key={`entree-${i}`}
-                title={`Entree ${i + 1}`}
-                dishes={allEntrees}
-                onSelect={handleDishSelect}
+            key={`entree-${i}`}
+            title={`Entree ${i + 1}`}
+            dishes={allEntrees}
+            onSelect={handleSelect}
             />
         ));
 
-        dishBoxes = [
+        boxes = [
             ...entreeBoxes,
-            <DishBox
-                key="side"
-                title="Choose Your Side"
-                dishes={allSides}
-                onSelect={handleDishSelect}
-            />
+            <DishBox key="side" title="Choose your Side" dishes={allSides} onSelect={handleSelect} />
         ];
-    } else if (type === 'appetizer') {
-        title = 'Choose Your Appetizer';
-        dishBoxes = [
-            <DishBox
-                key="appetizers"
-                title="Appetizers & Sides"
-                dishes={allApps}
-                onSelect={handleDishSelect}
-            />
-        ];
+    } else if (type == 'appetizer'){
+        title = 'Choose Appeitizer';
+        boxes = [<DishBox key="apps" title="Appetizers" dishes={allApps} onSelect={handleSelect} />];
+    } else if (type == 'side'){
+        title = 'Choose Side';
+        boxes = [<DishBox key="sides" title="Sides" dishes={allSides} onSelect={handleSelect} />];
     } else if (type === 'drink') {
-        title = 'Choose Your Drink';
-        dishBoxes = [
-            <DishBox
-                key="drinks"
-                title="Drinks"
-                dishes={allDrinks}
-                onSelect={handleDishSelect}
-            />
-        ];
-    } else {
-        title = 'Menu';
+        title = 'Choose Drink';
+        boxes = [<DishBox key="drinks" title="Drinks" dishes={allDrinks} onSelect={handleSelect} />];
     }
 
-    return (
-        <div>
-            <GuestHeader name={title} />
-            <div className="meal-builder-wrapper">
-                {dishBoxes}
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem' }}>
-                <button onClick={() => navigate('/customer')} style={{ padding: '1rem 2rem' }}>
-                    Back to Menu
-                </button>
-            </div>
+    return(
+        <div className="meal-builder-wrapper">
+            <GuestHeader name={title}/>
+            {boxes}
+            <button onClick={onBack} style = {{ marginTop: '2rem', padding: '1rem 2rem'}}>
+                Back to Menu
+            </button>
         </div>
     );
 }

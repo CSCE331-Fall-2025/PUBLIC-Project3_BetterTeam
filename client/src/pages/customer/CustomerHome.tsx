@@ -1,35 +1,38 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState} from 'react';
 import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx';
 import Button from '../../components/ButtonComponents/Button.tsx';
+import CustomerDish from './CustomerDish';
 import './CustomerHome.css';
 
-
-const page = {
-    name: 'Guest Page',
-    user: 'Customer',
-};
+type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
 
 function CustomerHome() {
-    const navigate = useNavigate();
+    const [page, setPage] = useState<'home' | 'dish'>('home');
+    const [dishType, setDishType] = useState<DishType>('entree');
+    const [entreeCount, setEntreeCount] = useState(1);
 
-
-    const handleClick = (type: 'entree' | 'appetizer' | 'drink', entreeCount?: number) => {
-        navigate('/customer/dish', {state: { type, entreeCount}});
-    };
-    
+    if(page == 'dish'){
+        return(
+            <CustomerDish
+                type={dishType}
+                entreeCount={entreeCount}
+                onBack={() => setPage('home')}
+            />
+        );
+    }
     return(
         <div className="customer-home">
-            <GuestHeader name={page.name} />
+            <GuestHeader name="Guest Page" />
             <div className="button-container">
-                <Button name="Bowl" onClick={() => handleClick('entree', 1)}/>
-                <Button name="Plate" onClick={() => handleClick('entree', 2)}/>
-                <Button name="Big Plate" onClick={() => handleClick('entree', 3)}/>
-                <Button name="Appetizer or Side" onClick={() => handleClick('appetizer')}/>
-                <Button name="Drinks" onClick={() => handleClick('drink')}/>
+                <Button name="Bowl" onClick={() => { setDishType('entree'); setEntreeCount(1); setPage('dish'); }} />
+                <Button name="Plate" onClick={() => { setDishType('entree'); setEntreeCount(2); setPage('dish'); }} />
+                <Button name="Big Plate" onClick={() => { setDishType('entree'); setEntreeCount(3); setPage('dish'); }} />
+                <Button name="Appetizer" onClick={() => { setDishType('appetizer');  setPage('dish'); }} />
+                <Button name="Sides" onClick={() => { setDishType('side'); setPage('dish'); }} />
+                <Button name="Drinks" onClick={() => { setDishType('drink'); setPage('dish'); }} />
             </div>
         </div>
-    );
+    )
 }
 
 export default CustomerHome;
