@@ -1,25 +1,46 @@
+// import React from "react";
+// import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// import Home from "./pages/any/Home.tsx";
+// import Login from "./pages/any/Login.tsx";
+// import Signup from "./pages/any/Signup.tsx";
+// import CashierHome from "./pages/cashier/CashierHome.tsx";
+// import ManagerHome from "./pages/manager/ManagerHome.tsx";
+// import CustomerHome from "./pages/customer/CustomerHome.tsx";
+// import CustomerDish from "./pages/customer/CustomerDish.tsx";
+
+// function App() {
+//     return (
+//         <BrowserRouter>
+//             <Routes>
+//                 <Route path="/" element={<Home />} />
+//                 <Route path="/login" element={<Login />} />
+//                 <Route path="/signup" element={<Signup />} />
+//                 <Route path="/cashier" element={<CashierHome />} />
+//                 <Route path="/manager" element={<ManagerHome />} />
+//                 <Route path="/customer" element={<CustomerHome />} />
+//                 <Route path="/customer/dish" element={<CustomerDish />} />
+//             </Routes>
+//         </BrowserRouter>
+//     );
+// }
+
+// export default App;
+
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./pages/any/Home.tsx";
-import Login from "./pages/any/Login.tsx";
-import Signup from "./pages/any/Signup.tsx";
-import CashierHome from "./pages/cashier/CashierHome.tsx";
-import ManagerHome from "./pages/manager/ManagerHome.tsx";
-import CustomerHome from "./pages/customer/CustomerHome.tsx";
-import CustomerEntreeSide from "./pages/customer/CustomerEntreeSide.tsx";
+import Home from "./pages/any/Home";
+import CustomerHome from "./pages/customer/CustomerHome";
+import CustomerDish from "./pages/customer/CustomerDish";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/cashier" element={<CashierHome />} />
-                <Route path="/manager" element={<ManagerHome />} />
                 <Route path="/customer" element={<CustomerHome />} />
-                <Route path="/customer/entree-side" element={<CustomerEntreeSide />} />
+                <Route path="/customer/dish" element={<CustomerDish />} />
             </Routes>
         </BrowserRouter>
     );

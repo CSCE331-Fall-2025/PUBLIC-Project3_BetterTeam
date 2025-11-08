@@ -14,16 +14,19 @@ function CustomerHome() {
     const navigate = useNavigate();
 
 
-    const handleClick = (mealType: 'bowl' | 'plate' | 'bigplate')
+    const handleClick = (type: 'entree' | 'appetizer' | 'drink', entreeCount?: number) => {
+        navigate('/customer/dish', {state: { type, entreeCount}});
+    };
+    
     return(
         <div className="customer-home">
             <GuestHeader name={page.name} />
             <div className="button-container">
-                <Button name="Bowl" onClick={handleClick}/>
-                <Button name="Plate" onClick={handleClick}/>
-                <Button name="Big Plate" onClick={handleClick}/>
-                <Button name="Appetizer or Side" onClick={handleClick}/>
-                <Button name="Drinks" onClick={handleClick}/>
+                <Button name="Bowl" onClick={() => handleClick('entree', 1)}/>
+                <Button name="Plate" onClick={() => handleClick('entree', 2)}/>
+                <Button name="Big Plate" onClick={() => handleClick('entree', 3)}/>
+                <Button name="Appetizer or Side" onClick={() => handleClick('appetizer')}/>
+                <Button name="Drinks" onClick={() => handleClick('drink')}/>
             </div>
         </div>
     );
