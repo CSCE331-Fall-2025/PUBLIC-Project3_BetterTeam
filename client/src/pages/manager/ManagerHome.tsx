@@ -1,6 +1,6 @@
 import React from 'react'
 import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx'
-import Button from '../../components/buttonComponents/Button.tsx'
+import Button from '../../components/ButtonComponents/Button.tsx'
 import Table, { type ColumnDefinition } from '../../components/TableComponents/Table.tsx'
 
 const page = {
