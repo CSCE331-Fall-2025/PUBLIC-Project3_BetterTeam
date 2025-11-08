@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
+import './CustomerEntreeSide.css'
 
 const page = {
     name: 'Entree-Side',
@@ -21,6 +22,20 @@ const allSides: { name: string; price: number; imageUrl?: string }[] = [
     { name: "Fried Rice", price: 4, imageUrl: "../../../assets/ricefried.PNG" },
     { name: "Chow Mein", price: 3000, imageUrl: "../../../assets/chowmein.PNG" },
 ];
+
+const allDrinks: { name: string; price: number; imageUrl?: string }[] = [
+    { name: "Coke", price: 4, imageUrl: "../../../assets/coke.PNG" },
+    { name: "Dr. Pepper", price: 3, imageUrl: "../../../assets/drp.PNG" },
+];
+
+const allApps: { name: string; price: number; imageUrl?: string }[] = [
+    { name: "Cream Cheese Rangoon", price: 3, imageUrl: "../../../assets/rangoon.PNG" },
+    { name: "Veggie Spring Roll", price: 3, imageUrl: "../../../assets/veggieroll.PNG" },
+];
+
+
+
+
 
 interface Dish { name: string; price: number; imageUrl?: string }
 

@@ -17,7 +17,7 @@
 // export default App
 
 import React from "react";
-import './App.css';
+
 
 import CustomerEntreeSide from './pages/customer/CustomerEntreeSide.tsx';
 

@@ -1,5 +1,6 @@
 /* explicitly for testing */
 .meal-builder-wrapper {
     display: flex;
+    margin: 0 auto;
     gap: 1rem;
 }
