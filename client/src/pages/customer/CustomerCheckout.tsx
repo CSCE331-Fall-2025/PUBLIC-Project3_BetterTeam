@@ -1,4 +1,4 @@
-import { React } from 'react'
+import React from 'react'
 import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx'
 
 const page = {
