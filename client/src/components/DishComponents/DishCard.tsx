@@ -6,11 +6,13 @@ interface DishCardProps {
     price: number;
     imageUrl?: string;
     onSelect?: () => void;
+    isSelected?: boolean;
 }
-/* This is a component to display any dish in a card, pairs with a css */
-export const DishCard: React.FC<DishCardProps> = ({ name, price, imageUrl, onSelect }) => {
+
+
+export const DishCard: React.FC<DishCardProps> = ({name, price, imageUrl, onSelect, isSelected}) => {
     return (
-        <div className="dish-card" onClick={onSelect}>
+        <div className={`dish-card ${isSelected ? "selected" : ""}`} onClick={onSelect}>
             <img
                 src={imageUrl}
                 alt={name}

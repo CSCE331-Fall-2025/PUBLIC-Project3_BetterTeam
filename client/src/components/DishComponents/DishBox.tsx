@@ -12,10 +12,10 @@ interface DishBoxProps {
     title?: string;
     dishes: Dish[];
     onSelect?: (dishes: Dish) => void;
+    selectedDishes?: Dish[];
 }
 
-/** */
-export const DishBox: React.FC<DishBoxProps> = ({ title, dishes, onSelect }) => {
+export const DishBox: React.FC<DishBoxProps> = ({title, dishes, onSelect, selectedDishes}) => {
     return (
         <div className="dish-box">
             {title && <h2 className="dish-box-title">{title}</h2>}
@@ -27,6 +27,7 @@ export const DishBox: React.FC<DishBoxProps> = ({ title, dishes, onSelect }) => 
                         price={dish.price}
                         imageUrl={dish.imageUrl}
                         onSelect={() => onSelect?.(dish)}
+                        isSelected={selectedDishes?.some(d => d.name === dish.name)}
                     />
                 ))}
             </div>
