@@ -37,3 +37,14 @@
     color: black;
     margin: 0;
 }
+
+.dish-card.selected {
+    border: 3px solid black;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+    transform: scale(1.05);
+    transition: all 0.15s ease-in-out;
+}
+
+.dish-card.selected:hover {
+    box-shadow: 0 0 12px rgba(231, 76, 60, 0.7);
+}
