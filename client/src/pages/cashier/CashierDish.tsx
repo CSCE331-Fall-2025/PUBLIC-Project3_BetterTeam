@@ -2,14 +2,14 @@ import { React } from 'react'
 import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx'
 
 const page = {
-    name: 'Appetizer',
+    name: 'Entree/Side',
     user: 'Cashier',
 };
 
-function CashierAppetizer() {
+function CashierDish() {
     return(
         <StaffHeader name={page.name}/>
     );
 }
 
-export default CashierAppetizer;
+export default CashierDish;
