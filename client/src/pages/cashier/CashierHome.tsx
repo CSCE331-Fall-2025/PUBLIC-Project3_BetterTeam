@@ -20,7 +20,8 @@ function CashierHome() {
 
   const handleClearCart = () => setCart([]);
   const total = cart.reduce((sum, dish) => sum + dish.price, 0);
-
+/* Basically all copied over from CustomerCheckout and CustomerHome and combined
+Will theoretically send data to kitchen and manager page */
   return (
     <div className="cashier-home">
       <StaffHeader name="Cashier Home" />
@@ -67,7 +68,6 @@ function CashierHome() {
           </div>
         </>
       ) : (
-        // ====== Dish selection overlay (like CustomerDish) ======
         <CustomerDish
           type={dishType}
           entreeCount={entreeCount}
