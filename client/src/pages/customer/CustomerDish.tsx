@@ -65,7 +65,6 @@ function CustomerDish({ type, entreeCount = 1, onBack, onAddToCart }: CustomerDi
     let boxes: React.ReactNode[] = [];
 
     if(type === 'entree'){
-        title = 'Build your Meal';
         const entreeBoxes = Array.from({ length: entreeCount }).map((_, i) => (
         
             <DishBox
@@ -89,13 +88,10 @@ function CustomerDish({ type, entreeCount = 1, onBack, onAddToCart }: CustomerDi
         boxes = [...entreeBoxes, sideBox];
 
     } else if (type == 'appetizer'){
-        title = 'Choose Appeitizer';
         boxes = [<DishBox key="apps" title="Appetizers" dishes={allApps} onSelect={(dish) => handleSelect(dish, 'App')} selectedDishes={selected.filter(d => d._slot === 'App')} />];
     } else if (type == 'side'){
-        title = 'Choose Side';
         boxes = [<DishBox key="sides" title="Sides" dishes={allSides} onSelect={(dish) => handleSelect(dish, 'Side')} selectedDishes={selected.filter(d => d._slot === 'Side')} />];
     } else if (type === 'drink') {
-        title = 'Choose Drink';
         boxes = [<DishBox key="drinks" title="Drinks" dishes={allDrinks} onSelect={(dish) => handleSelect(dish, 'Drink')} selectedDishes={selected.filter(d => d._slot === 'Drink')} />];
     }
 
