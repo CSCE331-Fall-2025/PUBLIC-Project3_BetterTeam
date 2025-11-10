@@ -1,16 +1,10 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Button from '../../components/ButtonComponents/Button.tsx'
 import Table, { type ColumnDefinition } from '../../components/TableComponents/Table.tsx'
 import { Chart as ChartJS} from 'chart.js/auto'
 import { Line } from 'react-chartjs-2'
 import { useNavigate } from 'react-router-dom'
 import './Dashboard.css'
-
-// For the staff header
-const page = {
-    name: 'ManagerHome',
-    user: 'Manager',
-};
 
 
 // Data for the charts

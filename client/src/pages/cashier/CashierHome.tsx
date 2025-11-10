@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from '../../components/ButtonComponents/Button.tsx';
 import type { Dish } from '../customer/CustomerDish';
 import CustomerDish from '../customer/CustomerDish';

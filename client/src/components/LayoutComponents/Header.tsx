@@ -1,4 +1,3 @@
-import React from 'react';
 import './Header.css'
 import './TimeUpdate.js'//So like idk if this is the right way to do it but it does just work so
 //<h1 id="PageTitle"> {page.name} </h1>

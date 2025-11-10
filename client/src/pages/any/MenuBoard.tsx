@@ -1,11 +1,5 @@
-import React from 'react'
 import { DishBox } from '../../components/DishComponents/DishBox.tsx'
 import './MenuBoard.css'
-
-const page = {
-    name: 'Menu-Board',
-    user: 'Any',
-};
 
 export interface Dish{
     name: string;
