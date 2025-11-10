@@ -1,14 +1,22 @@
 import React, { useState} from 'react';
 import Button from '../../components/ButtonComponents/Button.tsx';
 import CustomerDish from './CustomerDish';
+import type { Dish } from './CustomerDish';
+import CustomerCheckout from './CustomerCheckout';
 import './CustomerHome.css';
 
 type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
 
 function CustomerHome() {
-    const [page, setPage] = useState<'home' | 'dish'>('home');
+    const [page, setPage] = useState<'home' | 'dish' | 'checkout'>('home');
     const [dishType, setDishType] = useState<DishType>('entree');
     const [entreeCount, setEntreeCount] = useState(1);
+    const [cart, setCart] = useState<Dish[]>([]);
+
+    const handleAddToCart = (selectedDishes: Dish[]) => {
+        setCart(prev => [...prev, ...selectedDishes]);
+        setPage('home');
+    };
 
     if(page == 'dish'){
         return(
@@ -16,7 +24,17 @@ function CustomerHome() {
                 type={dishType}
                 entreeCount={entreeCount}
                 onBack={() => setPage('home')}
+                onAddToCart = {handleAddToCart}
             />
+        );
+    }
+
+    if(page == 'checkout'){
+        return(
+            <CustomerCheckout 
+                cart={cart}
+                onBack={() => setPage('home')}
+                onClearCart={() => setCart([])}/>
         );
     }
     return(
@@ -29,8 +47,12 @@ function CustomerHome() {
                 <Button name="Sides" onClick={() => { setDishType('side'); setPage('dish'); }} />
                 <Button name="Drinks" onClick={() => { setDishType('drink'); setPage('dish'); }} />
             </div>
+
+            <div className="checkout-button">
+                <Button name="Checkout" onClick={() => setPage('checkout')} />
+            </div>
         </div>
-    )
+    );
 }
 
 export default CustomerHome;

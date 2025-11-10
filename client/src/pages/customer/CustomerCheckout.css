@@ -1,0 +1,26 @@
+.checkout-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+.receipt {
+    color: black;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 300px;
+}
+
+.receipt ul {
+    list-style: none;
+    padding: 0;
+}
+
+.receipt li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}

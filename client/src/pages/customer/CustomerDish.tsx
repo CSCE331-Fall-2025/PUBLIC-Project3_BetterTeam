@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
 import Button from "../../components/ButtonComponents/Button.tsx";
 import './CustomerDish.css';
@@ -11,10 +11,13 @@ export interface Dish{
     imageUrl?: string;
 }
 
+type SelectedDish = Dish & { _slot?: string };
+
 interface CustomerDishProps{
     type: DishType;
     entreeCount?: number;
     onBack: () => void;
+    onAddToCart: (dishes: Dish[]) => void;
 }
 
 const allEntrees: Dish[] = [
@@ -40,43 +43,61 @@ const allApps: Dish[] = [
   { name: "Veggie Spring Roll", price: 3, imageUrl: "../../../assets/veggieroll.PNG" },
 ];
 
-const handleAddToCart = () => {
-  console.log("Adding selected dishes to cart...");
-  // I need to make this work...
-};
+function CustomerDish({ type, entreeCount = 1, onBack, onAddToCart }: CustomerDishProps){
+    const [selected, setSelected] = useState<SelectedDish[]>([]);
 
-function CustomerDish({ type, entreeCount = 1, onBack }: CustomerDishProps){
-    const handleSelect = (dish: Dish) => {
-        console.log("Selected Dish:", dish.name);
+    const handleSelect = (dish: Dish, slot?: string) => {
+        setSelected(prev => {
+            const isSelected = prev.find(d => d.name === dish.name && d._slot === slot);
+            if(isSelected){
+                return prev.filter(d => !(d.name === dish.name && d._slot === slot));
+            }
+            if(slot){
+                const filtered = prev.filter(d => d._slot !== slot);
+                return [...filtered, {...dish, _slot: slot}];
+            }
+
+            const alreadySelected = prev.find(d => d.name === dish.name);
+            return alreadySelected ? prev.filter(d => d.name !== dish.name): [...prev, {...dish}];
+        });
     };
 
     let title = '';
     let boxes: React.ReactNode[] = [];
 
-    if(type == 'entree'){
+    if(type === 'entree'){
         title = 'Build your Meal';
         const entreeBoxes = Array.from({ length: entreeCount }).map((_, i) => (
+        
             <DishBox
-            key={`entree-${i}`}
-            title={`Entree ${i + 1}`}
-            dishes={allEntrees}
-            onSelect={handleSelect}
+                key={`entree-${i}`}
+                title={`Entree ${i + 1}`}
+                dishes={allEntrees}
+                onSelect={(dish) => handleSelect(dish, `Entree ${i + 1}`)}
+                selectedDishes = {selected.filter(d => d._slot === `Entree ${i + 1}`)}
             />
         ));
+            const sideBox = (
+                <DishBox
+                    key="side"
+                    title="Choose your Side"
+                    dishes={allSides}
+                    onSelect={(dish) => handleSelect(dish, 'Side')}
+                    selectedDishes={selected.filter(d => d._slot === 'Side')}
+                />
+            );
 
-        boxes = [
-            ...entreeBoxes,
-            <DishBox key="side" title="Choose your Side" dishes={allSides} onSelect={handleSelect} />
-        ];
+        boxes = [...entreeBoxes, sideBox];
+
     } else if (type == 'appetizer'){
         title = 'Choose Appeitizer';
-        boxes = [<DishBox key="apps" title="Appetizers" dishes={allApps} onSelect={handleSelect} />];
+        boxes = [<DishBox key="apps" title="Appetizers" dishes={allApps} onSelect={(dish) => handleSelect(dish, 'App')} selectedDishes={selected.filter(d => d._slot === 'App')} />];
     } else if (type == 'side'){
         title = 'Choose Side';
-        boxes = [<DishBox key="sides" title="Sides" dishes={allSides} onSelect={handleSelect} />];
+        boxes = [<DishBox key="sides" title="Sides" dishes={allSides} onSelect={(dish) => handleSelect(dish, 'Side')} selectedDishes={selected.filter(d => d._slot === 'Side')} />];
     } else if (type === 'drink') {
         title = 'Choose Drink';
-        boxes = [<DishBox key="drinks" title="Drinks" dishes={allDrinks} onSelect={handleSelect} />];
+        boxes = [<DishBox key="drinks" title="Drinks" dishes={allDrinks} onSelect={(dish) => handleSelect(dish, 'Drink')} selectedDishes={selected.filter(d => d._slot === 'Drink')} />];
     }
 
     return(
@@ -86,7 +107,7 @@ function CustomerDish({ type, entreeCount = 1, onBack }: CustomerDishProps){
             </div>
             <div className="button-row">
                 <Button name="Cancel" onClick={(e) => onBack()}/>
-                <Button name="Add to Cart" onClick={(e) => handleAddToCart()}/>
+                <Button name="Add to Cart" onClick={(e) => onAddToCart(selected)}/>
             </div>
         </div>
     );
