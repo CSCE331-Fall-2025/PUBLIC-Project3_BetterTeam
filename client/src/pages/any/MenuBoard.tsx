@@ -40,11 +40,13 @@ const allApps: Dish[] = [
 function MenuBoard() {
     return(
         <>
-            <GuestHeader name={page.name}/>
-            <DishBox title={'Entrees'} dishes = {allEntrees}/>  
-            <DishBox title={'Sides'} dishes = {allSides}/>
-            <DishBox title={'Drinks'} dishes = {allDrinks}/>
-            <DishBox title={'Apps'} dishes = {allApps}/>
+            <div className='board'>
+                <GuestHeader name={page.name}/>
+                <DishBox title={'Entrees'} dishes = {allEntrees}/>  
+                <DishBox title={'Sides'} dishes = {allSides}/>
+                <DishBox title={'Drinks'} dishes = {allDrinks}/>
+                <DishBox title={'Apps'} dishes = {allApps}/>
+            </div>
         </>
     );
 }
