@@ -1,5 +1,4 @@
 import React, { useState} from 'react';
-import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx';
 import Button from '../../components/ButtonComponents/Button.tsx';
 import CustomerDish from './CustomerDish';
 import './CustomerHome.css';
@@ -22,7 +21,6 @@ function CustomerHome() {
     }
     return(
         <div className="customer-home">
-            <GuestHeader name="Guest Page" />
             <div className="button-container">
                 <Button name="Bowl" onClick={() => { setDishType('entree'); setEntreeCount(1); setPage('dish'); }} />
                 <Button name="Plate" onClick={() => { setDishType('entree'); setEntreeCount(2); setPage('dish'); }} />

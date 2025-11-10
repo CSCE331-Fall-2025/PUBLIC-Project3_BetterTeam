@@ -1,5 +1,4 @@
 import { React } from 'react'
-import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx'
 
 const page = {
     name: 'Cater',
@@ -7,9 +6,7 @@ const page = {
 };
 
 function CustomerCater() {
-    return(
-        <GuestHeader name={page.name}/>
-    );
+	return;
 }
 
 export default CustomerCater;

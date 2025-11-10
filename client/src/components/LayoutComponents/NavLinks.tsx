@@ -1,0 +1,37 @@
+
+import './NavLinks.css';
+
+import { Link } from 'react-router-dom';
+
+export function ManagerLinks() {
+	// add whatever manager pages:
+	// Ex:
+	// "/manager/<page>
+	return (
+		<div>
+			<Link to="/Manager/Dashboard">Dashboard</Link>
+			<Link to="/Manager/EmployeeData">Employee Data</Link>
+			<Link to="/Manager/OrderTrends">Order Trends</Link>
+		</div>
+	);
+}
+
+export function CashierLinks() {
+	return (
+		<div>
+			{/*<Link to="/Cashier">Home</Link>*/}
+			{/* <Link to="/Customer/Checkout">Checkout</Link */}
+		</div>
+	);
+}
+
+export function CustomerLinks() {
+	return (
+		<div>
+			{/*<Link to="/Customer">Home</Link>*/}
+			{/* <Link to="/Customer/Order">Order</Link */}
+			{/* <Link to="/Customer/Profile">Profile</Link */}
+		</div>
+	);
+}
+

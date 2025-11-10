@@ -1,13 +1,13 @@
 import React from 'react';
-import './StaffHeader.css'
+import './Header.css'
 import './TimeUpdate.js'//So like idk if this is the right way to do it but it does just work so
 //<h1 id="PageTitle"> {page.name} </h1>
 
-interface StaffHeaderProps{
+interface HeaderProps{
   name:string;
 }
 
-function StaffHeader({name}: StaffHeaderProps) {
+export default function Header({name}: HeaderProps) {
 
   return (
     <>
@@ -20,4 +20,3 @@ function StaffHeader({name}: StaffHeaderProps) {
   )
 }
 
-export default StaffHeader

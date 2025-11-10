@@ -1,5 +1,4 @@
 import React from 'react';
-import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
 import Button from "../../components/ButtonComponents/Button.tsx";
 import './CustomerDish.css';
@@ -82,7 +81,6 @@ function CustomerDish({ type, entreeCount = 1, onBack }: CustomerDishProps){
 
     return(
         <div className="meal-builder-wrapper">
-            <GuestHeader name={title}/>
             <div className="dish-box-row">
                 {boxes}
             </div>

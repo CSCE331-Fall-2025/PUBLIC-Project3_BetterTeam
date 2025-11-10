@@ -1,5 +1,4 @@
 import { React } from 'react'
-import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx'
 
 const page = {
     name: 'Home',
@@ -7,9 +6,7 @@ const page = {
 };
 
 function CashierHome() {
-    return(
-        <StaffHeader name={page.name}/>
-    );
+	return;
 }
 
 export default CashierHome;

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx'
 import './Login.css'
 
 const page = {
@@ -25,7 +24,6 @@ function Login() {
 
     return(
         <div>
-            <StaffHeader name={page.name}/>
             <div className="login-container">
                 <div className="login-card">
                     <h2>Login</h2>
