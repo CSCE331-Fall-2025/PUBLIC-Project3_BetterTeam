@@ -19,7 +19,7 @@ function NavBar() {
 	const isCustomer = path.startsWith("/Customer");
 	const isHome = path.startsWith("/any");
 
-	// TODO: A logged in Customer & Guest Customer feature *basically* the same links... what to do about that.
+	// TODO: A logged in Customer & Guest Customer fature *basically* the same links... what to do about that.
 	return (
 		<div>
 			<nav className="navbar">

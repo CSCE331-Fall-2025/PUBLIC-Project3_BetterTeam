@@ -1,4 +1,3 @@
-import React from 'react'
 import Button from '../../components/ButtonComponents/Button.tsx'
 import type { Dish } from './CustomerDish';
 import './CustomerCheckout.css'
@@ -10,7 +9,6 @@ interface CustomerCheckoutProps{
 }
 
 function CustomerCheckout({cart, onBack, onClearCart}: CustomerCheckoutProps){
-	console.log(cart);
     const total = cart.reduce((sum, dish) => sum + dish.price, 0);
 
     const handlePlaceOrder = () => {

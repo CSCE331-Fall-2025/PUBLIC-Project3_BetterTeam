@@ -62,7 +62,7 @@ function Login() {
                         Log in with Google
                     </button>
                     <div className="login-footer">
-                        <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
+                        <p>Don't have an account? <Link to="/any/Signup">Sign up</Link></p>
                     </div>
                 </div>
             </div>

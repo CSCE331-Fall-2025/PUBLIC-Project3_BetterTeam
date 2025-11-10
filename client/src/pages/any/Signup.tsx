@@ -35,7 +35,6 @@ function Signup() {
 
     return(
         <div className="signup-page-wrapper">
-            <StaffHeader name={page.name}/>
             <div className="signup-container">
                 <div className="signup-card">
                     <h2>Sign Up</h2>
@@ -85,7 +84,7 @@ function Signup() {
                         Sign up with Google
                     </button>
                     <div className="signup-footer">
-                        <p>Already have an account? <Link to="/login">Login</Link></p>
+                        <p>Already have an account? <Link to="/any/login">Login</Link></p>
                     </div>
                 </div>
             </div>
