@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx';
 import Button from '../../components/ButtonComponents/Button.tsx';
 import type { Dish } from '../customer/CustomerDish';
 import CustomerDish from '../customer/CustomerDish';
@@ -24,7 +23,6 @@ function CashierHome() {
 Will theoretically send data to kitchen and manager page */
   return (
     <div className="cashier-home">
-      <StaffHeader name="Cashier Home" />
 
       {!selectingDish ? (
         <>

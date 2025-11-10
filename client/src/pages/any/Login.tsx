@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx'
 import './Login.css'
 
 const page = {
@@ -25,7 +24,6 @@ function Login() {
 
     return(
         <div className="login-page-wrapper">
-            <StaffHeader name={page.name}/>
             <div className="login-container">
                 <div className="login-card">
                     <h2>Login</h2>
@@ -64,7 +62,7 @@ function Login() {
                         Log in with Google
                     </button>
                     <div className="login-footer">
-                        <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
+                        <p>Don't have an account? <Link to="/any/Signup">Sign up</Link></p>
                     </div>
                 </div>
             </div>

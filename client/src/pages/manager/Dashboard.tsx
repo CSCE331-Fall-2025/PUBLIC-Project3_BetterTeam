@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx'
 import Button from '../../components/ButtonComponents/Button.tsx'
 import Table, { type ColumnDefinition } from '../../components/TableComponents/Table.tsx'
 import { Chart as ChartJS} from 'chart.js/auto'
 import { Line } from 'react-chartjs-2'
 import { useNavigate } from 'react-router-dom'
-import './ManagerHome.css'
+import './Dashboard.css'
 
 // For the staff header
 const page = {
@@ -184,8 +183,6 @@ function ManagerHome() {
 
     return(
         <div className='managerHome'>
-            <StaffHeader name={page.name}/>
-            
             <div className = 'chartContainer'>
                 {employeeVisible && (
                     <div className='lineChart'>

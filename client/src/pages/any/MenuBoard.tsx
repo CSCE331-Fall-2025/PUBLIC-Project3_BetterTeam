@@ -1,5 +1,4 @@
 import React from 'react'
-import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx'
 import { DishBox } from '../../components/DishComponents/DishBox.tsx'
 import './MenuBoard.css'
 
@@ -41,7 +40,6 @@ function MenuBoard() {
     return(
         <>
             <div className='board'>
-                <GuestHeader name={page.name}/>
                 <DishBox title={'Entrees'} dishes = {allEntrees}/>  
                 <DishBox title={'Sides'} dishes = {allSides}/>
                 <DishBox title={'Drinks'} dishes = {allDrinks}/>

@@ -1,5 +1,3 @@
-import React from 'react'
-import GuestHeader from '../../components/GuestHeaderComponents/GuestHeader.tsx'
 import Button from '../../components/ButtonComponents/Button.tsx'
 import type { Dish } from './CustomerDish';
 import './CustomerCheckout.css'
@@ -28,7 +26,6 @@ function CustomerCheckout({cart, onBack, onClearCart}: CustomerCheckoutProps){
 
     return(
         <div className="checkout-page">
-            <GuestHeader name="Checkout"/>
             <div className="receipt">
                 {cart.length === 0 ? (
                     <p> Your Cart is empty lil bro.</p>

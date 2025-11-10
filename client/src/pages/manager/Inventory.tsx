@@ -1,5 +1,4 @@
 import { React } from 'react'
-import StaffHeader from '../../components/StaffHeaderComponents/StaffHeader.tsx'
 
 const page = {
     name: 'Inventory',
@@ -7,9 +6,7 @@ const page = {
 };
 
 function Inventory() {
-    return(
-        <StaffHeader name={page.name}/>
-    );
+	return;
 }
 
 export default Inventory;
