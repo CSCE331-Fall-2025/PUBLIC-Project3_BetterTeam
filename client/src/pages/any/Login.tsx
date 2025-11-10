@@ -24,7 +24,7 @@ function Login() {
     };
 
     return(
-        <div>
+        <div className="login-page-wrapper">
             <StaffHeader name={page.name}/>
             <div className="login-container">
                 <div className="login-card">
@@ -57,6 +57,12 @@ function Login() {
                             Login
                         </button>
                     </form>
+                    <div className="divider">
+                        <span>or</span>
+                    </div>
+                    <button type="button" className="google-login-button" onClick={() => {}}>
+                        Log in with Google
+                    </button>
                     <div className="login-footer">
                         <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
                     </div>
