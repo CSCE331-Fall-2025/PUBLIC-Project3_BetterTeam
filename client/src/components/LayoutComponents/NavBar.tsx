@@ -15,8 +15,8 @@ function NavBar() {
 	const path = useLocation().pathname;
 	
 	const isManager = path.startsWith("/Manager");
-	const isCashier = path.startsWith("/cashier");
-	const isCustomer = path.startsWith("/customer");
+	const isCashier = path.startsWith("/Cashier");
+	const isCustomer = path.startsWith("/Customer");
 
 	// TODO: A logged in Customer & Guest Customer feature *basically* the same links... what to do about that.
 	return (

@@ -19,7 +19,8 @@ export function ManagerLinks() {
 export function CashierLinks() {
 	return (
 		<div>
-			{/*<Link to="/Cashier">Home</Link>*/}
+			<Link to="/Cashier/Home">Home</Link>
+			<Link to="/Cashier/Checkout">Home</Link>
 			{/* <Link to="/Customer/Checkout">Checkout</Link */}
 		</div>
 	);
@@ -28,6 +29,9 @@ export function CashierLinks() {
 export function CustomerLinks() {
 	return (
 		<div>
+			<Link to="/Customer/Home">Home</Link>
+			<Link to="/Customer/Checkout">Checkout</Link>
+			<Link to="/Customer/Profile">Profile</Link>
 			{/*<Link to="/Customer">Home</Link>*/}
 			{/* <Link to="/Customer/Order">Order</Link */}
 			{/* <Link to="/Customer/Profile">Profile</Link */}
