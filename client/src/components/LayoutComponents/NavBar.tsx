@@ -1,7 +1,7 @@
 
 import './NavBar.css';
 
-import { ManagerLinks, CashierLinks, CustomerLinks } from './NavLinks';
+import { ManagerLinks, CashierLinks, CustomerLinks, TempHomeLinks } from './NavLinks';
 import { useLocation } from 'react-router-dom';
 
 
@@ -17,11 +17,13 @@ function NavBar() {
 	const isManager = path.startsWith("/Manager");
 	const isCashier = path.startsWith("/Cashier");
 	const isCustomer = path.startsWith("/Customer");
+	const isHome = path.startsWith("/any");
 
 	// TODO: A logged in Customer & Guest Customer feature *basically* the same links... what to do about that.
 	return (
 		<div>
 			<nav className="navbar">
+				{isHome && <TempHomeLinks />}
 				{isManager && <ManagerLinks />}
 				{isCashier && <CashierLinks />}
 				{isCustomer && <CustomerLinks />}

@@ -10,6 +10,7 @@ interface CustomerCheckoutProps{
 }
 
 function CustomerCheckout({cart, onBack, onClearCart}: CustomerCheckoutProps){
+	console.log(cart);
     const total = cart.reduce((sum, dish) => sum + dish.price, 0);
 
     const handlePlaceOrder = () => {

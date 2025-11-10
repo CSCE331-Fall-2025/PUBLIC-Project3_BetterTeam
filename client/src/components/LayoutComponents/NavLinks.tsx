@@ -3,6 +3,20 @@ import './NavLinks.css';
 
 import { Link } from 'react-router-dom';
 
+export function TempHomeLinks() {
+	return (
+		<div>
+			<Link to="/any/home">Home</Link>
+			<Link to="/Manager/Dashboard">Dashboard</Link>
+			<Link to="/Customer/CustomerHome">CustomerHome</Link>
+			<Link to="/Cashier/CashierHome">CashierHome</Link>
+			<Link to="/any/Login">Login</Link>
+			<Link to="/any/Signup">Sign Up</Link>
+			<Link to="/any/MenuBoard">Menu Board</Link>
+		</div>
+	);
+}
+
 export function ManagerLinks() {
 	// add whatever manager pages:
 	// Ex:
@@ -12,6 +26,7 @@ export function ManagerLinks() {
 			<Link to="/Manager/Dashboard">Dashboard</Link>
 			<Link to="/Manager/EmployeeData">Employee Data</Link>
 			<Link to="/Manager/OrderTrends">Order Trends</Link>
+			<Link to="/Customer/CustomerHome">CustomerHome</Link>
 		</div>
 	);
 }
