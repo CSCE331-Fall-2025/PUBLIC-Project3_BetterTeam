@@ -8,8 +8,6 @@ import { Layout } from './components/LayoutComponents/Layout.tsx';
 
 
 interface RouteCommon {
-  loader?: LoaderFunction;
-  action?: ActionFunction;
   ErrorBoundary?: React.ComponentType<any>;
 }
 
@@ -40,8 +38,6 @@ for (const path of Object.keys(pages)) {
   routes.push({
     path: fileName === "index" ? "/" : `/${normalizedPathName.toLowerCase()}`,
     Element: pages[path].default,
-    loader: pages[path]?.loader as LoaderFunction | undefined,
-    action: pages[path]?.action as ActionFunction | undefined,
     ErrorBoundary: pages[path]?.ErrorBoundary,
   });
 }
@@ -59,16 +55,6 @@ const router = createBrowserRouter([
   }
 ]);
 
-
-/*
-const router = createBrowserRouter(
-  routes.map(({ Element, ErrorBoundary, ...rest }) => ({
-    ...rest,
-    element: <Element />,
-    ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
-  }))
-);
-*/
 
 const App = () => {
 	return <RouterProvider router={router} />

@@ -106,8 +106,8 @@ function CustomerDish({ type, entreeCount = 1, onBack, onAddToCart }: CustomerDi
                 {boxes}
             </div>
             <div className="button-row">
-                <Button name="Cancel" onClick={(e) => onBack()}/>
-                <Button name="Add to Cart" onClick={(e) => onAddToCart(selected)}/>
+                <Button name="Cancel" onClick={() => onBack()}/>
+                <Button name="Add to Cart" onClick={() => onAddToCart(selected)}/>
             </div>
         </div>
     );
