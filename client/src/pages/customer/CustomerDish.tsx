@@ -62,7 +62,6 @@ function CustomerDish({ type, entreeCount = 1, onBack, onAddToCart }: CustomerDi
         });
     };
 
-    let title = '';
     let boxes: React.ReactNode[] = [];
 
     if(type === 'entree'){
