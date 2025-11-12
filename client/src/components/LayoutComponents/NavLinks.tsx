@@ -21,11 +21,11 @@ export function ManagerLinks() {
 	// Ex:
 	// "/manager/<page>
 	return (
-		<div>
+		<div className="nav-links">
 			<Link to="/any/home">Home</Link>
 			<Link to="/Manager/Dashboard">Manager Dashboard</Link>
-			<Link to="/Manager/EmployeeData">Employee Data</Link>
-			<Link to="/Manager/OrderTrends">Order Trends</Link>
+			{/* <Link to="/Manager/EmployeeData">Employee Data</Link>
+			<Link to="/Manager/OrderTrends">Order Trends</Link> */}
 			<Link to="/Customer/CustomerHome">Customer Home</Link>
 			<Link to="/Cashier/CashierHome">Cashier Home</Link>
 		</div>
@@ -34,7 +34,7 @@ export function ManagerLinks() {
 
 export function CashierLinks() {
 	return (
-		<div>
+		<div className="nav-links">
 			<Link to="/any/home">Home</Link>
 			<Link to="/Cashier/CashierHome">Cashier Home</Link>
 			{/* <Link to="/Customer/Checkout">Checkout</Link */}
@@ -44,7 +44,7 @@ export function CashierLinks() {
 
 export function CustomerLinks() {
 	return (
-		<div>
+		<div className="nav-links">
 			<Link to="/any/Home">Home</Link>
 			<Link to="/Customer/CustomerHome">Customer Home</Link>
 			{/*<Link to="/Customer">Home</Link>*/}
