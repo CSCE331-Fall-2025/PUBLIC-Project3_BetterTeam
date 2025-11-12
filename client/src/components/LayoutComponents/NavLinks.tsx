@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 export function TempHomeLinks() {
 	return (
-		<div>
+		<div className="nav-links">
 			<Link to="/any/home">Home</Link>
 			<Link to="/Manager/Dashboard">Manager Dashboard</Link>
 			<Link to="/Customer/CustomerHome">CustomerHome</Link>
