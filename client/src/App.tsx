@@ -1,6 +1,7 @@
 import {
   createBrowserRouter,
   RouterProvider,
+  Navigate
 } from "react-router-dom";
 
 import { Layout } from './components/LayoutComponents/Layout.tsx';
@@ -47,11 +48,17 @@ const router = createBrowserRouter([
   {
     path: "/", 
     element: <Layout />,   // Layout is now the parent
-    children: routes.map(({ Element, ErrorBoundary, ...rest }) => ({
+    children: [
+      {
+        index: true,
+        element: <Navigate to ="/any/home" replace /> // This puts the auto redirect to any/home
+    },
+    ...routes.map(({ Element, ErrorBoundary, ...rest }) => ({
       ...rest,
       element: <Element />,
       ...(ErrorBoundary && { errorElement: <ErrorBoundary /> })
     }))
+  ]
   }
 ]);
 
