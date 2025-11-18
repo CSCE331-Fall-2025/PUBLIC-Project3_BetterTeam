@@ -1,0 +1,21 @@
+.inventory{
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+}
+
+.inventoryChart{
+    display: flex;
+    flex: 1;
+    background-color: whitesmoke;
+    min-width: 0;
+}
+
+.tableContainer{
+    display: flex;
+    flex: 1;
+    color: white;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+}

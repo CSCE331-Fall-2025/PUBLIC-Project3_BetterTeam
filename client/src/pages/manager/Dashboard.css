@@ -1,9 +1,9 @@
-html, body{
+/* html, body{
     margin: 0;
     padding: 0;
     width: 100%;
     color: white;
-}
+} */
 
 .managerHome{
     display: flex;
@@ -11,7 +11,7 @@ html, body{
     width: 100vw;
 }
 
-.chartContainer{
+/* .chartContainer{
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -19,22 +19,7 @@ html, body{
     padding-bottom: 10px;
     flex-grow: 1;
     box-sizing: border-box;
-}
-
-.lineChart{
-    display: flex;
-    flex: 1;
-    background-color: whitesmoke;
-    min-width: 0;
-}
-
-.tableContainer{
-    display: flex;
-    flex: 1;
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 0;
-}
+} */
 
 .buttonContainer{
     display: flex;

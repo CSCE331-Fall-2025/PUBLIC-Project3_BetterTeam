@@ -8,8 +8,8 @@ export function TempHomeLinks() {
 		<div className="nav-links">
 			<Link to="/any/home">Home</Link>
 			<Link to="/Manager/Dashboard">Manager Dashboard</Link>
-			<Link to="/Customer/CustomerHome">CustomerHome</Link>
-			<Link to="/Cashier/CashierHome">CashierHome</Link>
+			<Link to="/Customer/CustomerHome">Customer Home</Link>
+			<Link to="/Cashier/CashierHome">Cashier Home</Link>
 			<Link to="/any/Login">Login</Link>
 			<Link to="/any/MenuBoard">Menu Board</Link>
 		</div>
@@ -24,10 +24,13 @@ export function ManagerLinks() {
 		<div className="nav-links">
 			<Link to="/any/home">Home</Link>
 			<Link to="/Manager/Dashboard">Manager Dashboard</Link>
-			{/* <Link to="/Manager/EmployeeData">Employee Data</Link>
-			<Link to="/Manager/OrderTrends">Order Trends</Link> */}
-			<Link to="/Customer/CustomerHome">Customer Home</Link>
-			<Link to="/Cashier/CashierHome">Cashier Home</Link>
+			<Link to="/Manager/EmployeeData">Employee Data</Link>
+			<Link to="/Manager/Inventory">Inventory</Link>
+			<Link to="/Manager/OrderTrends">Order Trends</Link>
+			<Link to="/any/Kitchen">Kitchen</Link>
+			<Link to="/any/login">Logout</Link>
+			{/* <Link to="/Customer/CustomerHome">Customer Home</Link>
+			<Link to="/Cashier/CashierHome">Cashier Home</Link> */}
 		</div>
 	);
 }
