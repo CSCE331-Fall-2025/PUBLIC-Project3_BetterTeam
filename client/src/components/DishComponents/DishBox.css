@@ -1,5 +1,5 @@
 .dish-box {
-    background-color: #BB2719;
+    background-color: var(--primary-color);
     padding: 0.5rem;
     border-radius: 0.75rem;
     overflow-y: auto;

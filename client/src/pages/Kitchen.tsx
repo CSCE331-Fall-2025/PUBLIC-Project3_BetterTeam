@@ -2,6 +2,7 @@
 import type {OrderCardProps} from '../components/KitchenComponents/OrderCard.tsx'
 import {OrderBox} from '../components/KitchenComponents/OrderBox.tsx'
 import type { Dish } from './customer/CustomerDish';
+import './Kitchen.css';
 
 type Order = OrderCardProps;
 interface KitchenProps{
