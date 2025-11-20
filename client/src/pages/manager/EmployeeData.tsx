@@ -31,7 +31,7 @@ function EmployeeData() {
         const fetchEmployees = async () => {
             try {
                 // sends a fetch request to the backend route
-                const response = await fetch('http://localhost:4000/api/employee');
+                const response = await fetch('http://localhost:4000/api/manager/employee');
 
                 if(!response.ok){
                     throw new Error('Failed to fetch employees');

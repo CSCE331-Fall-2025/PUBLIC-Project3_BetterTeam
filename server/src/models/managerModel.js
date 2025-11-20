@@ -8,3 +8,17 @@ export async function getAllEmployees() {
     );
     return result.rows;
 }
+
+export async function getAllInventory() {
+    const result = await pool.query(
+        'SELECT * FROM inventory;'
+    );
+    return result.rows;
+}
+
+export async function getAllDishes() {
+    const result = await pool.query(
+        'SELECT * FROM dish;'
+    );
+    return result.rows;
+}
