@@ -1,0 +1,28 @@
+.order-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(212, 39, 117);
+    border-radius: 0.5rem;
+    padding: 0.25rem;
+    box-shadow: 0 1px 3px rgba(43, 197, 74, 0.1);
+    cursor: pointer;
+    transition: box-shadow 0.2s ease-in-out;
+    width: 24vw;
+    height: auto;
+    margin: 1 auto;
+}
+
+.order-card-title {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    margin: 0;
+}
+
+.order-card-text {
+    font-size: 0.65rem;
+    color: white;
+    margin: 0;
+}
