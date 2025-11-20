@@ -29,7 +29,7 @@ button {
     border: none;
     border-radius: 8px;
     background-color: var(--primary-color);
-    color: white;
+    color: var(--defwhite);
     font-size: 1.2rem;
     min-width: 160px;
     transition: transform 0.15s ease-in-out;

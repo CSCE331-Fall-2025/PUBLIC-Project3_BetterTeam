@@ -15,7 +15,7 @@
 }
 
 .receipt-section {
-  background-color: white;
+  background-color: var(--defwhite);
   color: var(--defblack);
   border-radius: 1rem;
   padding: 1rem 2rem;

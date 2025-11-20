@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: var(--secondary-color);
+    background-color: var(--defwhite);
     border-radius: 0.5rem;
     padding: 0.25rem;
     box-shadow: 0 1px 3px rgba(43, 197, 74, 0.1);
@@ -14,15 +14,15 @@
 }
 
 .order-card-title {
-    font-size: 0.65rem;
+    font-size: 0.85rem;
     font-weight: 600;
     text-align: center;
-    color: rgb(255, 255, 255);
+    color: var(--defblack);
     margin: 0;
 }
 
 .order-card-text {
     font-size: 0.65rem;
-    color: white;
+    color: var(--defblack);
     margin: 0;
 }
