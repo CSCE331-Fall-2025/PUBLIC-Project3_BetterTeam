@@ -1,5 +1,5 @@
 .navbar {
-	background: #BB2719;
+	background: var(--primary-color);
 	color: white;
 	display: flex;
 	padding: 1rem;

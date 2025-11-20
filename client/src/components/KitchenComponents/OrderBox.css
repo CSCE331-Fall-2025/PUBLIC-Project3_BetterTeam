@@ -1,5 +1,5 @@
 .order-box {
-    background-color: #6761e9;
+    background-color: var(--primary-color);
     padding: 0.5rem;
     border-radius: 0.75rem;
     overflow-y: auto;
@@ -10,13 +10,4 @@
     font-size: 1.25rem;
     font-weight: bold;
     text-align: center;
-}
-
-.slots {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
 }

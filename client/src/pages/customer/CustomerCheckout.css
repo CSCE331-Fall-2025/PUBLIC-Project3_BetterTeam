@@ -6,7 +6,7 @@
 }
 
 .receipt {
-    color: black;
+    color: var(--defblack);
     background: white;
     padding: 1.5rem;
     border-radius: 10px;
