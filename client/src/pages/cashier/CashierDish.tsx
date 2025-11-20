@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
 import Button from "../../components/ButtonComponents/Button.tsx";
-import { useLocation, useNavigate } from 'react-router-dom';
-import './CustomerDish.css';
 
 export type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
 
-export interface Dish{
+export interface Dish {
     name: string;
     price: number;
     imageUrl?: string;
@@ -15,7 +14,7 @@ export interface Dish{
 type SelectedDish = Dish & { _slot?: string };
 
 interface LocationState {
-    dishType: DishType;
+    type: DishType;
     entreeCount?: number;
     cart: Dish[];
 }
@@ -43,39 +42,40 @@ const allApps: Dish[] = [
   { name: "Veggie Spring Roll", price: 3, imageUrl: "../../../assets/veggieroll.PNG" },
 ];
 
-function CustomerDish(){
-    const location = useLocation();
+function CashierDish() {
     const navigate = useNavigate();
-    const { dishType, entreeCount = 1, cart } = location.state as LocationState;
+    const location = useLocation();
+    const { type, entreeCount = 1, cart } = (location.state as LocationState) || {};
 
     const [selected, setSelected] = useState<SelectedDish[]>([]);
 
     const handleSelect = (dish: Dish, slot?: string) => {
         setSelected(prev => {
             const isSelected = prev.find(d => d.name === dish.name && d._slot === slot);
-            if(isSelected){
-                return prev.filter(d => !(d.name === dish.name && d._slot === slot));
-            }
-            if(slot){
+            if (isSelected) return prev.filter(d => !(d.name === dish.name && d._slot === slot));
+            
+            if (slot) {
                 const filtered = prev.filter(d => d._slot !== slot);
                 return [...filtered, { ...dish, _slot: slot }];
             }
+
             const alreadySelected = prev.find(d => d.name === dish.name);
             return alreadySelected ? prev.filter(d => d.name !== dish.name) : [...prev, { ...dish }];
         });
     };
 
     const handleAddToCart = () => {
-        navigate('/Customer/CustomerHome', { state: { cart: [...cart, ...selected] }});
+        const newCart = [...cart, ...selected];
+        navigate('/Cashier/CashierHome', { state: { cart: newCart } });
     };
 
-    const handleCancel = () => {
-        navigate('/Customer/CustomerHome', { state: { cart } });
+    const handleBack = () => {
+        navigate('/Cashier/CashierHome', { state: { cart } });
     };
 
     let boxes: React.ReactNode[] = [];
 
-    if(dishType === 'entree'){
+    if (type === 'entree') {
         const entreeBoxes = Array.from({ length: entreeCount }).map((_, i) => (
             <DishBox
                 key={`entree-${i}`}
@@ -97,48 +97,23 @@ function CustomerDish(){
         );
 
         boxes = [...entreeBoxes, sideBox];
-    } else if (dishType === 'appetizer'){
-        boxes = [
-            <DishBox
-                key="apps"
-                title="Appetizers"
-                dishes={allApps}
-                onSelect={(dish) => handleSelect(dish, 'App')}
-                selectedDishes={selected.filter(d => d._slot === 'App')}
-            />
-        ];
-    } else if (dishType === 'side'){
-        boxes = [
-            <DishBox
-                key="sides"
-                title="Sides"
-                dishes={allSides}
-                onSelect={(dish) => handleSelect(dish, 'Side')}
-                selectedDishes={selected.filter(d => d._slot === 'Side')}
-            />
-        ];
-    } else if (dishType === 'drink'){
-        boxes = [
-            <DishBox
-                key="drinks"
-                title="Drinks"
-                dishes={allDrinks}
-                onSelect={(dish) => handleSelect(dish, 'Drink')}
-                selectedDishes={selected.filter(d => d._slot === 'Drink')}
-            />
-        ];
+    } else if (type === 'appetizer') {
+        boxes = [<DishBox key="apps" title="Appetizers" dishes={allApps} onSelect={(dish) => handleSelect(dish, 'App')} selectedDishes={selected.filter(d => d._slot === 'App')} />];
+    } else if (type === 'side') {
+        boxes = [<DishBox key="sides" title="Sides" dishes={allSides} onSelect={(dish) => handleSelect(dish, 'Side')} selectedDishes={selected.filter(d => d._slot === 'Side')} />];
+    } else if (type === 'drink') {
+        boxes = [<DishBox key="drinks" title="Drinks" dishes={allDrinks} onSelect={(dish) => handleSelect(dish, 'Drink')} selectedDishes={selected.filter(d => d._slot === 'Drink')} />];
     }
-    return(
+
+    return (
         <div className="meal-builder-wrapper">
-            <div className="dish-box-row">
-                {boxes}
-            </div>
+            <div className="dish-box-row">{boxes}</div>
             <div className="button-row">
-                <Button name="Cancel" onClick={handleCancel}/>
-                <Button name="Add to Cart" onClick={handleAddToCart}/>
+                <Button name="Cancel" onClick={handleBack} />
+                <Button name="Add to Cart" onClick={handleAddToCart} />
             </div>
         </div>
     );
 }
 
-export default CustomerDish;
+export default CashierDish;
