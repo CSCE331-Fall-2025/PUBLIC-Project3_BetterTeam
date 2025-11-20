@@ -1,58 +1,47 @@
-import { useState} from 'react';
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '../../components/ButtonComponents/Button.tsx';
-import CustomerDish from './CustomerDish';
-import type { Dish } from './CustomerDish';
-import CustomerCheckout from './CustomerCheckout';
+import type { Dish, DishType } from './CustomerDish';
 import './CustomerHome.css';
 
-type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
+interface LocationState {
+  cart?: Dish[];
+}
 
 function CustomerHome() {
-    const [page, setPage] = useState<'home' | 'dish' | 'checkout'>('home');
-    const [dishType, setDishType] = useState<DishType>('entree');
-    const [entreeCount, setEntreeCount] = useState(1);
-    const [cart, setCart] = useState<Dish[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as LocationState;
+  const cart: Dish[] = state?.cart ?? [];
 
-    const handleAddToCart = (selectedDishes: Dish[]) => {
-        setCart(prev => [...prev, ...selectedDishes]);
-        setPage('home');
-    };
+  const total = cart.reduce((sum, dish) => sum + dish.price, 0);
 
-    if(page == 'dish'){
-        return(
-            <CustomerDish
-                type={dishType}
-                entreeCount={entreeCount}
-                onBack={() => setPage('home')}
-                onAddToCart = {handleAddToCart}
-            />
-        );
-    }
+  const goToDishPage = (dishType: DishType, entreeCount?: number) => {
+    navigate('/Customer/CustomerDish', {
+      state: { cart, dishType, entreeCount },
+    });
+  };
 
-    if(page == 'checkout'){
-        return(
-            <CustomerCheckout 
-                cart={cart}
-                onBack={() => setPage('home')}
-                onClearCart={() => setCart([])}/>
-        );
-    }
-    return(
-        <div className="customer-home">
-            <div className="button-container">
-                <Button name="Bowl" onClick={() => { setDishType('entree'); setEntreeCount(1); setPage('dish'); }} />
-                <Button name="Plate" onClick={() => { setDishType('entree'); setEntreeCount(2); setPage('dish'); }} />
-                <Button name="Big Plate" onClick={() => { setDishType('entree'); setEntreeCount(3); setPage('dish'); }} />
-                <Button name="Appetizer" onClick={() => { setDishType('appetizer');  setPage('dish'); }} />
-                <Button name="Sides" onClick={() => { setDishType('side'); setPage('dish'); }} />
-                <Button name="Drinks" onClick={() => { setDishType('drink'); setPage('dish'); }} />
-            </div>
+  const goToCheckout = () => {
+    navigate('/Customer/CustomerCheckout', { state: { cart } });
+  };
 
-            <div className="checkout-button">
-                <Button name="Checkout" onClick={() => setPage('checkout')} />
-            </div>
+  return (
+    <div className="customer-home">
+        <div className="button-container">
+            <Button name="Bowl" onClick={() => goToDishPage('entree', 1)} />
+            <Button name="Plate" onClick={() => goToDishPage('entree', 2)} />
+            <Button name="Big Plate" onClick={() => goToDishPage('entree', 3)} />
+            <Button name="Appetizer" onClick={() => goToDishPage('appetizer')} />
+            <Button name="Sides" onClick={() => goToDishPage('side')} />
+            <Button name="Drinks" onClick={() => goToDishPage('drink')} />
         </div>
-    );
+
+        <div className="checkout-buttons">
+            <Button name="Checkout" onClick={goToCheckout} />
+        </div>
+    </div>
+  );
 }
 
 export default CustomerHome;
