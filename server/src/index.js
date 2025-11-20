@@ -5,6 +5,7 @@ import { pool } from "./db.js";
 
 // IMPORT THE ROUTE
 import exampleRoute from "./routes/exampleRoute.js";
+import employeeRoutes from "./routes/employeeRoutes.js";
 
 const app = express();
 
@@ -30,7 +31,7 @@ pool.connect()
 // .use(<URL_custom_BASE_route>, <actual_router>)
 app.use("/api/example", exampleRoute);
 
-//app.use("/api/employee", employeeRoutes);
+app.use("/api/employee", employeeRoutes);
 //app.use("/api/manager", managerRoutes);
 //app.use("/api/something", somethingRoutes);
 

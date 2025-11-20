@@ -1,49 +1,80 @@
-// import { useState } from 'react'
-// import Button from '../../components/ButtonComponents/Button.tsx'
+import { useState, useEffect } from 'react'
 import Table, { type ColumnDefinition } from '../../components/TableComponents/Table.tsx'
 import 'chart.js/auto'
-import { Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 import './EmployeeData.css'
 
-const employeeData = {
-    labels: ['Michael','Jackson','Sepguy'],
-    datasets: [
-        {
-            label: 'Sales',
-            data: [150,0,750],
-            borderColor: 'rgba(75, 75, 75, 1)',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            borderWidth: 2,
-        },
-    ],
+interface Employee {
+    employee_id: number;
+    name: string;
+    ismanager: boolean;
+    wage: number;
 }
 
-interface Employee {
-    id: number;
-    name: string;
-    manager: boolean;
+interface ChartData {
+    labels: string[];
+    datasets: {
+        label: string;
+        data: number[];
+        borderColor: string;
+        backgroundColor: string;
+        borderWidth: number;
+    }[];
 }
 
 function EmployeeData() {
-	const employeeTableData: Employee[] = [
-        { id: 1, name: 'Michael', manager: true },
-        { id: 2, name: 'Jackson', manager: false },
-        { id: 3, name: 'Sepguy', manager: true },
-    ];
 
-	const employeeColumns: ColumnDefinition<Employee>[] = [
-        {header: 'Employee Id', accessor: (e) => e.id },
+    const [employees, setEmployees] = useState<Employee[]>([]);
+
+    // hook that fetches the data
+    useEffect(() => {
+        const fetchEmployees = async () => {
+            try {
+                // sends a fetch request to the backend route
+                const response = await fetch('http://localhost:4000/api/employee');
+
+                if(!response.ok){
+                    throw new Error('Failed to fetch employees');
+                }
+
+                // this parses the json and converts it into an employee array
+                const data:Employee[] = await response.json();
+
+                setEmployees(data);
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchEmployees();
+    }, []);
+
+    const employeeChartData: ChartData = {
+        labels: employees.map(e => e.name),
+        datasets: [{
+            label: 'Employee Wages',
+            data: employees.map(e => e.wage),
+            borderColor: 'rgba(75, 75, 75, 1)',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            borderWidth: 2,
+        },],
+    };
+
+    const employeeColumns: ColumnDefinition<Employee>[] = [
+        {header: 'Employee Id', accessor: (e) => e.employee_id },
         {header: 'Employee Name', accessor: (e) => e.name },
-        {header: 'Is Manager?', accessor: (e) => (e.manager ? 'Yes' : 'No') },
+        {header: 'Is Manager?', accessor: (e) => (e.ismanager ? 'Yes' : 'No') },
+        {header: 'Wage', accessor: (e) => e.wage},
     ];
 
 	return(
 		<div className='employeeData'>
 			<div className='employeeChart'>
-				<Line data={employeeData} />
+				<Bar data={employeeChartData} />
 			</div>
 			<div className='tableContainer'>
-				<Table data={employeeTableData} columns={employeeColumns}/>
+				<Table data={employees} columns={employeeColumns}/>
 			</div>
 		</div>
 	);
