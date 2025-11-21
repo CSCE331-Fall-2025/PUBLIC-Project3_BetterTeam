@@ -6,6 +6,7 @@ import { pool } from "./db.js";
 // IMPORT THE ROUTE
 import exampleRoute from "./routes/exampleRoute.js";
 import managerRoutes from "./routes/managerRoutes.js";
+import customerRoute from "./routes/customerRoute.js";
 
 const app = express();
 
@@ -34,6 +35,9 @@ app.use("/api/example", exampleRoute);
 // app.use("/api/employee", employeeRoutes);
 app.use("/api/manager", managerRoutes);
 //app.use("/api/something", somethingRoutes);
+app.use("/api/dishes", customerRoute);
+
+
 
 // To test your route/controller/model without have to issue an http request from the frontend/client, you could:
 // 	- type the request into a browser: `https://localhost:4000/api/example/"
@@ -44,7 +48,7 @@ app.use("/api/manager", managerRoutes);
 // Start server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log("Server listening on port ${PORT}");
+  console.log(`Server listening on port ${PORT}`);
 }); 
 
 /*
