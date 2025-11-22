@@ -1,11 +1,7 @@
 import React from "react";
 import { DishCard } from "./DishCard";
+import type { Dish } from "../../pages/customer/CustomerDish.tsx";
 import './DishBox.css';
-
-interface Dish {
-    name: string;
-    price: number;
-}
 
 interface DishBoxProps {
     title?: string;
@@ -19,9 +15,10 @@ export const DishBox: React.FC<DishBoxProps> = ({ title, dishes, onSelect, selec
         <div className="dish-box">
             {title && <h2 className="dish-box-title">{title}</h2>}
             <div className="dish-box-grid">
-                {dishes.map((dish, index) => (
+                {dishes.map((dish) => (
                     <DishCard
-                        key={index}
+                        key={dish.dish_id}
+                        dish_id={dish.dish_id}
                         name={dish.name}
                         price={dish.price}
                         onSelect={() => onSelect?.(dish)}

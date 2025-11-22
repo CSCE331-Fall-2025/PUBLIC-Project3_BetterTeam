@@ -7,6 +7,7 @@ import './CustomerDish.css';
 export type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
 
 export interface Dish {
+    dish_id: number;
     name: string;
     price: number;
     type?: string;
@@ -61,10 +62,10 @@ function CustomerDish() {
 
     const handleSelect = (dish: Dish, slot?: string) => {
         setSelected(prev => {
-            const isSelected = prev.find(d => d.name === dish.name && d._slot === slot);
+            const isSelected = prev.find(d => d.dish_id === dish.dish_id && d._slot === slot);
 
             if (isSelected) {
-                return prev.filter(d => !(d.name === dish.name && d._slot === slot));
+                return prev.filter(d => !(d.dish_id === dish.dish_id && d._slot === slot));
             }
 
             if (slot) {
@@ -72,9 +73,9 @@ function CustomerDish() {
                 return [...filtered, { ...dish, _slot: slot }];
             }
 
-            const alreadySelected = prev.find(d => d.name === dish.name);
+            const alreadySelected = prev.find(d => d.dish_id === dish.dish_id);
             return alreadySelected
-                ? prev.filter(d => d.name !== dish.name)
+                ? prev.filter(d => d.dish_id !== dish.dish_id)
                 : [...prev, { ...dish }];
         });
     };

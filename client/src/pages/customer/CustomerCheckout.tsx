@@ -14,11 +14,24 @@ function CustomerCheckout(){
 
     const total = cart.reduce((sum, dish) => sum + dish.price, 0);
 
-    const handlePlaceOrder = () => {
-        alert('Order Placed!');
-        navigate('/Customer/CustomerHome', { state: { cart: [] } });
+    const handlePlaceOrder = async () => {
+        try{
+            await fetch("http://localhost:4000/api/transactions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    cart,
+                    fk_customer: 11,
+                    fk_employee: 15
+                }),
+            });
 
-        // TODO make transactionDish update after the model and controller stuff
+            alert("Order Placed!");
+            navigate("/Customer/CustomerHome", { state: { cart: [] } });
+        } catch(err){
+            console.error(err);
+            alert("Failed to place order");
+        }
     };
 
     const handleCancelOrder = () => {

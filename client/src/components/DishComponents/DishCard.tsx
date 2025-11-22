@@ -2,13 +2,14 @@ import React from "react";
 import './DishCard.css';
 
 interface DishCardProps {
+    dish_id: number;
     name: string;
     price: number;
     onSelect?: () => void;
     isSelected?: boolean;
 }
 
-export const DishCard: React.FC<DishCardProps> = ({ name, price, onSelect, isSelected }) => {
+export const DishCard: React.FC<DishCardProps> = ({ dish_id, name, price, onSelect, isSelected }) => {
     return (
         <div 
             className={`dish-card ${isSelected ? "selected" : ""}`} 
