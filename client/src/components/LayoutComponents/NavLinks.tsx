@@ -27,7 +27,7 @@ export function ManagerLinks() {
 			<Link to="/Manager/EmployeeData">Employee Data</Link>
 			<Link to="/Manager/Inventory">Inventory</Link>
 			<Link to="/Manager/OrderTrends">Order Trends</Link>
-			<Link to="/any/Kitchen">Kitchen</Link>
+			<Link to="/Kitchen">Kitchen</Link>
 			<Link to="/any/login">Logout</Link>
 			{/* <Link to="/Customer/CustomerHome">Customer Home</Link>
 			<Link to="/Cashier/CashierHome">Cashier Home</Link> */}
