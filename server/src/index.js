@@ -5,6 +5,7 @@ import { pool } from "./db.js";
 
 // IMPORT THE ROUTE
 import exampleRoute from "./routes/exampleRoute.js";
+import userRoute from "./routes/userRoute.js";
 import managerRoutes from "./routes/managerRoutes.js";
 import customerRoute from "./routes/customerRoute.js";
 
@@ -31,6 +32,7 @@ pool.connect()
 
 // .use(<URL_custom_BASE_route>, <actual_router>)
 app.use("/api/example", exampleRoute);
+app.use("/api/users", userRoute);
 
 // app.use("/api/employee", employeeRoutes);
 app.use("/api/manager", managerRoutes);
