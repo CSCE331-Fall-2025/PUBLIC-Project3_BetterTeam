@@ -1,4 +1,4 @@
-import { getAllDishes, getDishesByType } from "../models/customerModel.js";
+import { getAllDishes, getDishesByType } from "../models/dishModel.js";
 
 export async function fetchAllDishes(req, res){
     try{

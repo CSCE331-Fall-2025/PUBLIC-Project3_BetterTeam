@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { fetchAllDishes, fetchDishesByType } from "../controllers/customerController.js";
+import { fetchAllDishes, fetchDishesByType } from "../controllers/dishController.js";
 
 const router = Router();
 
