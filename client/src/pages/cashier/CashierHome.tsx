@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../components/ButtonComponents/Button.tsx';
 import type { Dish } from './CashierDish';
@@ -16,21 +15,37 @@ function CashierHome() {
   const state = location.state as LocationState;
   const cart: Dish[] = state?.cart || [];
 
-  const total = cart.reduce((sum, dish) => sum + dish.price, 0);
+  const total = cart.reduce((sum, d) => sum + d.price, 0);
 
   const goToDishPage = (type: DishType, entreeCount = 1) => {
     navigate('/Cashier/CashierDish', { state: { type, entreeCount, cart } });
   };
 
   const handleClearCart = () => {
-    if (window.confirm('Are you sure you want to cancel your order?')) {
+    if (window.confirm("Cancel this order?")) {
       navigate('/Cashier/CashierHome', { state: { cart: [] } });
     }
   };
 
-  const handlePlaceOrder = () => {
-    alert('Order placed!');
-    navigate('/Cashier/CashierHome', { state: { cart: [] } });
+  const handlePlaceOrder = async () => {
+    try {
+      await fetch("http://localhost:4000/api/transactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cart,
+          fk_customer: 11,
+          fk_employee: 15
+        }),
+      });
+
+      alert("Order placed!");
+      navigate('/Cashier/CashierHome', { state: { cart: [] } });
+
+    } catch (err) {
+      console.error(err);
+      alert("Failed to place order.");
+    }
   };
 
   return (
@@ -46,6 +61,7 @@ function CashierHome() {
 
       <div className="receipt-section">
         <h2>Current Order</h2>
+
         {cart.length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
@@ -53,7 +69,7 @@ function CashierHome() {
             <ul>
               {cart.map((dish, i) => (
                 <li key={i}>
-                  <span>{dish.name}</span> - <span>${dish.price.toFixed(2)}</span>
+                  <span>{dish.name}</span> - ${dish.price.toFixed(2)}
                 </li>
               ))}
             </ul>
