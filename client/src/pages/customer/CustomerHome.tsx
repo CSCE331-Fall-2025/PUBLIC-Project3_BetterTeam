@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '../../components/ButtonComponents/Button.tsx';
 import type { Dish, DishType } from './CustomerDish';
@@ -13,8 +12,6 @@ function CustomerHome() {
   const location = useLocation();
   const state = location.state as LocationState;
   const cart: Dish[] = state?.cart ?? [];
-
-  const total = cart.reduce((sum, dish) => sum + dish.price, 0);
 
   const goToDishPage = (dishType: DishType, entreeCount?: number) => {
     navigate('/Customer/CustomerDish', {
