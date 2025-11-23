@@ -6,7 +6,10 @@ import { pool } from "./db.js";
 // IMPORT THE ROUTE
 import exampleRoute from "./routes/exampleRoute.js";
 import userRoute from "./routes/userRoute.js";
-import managerRoutes from "./routes/managerRoutes.js";
+import managerRoute from "./routes/managerRoute.js";
+import managerDishRoute from "./routes/managerDishRoute.js";
+import managerEmployeeRoute from "./routes/managerEmployeeRoute.js";
+import managerInventoryRoute from "./routes/managerInventoryRoute.js";
 import dishRoute from "./routes/dishRoute.js";
 import transactionRoute from "./routes/transactionRoute.js"
 
@@ -34,12 +37,13 @@ pool.connect()
 // .use(<URL_custom_BASE_route>, <actual_router>)
 app.use("/api/example", exampleRoute);
 app.use("/api/users", userRoute);
-
-// app.use("/api/employee", employeeRoutes);
-app.use("/api/manager", managerRoutes);
-//app.use("/api/something", somethingRoutes);
+app.use("/api/manager", managerRoute);
+app.use("/api/manager/dish", managerDishRoute);
+app.use("/api/manager/employee", managerEmployeeRoute);
+app.use("/api/manager/inventory", managerInventoryRoute);
 app.use("/api/dishes", dishRoute);
 app.use("/api/transactions", transactionRoute);
+//app.use("/api/something", somethingRoutes);
 
 
 

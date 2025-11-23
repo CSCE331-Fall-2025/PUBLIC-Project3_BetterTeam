@@ -19,3 +19,11 @@
     width: 100%;
     min-width: 0;
 }
+
+.editContainer{
+    padding-bottom: 50px;
+}
+
+.addContainer{
+    padding-top: 50px;
+}
