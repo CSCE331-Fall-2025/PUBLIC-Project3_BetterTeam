@@ -1,4 +1,5 @@
 import { getAllDishes, getDishesByType } from "../models/dishModel.js";
+import { getIngredientsForDish } from "../models/inventoryModel.js";
 
 export async function fetchAllDishes(req, res){
     try{
@@ -9,6 +10,7 @@ export async function fetchAllDishes(req, res){
         res.status(500).json({ error: "Failed to load dishes" });
     }
 }
+
 export async function fetchDishesByType(req, res) {
     try {
         let { type } = req.params;
@@ -25,7 +27,7 @@ export async function fetchDishesByType(req, res) {
             return lowered === "app" ? "appetizer" : lowered;
         };
 
-        const normalized = dishes.map(d => ({
+        const normalized = dishes.map((d) => ({
             ...d,
             type: normalizeType(d.type)
         }));
@@ -35,5 +37,20 @@ export async function fetchDishesByType(req, res) {
     } catch (err) {
         console.error("Error fetching dishes:", err);
         res.status(500).json({ error: "Failed to fetch dishes" });
+    }
+}
+
+export async function fetchIngredientsForDish(req, res){
+    try{
+        const { dishId } = req.params;
+        const rows= await getIngredientsForDish(dishId);
+        const ingredients = rows.map((row) => ({
+            inventory_id: row.inventory_id,
+            name: row.item
+        }));
+        res.json(ingredients);
+    } catch(err){
+        console.error("Error fetching ingredients:", err);
+        res.status(500).json({ error: "Failed to fetch ingredients" });
     }
 }
