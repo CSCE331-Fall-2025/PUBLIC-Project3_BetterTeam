@@ -22,3 +22,11 @@ export async function getAllDishes() {
     );
     return result.rows;
 }
+
+export async function updateEmployee(id, name, ismanager, wage){
+    const result = await pool.query(
+        'UPDATE employee SET name = $1, ismanager = $2, wage = $3 WHERE employee_id = $4 RETURNING *;',
+        [name, ismanager, wage, id]
+    );
+    return result.rows[0];
+}
