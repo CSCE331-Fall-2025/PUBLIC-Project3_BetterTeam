@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
 import Button from "../../components/ButtonComponents/Button.tsx";
+import type { IngredientOption, CustomLevel, CustomizationChoice } from '../../components/DishComponents/DishCard.tsx';
 
 export type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
 
@@ -10,6 +11,7 @@ export interface Dish {
     name: string;
     price: number;
     type?: string;
+    customization?: Record<number, CustomLevel>;
 }
 
 type SelectedDish = Dish & { _slot?: string };
@@ -26,49 +28,97 @@ function CashierDish(){
     const { type, entreeCount = 1, cart } = (location.state as LocationState) || {};
     const [selected, setSelected] = useState<SelectedDish[]>([]);
     const [dishes, setDishes] = useState<Dish[]>([]);
+    const [ingredientsByDish, setIngredientsByDish] = useState<Record<number, IngredientOption[]>>({});
+    const [customization, setCustomization] = useState<Record<number, Record<number, CustomLevel>>>({});
 
     useEffect(() => {
-        async function loadDishes(){
+        async function loadDishesAndIngredients(){
             try{
+                let loadedDishes: Dish[] = [];
+
                 if(type === "entree"){
                     const entreeRes = await fetch("http://localhost:4000/api/dishes/entree");
                     const entreeData = await entreeRes.json();
                     const sideRes = await fetch("http://localhost:4000/api/dishes/side");
                     const sideData = await sideRes.json();
 
-                    setDishes([...entreeData, ...sideData]);
+                    loadedDishes = [...entreeData, ...sideData];
                 } else {
                     const res = await fetch(`http://localhost:4000/api/dishes/${type}`);
                     const data = await res.json();
-                    setDishes(data);
+                    loadedDishes = data;
                 }
+
+                setDishes(loadedDishes);
+                setSelected([]);
+
+                const ingredientMap: Record<number, IngredientOption[]> = {};
+                await Promise.all(
+                    loadedDishes.map(async (dish) => {
+                        try {
+                            const res = await fetch(
+                                `http://localhost:4000/api/dishes/${dish.dish_id}/ingredients`
+                            );
+                            if(!res.ok) return;
+                            const ingData: IngredientOption[] = await res.json();
+                            ingredientMap[dish.dish_id] = ingData;
+                        } catch (err) {
+                            console.error(
+                                `Failed to load ingredients for dish ${dish.dish_id}:`,
+                                err
+                            );
+                        }
+                    })
+                );
+                setIngredientsByDish(ingredientMap);
+                setCustomization({});
             } catch(err){
                 console.error("Failed to load dishes:", err);
             }
         }
-        loadDishes();
-        setSelected([]);
+        loadDishesAndIngredients();
     }, [type]);
 
     const handleSelect = (dish: Dish, slot?: string) => {
         setSelected(prev => {
-            const isSelected = prev.find(d => d.dish_id === dish.dish_id && d._slot === slot);
+            const isSelected = prev.find((d) => d.dish_id === dish.dish_id && d._slot === slot);
 
             if(isSelected){
-                return prev.filter(d => !(d.dish_id === dish.dish_id && d._slot === slot));
+                return prev.filter((d)=> !(d.dish_id === dish.dish_id && d._slot === slot));
             }
             if(slot){
-                const filtered = prev.filter(d => d._slot !== slot);
+                const filtered = prev.filter((d) => d._slot !== slot);
                 return [...filtered, { ...dish, _slot: slot }];
             }
 
-            const already = prev.find(d => d.dish_id === dish.dish_id);
-            return already ? prev.filter(d => d.dish_id !== dish.dish_id) : [...prev, { ...dish }];
+            const already = prev.find((d) => d.dish_id === dish.dish_id);
+            return already ? prev.filter((d) => d.dish_id !== dish.dish_id) : [...prev, { ...dish }];
+        });
+    };
+
+
+    const handleCustomizeChange = (
+        dish_id: number,
+        choice: CustomizationChoice
+    ) => {
+        setCustomization((prev) => {
+            const prevDish = prev[dish_id] || {};
+            return {
+                ...prev,
+                [dish_id]: {
+                    ...prevDish,
+                    [choice.inventory_id]: choice.level,
+                },
+            };
         });
     };
 
     const handleAddToCart = () => {
-        const newCart = [...cart, ...selected];
+        const selectedWithCustomization: Dish[] = selected.map((d) => ({
+            ...d,
+            customization: customization[d.dish_id] || {},
+        }));
+        const newCart = [...cart, ...selectedWithCustomization];
         navigate('/Cashier/CashierHome', { state: { cart: newCart } });
     };
 
@@ -81,9 +131,12 @@ function CashierDish(){
             <DishBox
                 key={`entree-${i}`}
                 title={`Entree ${i+1}`}
-                dishes={dishes.filter(d => d.type === "entree")}
+                dishes={dishes.filter((d) => d.type === "entree")}
                 onSelect={(dish) => handleSelect(dish, `Entree ${i + 1}`)}
-                selectedDishes={selected.filter(d => d._slot === `Entree ${i + 1}`)}
+                selectedDishes={selected.filter((d) => d._slot === `Entree ${i + 1}`)}
+                ingredientsByDish={ingredientsByDish}
+                customization={customization}
+                onCustomizeChange={handleCustomizeChange}
             />
         ));
 
@@ -91,9 +144,12 @@ function CashierDish(){
             <DishBox
                 key="side"
                 title="Choose Your Side"
-                dishes={dishes.filter(d => d.type === "side")}
+                dishes={dishes.filter((d) => d.type === "side")}
                 onSelect={(dish) => handleSelect(dish, 'Side')}
-                selectedDishes={selected.filter(d => d._slot === 'Side')}
+                selectedDishes={selected.filter((d) => d._slot === 'Side')}
+                ingredientsByDish={ingredientsByDish}
+                customization={customization}
+                onCustomizeChange={handleCustomizeChange}
             />
         );
 
@@ -105,8 +161,11 @@ function CashierDish(){
                 title={type.charAt(0).toUpperCase() + type.slice(1)}
                 dishes={dishes}
                 onSelect={(dish) => handleSelect(dish, type)}
-                selectedDishes={selected.filter(d => d._slot === type)}
-            />
+                selectedDishes={selected.filter((d) => d._slot === type)}
+                ingredientsByDish={ingredientsByDish}
+                customization={customization}
+                onCustomizeChange={handleCustomizeChange}
+            />,
         ];
     }
 

@@ -25,7 +25,17 @@ export async function createTransaction(req, res){
 
             const ingredients =  await getInventoryForDish(dish.dish_id);
             for(const item of ingredients){
-                await decrementInventory(item.fk_inventory);
+                const invId = item.fk_inventory;
+                const customLevels = dish.customization || {};
+                const level = customLevels[invId] || "normal";
+                
+                let decrementBy = 1;
+                if(level === "none") decrementBy = 0;
+                else if (level === "extra") decrementBy = 2;
+
+                if(decrementBy > 0){
+                    await decrementInventory(invId, decrementBy);
+                }
             }
         }
 
