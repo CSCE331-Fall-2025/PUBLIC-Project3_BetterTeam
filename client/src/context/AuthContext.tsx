@@ -4,13 +4,14 @@
  * Attempting to access a page will first authenticate the user and then determine whether or not they will have access. 
 */
 
-import React, {
+import {
   createContext,
   useContext,
   useEffect,
   useState,
-  ReactNode,
 } from "react";
+
+import type { ReactNode } from "react";
 
 export type Role = "guest" | "customer" | "cashier" | "manager";
 
