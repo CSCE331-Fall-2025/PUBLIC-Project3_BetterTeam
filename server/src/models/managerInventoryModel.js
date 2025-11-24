@@ -27,6 +27,10 @@ export async function updateInventory(id, item, current_inventory, target_invent
 }
 
 export async function deleteInventory(id){
+    await pool.query(
+        'DELETE FROM dishinventory WHERE fk_inventory = $1;',
+        [id]
+    );
     const result = await pool.query(
         'DELETE FROM inventory WHERE inventory_id = $1 RETURNING inventory_id;',
         [id]
