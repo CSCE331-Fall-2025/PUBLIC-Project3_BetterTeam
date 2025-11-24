@@ -70,10 +70,12 @@ export const OrderCard: React.FC<OrderCardProps
         // if someone tries to go left while at 0, ignore
     }
 
+    /*
+    <h3 className="order-card-title">{name}</h3>
+            <h3>Slot: {slot}</h3>
+            */
     return (
         <div className="order-card" >
-            <h3 className="order-card-title">{name}</h3>
-            <h3>Slot: {slot}</h3>
             <ul className="order-card-text">
                 {items.map((dish, index) => (
                     <h4 key = {index}>
