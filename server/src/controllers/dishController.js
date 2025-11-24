@@ -24,7 +24,12 @@ export async function fetchDishesByType(req, res) {
 
         const normalizeType = (t) => {
             const lowered = t.toLowerCase();
-            return lowered === "app" ? "appetizer" : lowered;
+            if (lowered.startsWith("app")) return "appetizer";
+            if (lowered.startsWith("ent")) return "entree";
+            if (lowered.startsWith("sid")) return "side";
+            if (lowered.startsWith("dri")) return "drink";
+
+            return lowered;
         };
 
         const normalized = dishes.map((d) => ({

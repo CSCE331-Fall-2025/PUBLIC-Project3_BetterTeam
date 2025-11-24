@@ -12,6 +12,7 @@ export function GuestLinks() {
       <Link to="/any/home">Home</Link>
       <Link to="/customer/customerhome">Customer Home</Link>
       <Link to="/any/login">Login</Link>
+      <Link to="/any/menuboard">Menu</Link>
     </div>
   );
 }
@@ -24,6 +25,7 @@ export function CustomerLinks({ onLogout }: LogoutProps) {
       <Link to="/any/home">Home</Link>
       <Link to="/customer/customerhome">Customer Home</Link>
       <Link to="/customer/profile">Profile</Link>
+      <Link to="/any/menuboard">Menu</Link>
       <button type="button" className="nav-link-button" onClick={onLogout}>
         Logout
       </button>
@@ -38,6 +40,7 @@ export function CashierLinks({ onLogout }: LogoutProps) {
       <Link to="/any/home">Home</Link>
       <Link to="/cashier/cashierhome">Cashier Home</Link>
       <Link to="/kitchen">Kitchen</Link>
+      <Link to="/any/menuboard">Menu</Link>
       <button type="button" className="nav-link-button" onClick={onLogout}>
         Logout
       </button>
@@ -55,6 +58,7 @@ export function ManagerLinks({ onLogout }: LogoutProps) {
       <Link to="/manager/inventory">Inventory</Link>
       <Link to="/manager/ordertrends">Order Trends</Link>
       <Link to="/kitchen">Kitchen</Link>
+      <Link to="/any/menuboard">Menu</Link>
       <button type="button" className="nav-link-button" onClick={onLogout}>
         Logout
       </button>

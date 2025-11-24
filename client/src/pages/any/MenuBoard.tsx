@@ -1,46 +1,59 @@
-import { DishBox } from '../../components/DishComponents/DishBox.tsx'
+console.log(">>> FROM MenuBoard.tsx! <<<");
+
+import { useEffect, useState } from 'react';
+import { MenuBox } from '../../components/MenuComponents/MenuBox.tsx'
 import './MenuBoard.css'
 
 export interface Dish{
-    name: string;
-    price: number;
-    imageUrl?: string;
+  dish_id: number;
+  name: string;
+  price: number;
+  type: string;
+  imageUrl?: string;
 }
 
-const allEntrees: Dish[] = [
-  { name: "Orange Chicken", price: 7, imageUrl: "../../../assets/orangechick.PNG" },
-  { name: "Beijing Beef", price: 7, imageUrl: "../../../assets/beijing.PNG" },
-  { name: "Honey Walnut Shrimp", price: 8, imageUrl: "../../../assets/shrimp.PNG" },
-  { name: "Broccoli Beef", price: 6, imageUrl: "../../../assets/brocbeef.PNG" },
-  { name: "Kung Pao Chicken", price: 7, imageUrl: "../../../assets/kungpao.PNG" }
-];
-
-const allSides: Dish[] = [
-  { name: "Fried Rice", price: 4, imageUrl: "../../../assets/ricefried.PNG" },
-  { name: "Chow Mein", price: 4, imageUrl: "../../../assets/chowmein.PNG" },
-];
-
-const allDrinks: Dish[] = [
-  { name: "Coke", price: 4, imageUrl: "../../../assets/coke.PNG" },
-  { name: "Dr. Pepper", price: 3, imageUrl: "../../../assets/drp.PNG" },
-];
-
-const allApps: Dish[] = [
-  { name: "Cream Cheese Rangoon", price: 3, imageUrl: "../../../assets/rangoon.PNG" },
-  { name: "Veggie Spring Roll", price: 3, imageUrl: "../../../assets/veggieroll.PNG" },
-];
 
 function MenuBoard() {
-    return(
-        <>
-            <div className='board'>
-                <DishBox title={'Entrees'} dishes = {allEntrees}/>  
-                <DishBox title={'Sides'} dishes = {allSides}/>
-                <DishBox title={'Drinks'} dishes = {allDrinks}/>
-                <DishBox title={'Apps'} dishes = {allApps}/>
-            </div>
-        </>
-    );
+  const [entrees, setEntrees] = useState<Dish[]>([]);
+  const [sides, setSides] = useState<Dish[]>([]);
+  const [drinks, setDrinks] = useState<Dish[]>([]);
+  const [apps, setApps] = useState<Dish[]>([]);
+
+  useEffect(() => {
+    async function load() {
+      try{
+        console.log("Fetching Dishes...");
+        const res = await fetch("http://localhost:4000/api/dishes");
+        console.log("Response status:", res.status);
+        const all: Dish[] = await res.json();
+        console.log("Dishes from backend", all);
+
+        setEntrees(all.filter(d => d.type.toLowerCase() === "entree"));
+        setSides(all.filter(d => d.type.toLowerCase() === "side"));
+        setDrinks(all.filter(d => d.type.toLowerCase() === "drink"));
+
+        setApps(
+          all.filter(d => {
+            const t = d.type.toLowerCase();
+            return t === "appetizer" || t === "app";
+          })
+        );
+
+      } catch(err){
+        console.error("Failed to fetch menu:", err);
+      }
+    }
+    load();
+  }, []);
+
+  return(
+    <div className='board'>
+      <MenuBox title="Entrees" dishes={entrees}/>
+      <MenuBox title="Sides" dishes={sides}/>
+      <MenuBox title="Drinks" dishes={drinks}/>
+      <MenuBox title="Apps" dishes={apps}/>
+    </div>
+  );
 }
 
 export default MenuBoard;
