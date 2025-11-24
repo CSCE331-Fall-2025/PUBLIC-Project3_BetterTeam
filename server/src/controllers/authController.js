@@ -24,7 +24,7 @@ function makeAuthPayload(table, data) {
   else {
     const role = data.ismanager ? "manager" : "cashier";
     return {
-      id: dat.employee_id,
+      id: data.employee_id,
       table: "employee",
       role,
       name: data.name,

@@ -1,28 +1,41 @@
 
 import "./NavBar.css";
 
-import { ManagerLinks, CashierLinks, CustomerLinks, TempHomeLinks } from "./NavLinks";
+import {
+  ManagerLinks,
+  CashierLinks,
+  CustomerLinks,
+  GuestLinks,
+} from "./NavLinks";
+
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function NavBar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-  if (!user) {
-    return (
-      <div>
-        <nav className="navbar">
-          <TempHomeLinks />
-        </nav>
-      </div>
-    );
-  }
+  const handleLogout = () => {
+    logout(); 
+    navigate("/any/home");
+  };
 
   return (
     <div>
       <nav className="navbar">
-        {user.role === "manager" && <ManagerLinks />}
-        {user.role === "cashier" && <CashierLinks />}
-        {user.role === "customer" && <CustomerLinks />}
+        {!user && <GuestLinks />}
+
+        {user?.role === "customer" && (
+          <CustomerLinks onLogout={handleLogout} />
+        )}
+
+        {user?.role === "cashier" && (
+          <CashierLinks onLogout={handleLogout} />
+        )}
+
+        {user?.role === "manager" && (
+          <ManagerLinks onLogout={handleLogout} />
+        )}
       </nav>
     </div>
   );
