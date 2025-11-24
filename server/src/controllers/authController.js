@@ -137,7 +137,8 @@ export async function login(req, res) {
 }
 
 
-// Creating a new employee --> TODO: need to add the client side capabilities to do this
+// TODO: Full API (route/controller/model) needs to be made for hiring/firigin EMPLOYEES
+// TODO: ALso the client side ability (a manager page that can send these hiring/firing backend request)
 export async function hireEmployee(req, res) {
   try {
     const { name, wage, email, password, isManager } = req.body;
@@ -177,3 +178,4 @@ export async function hireEmployee(req, res) {
   }
 }
 
+// TODO: Fire an Employee

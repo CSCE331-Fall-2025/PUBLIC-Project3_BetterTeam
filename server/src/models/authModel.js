@@ -70,4 +70,4 @@ export async function findEmployeeByEmail(email) {
   return result.rows[0] || null;
 }
 
-// TODO: Be able to remove an employee
+// TODO: Be able to remove an employee (hire/fire... the full API)

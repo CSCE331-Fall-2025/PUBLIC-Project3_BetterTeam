@@ -19,6 +19,7 @@ router.post("/login", login);
 
 // Manager Only req for hiring
 router.post("/hire", requireRole(["manager"]), hireEmployee);
+//TODO: router.post("/fire", requireRole(["manager"]), fireEmployee);
 
 export default router;
 
