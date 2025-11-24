@@ -1,5 +1,5 @@
 //import {OrderCard} from '../components/KitchenComponents/OrderCard.tsx'
-import React, { useState } from "react";
+import { useState } from "react";
 import type {OrderCardProps} from '../components/KitchenComponents/OrderCard.tsx'
 import {OrderBox} from '../components/KitchenComponents/OrderBox.tsx'
 import type { Dish } from './customer/CustomerDish';
@@ -7,9 +7,9 @@ import './Kitchen.css';
 
 type Order = OrderCardProps;
 
-interface KitchenProps{
+/*interface KitchenProps{
 	//orders: Order[];
-}
+}*/
 
 /*interface OrderCard = {
 	name: string;
@@ -52,7 +52,7 @@ const Orders : Order[] = [
 	{name: "t22", slot: 2, items: []},*/
 ];
 //<OrderBox title={"Completed"} 	slot={2} orders={ordersDone} />
-function Kitchen(props: KitchenProps) {
+function Kitchen() {
 	const [orders, setOrders] = useState<Order[]>(Orders);
 	
 	const updateOrderSlot = (name:string, newSlot: number) => {

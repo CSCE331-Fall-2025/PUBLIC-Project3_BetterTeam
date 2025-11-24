@@ -1,7 +1,7 @@
 import React from "react";
 import { OrderCard } from "../KitchenComponents/OrderCard";
 import type { OrderCardProps } from "../KitchenComponents/OrderCard";
-import type { Dish } from '../../pages/customer/CustomerDish';
+//import type { Dish } from '../../pages/customer/CustomerDish';
 import './OrderBox.css';
 
 /*interface Order{
