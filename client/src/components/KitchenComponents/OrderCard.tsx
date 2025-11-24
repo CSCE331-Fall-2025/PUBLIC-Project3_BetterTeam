@@ -10,27 +10,25 @@ export interface OrderCardProps {
 }
 
 //export function OrderCard(props: OrderCardProps) {
-export const OrderCard: React.FC<OrderCardProps> = ({name, slot, items}) => {
-    const [currentSlot, setCurrentSlot] = useState<number>(Number(slot));
+export const OrderCard: React.FC<OrderCardProps
+& {onSlotChange: (name: string, newSlot:number) => void}> 
+= ({name, slot, items, onSlotChange}) => {
     
     const handleUpSlot = () => {
-       setCurrentSlot(prev => prev + 1);
+        if(slot==2) onSlotChange(name, slot);// removes order if already rightmost
+        /*honestly idk why ^ works but im not looking the gifthorse in the mouth*/
+        onSlotChange(name, slot + 1);//  go right otherwise
     }
 
     const handleDownSlot = () => {
-       setCurrentSlot(prev => prev - 1);
+        if(slot>0) onSlotChange(name, slot - 1);//go left if possible
+        // if someone tries to go left while at 0, we dont care
     }
-    /*
-    <Button name="Down" onClick={handleDownSlot} />
-    <Button name="Up" onClick={handleUpSlot} />
-    */
-
-    //const handleUpSlot = () => {slot++;}
 
     return (
         <div className="order-card" >
             <h3 className="order-card-title">{name}</h3>
-            <h3>Slot: {currentSlot}</h3>
+            <h3>Slot: {slot}</h3>
             <ul className="order-card-text">
                 {items.map((dish, index) => (
                     <h4 key = {index}>
