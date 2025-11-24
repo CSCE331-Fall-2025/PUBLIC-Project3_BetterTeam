@@ -37,16 +37,27 @@ const ordersDone : Order[] = [
 	{name: "t21", slot: 2, items: []},
 	{name: "t22", slot: 2, items: []},
 ];
-
+const Orders : Order[] = [
+	{name: "t00", slot: 0, items: allEntrees},
+	{name: "t01", slot: 0, items: []},
+	{name: "t02", slot: 0, items: []},
+	{name: "t03", slot: 0, items: []},
+	{name: "t10", slot: 1, items: []},
+	{name: "t11", slot: 1, items: []},
+	{name: "t20", slot: 2, items: []},
+	{name: "t21", slot: 2, items: []},
+	{name: "t22", slot: 2, items: []},
+];
+//<OrderBox title={"Completed"} 	slot={2} orders={ordersDone} />
 function Kitchen({orders}: KitchenProps) {
+	
 	return(
 	//any kitchenmaxxers out here
-	//<OrderBox title={"test1"} orders={testOrders1} />
 	<div className="kitchen-page">
 		<div className="slots">
-			<OrderBox title={"Not Started"} slot={0} orders={ordersNotStarted} />
-			<OrderBox title={"Started"} 	slot={1} orders={ordersStarted} />
-			<OrderBox title={"Completed"} 	slot={2} orders={ordersDone} />
+			<OrderBox title={"Not Started"} slot={0} orders={Orders.filter(order => order.slot == 0)} />
+			<OrderBox title={"Started"} 	slot={1} orders={Orders.filter(order => order.slot == 1)} />
+			<OrderBox title={"Completed"} 	slot={2} orders={Orders.filter(order => order.slot == 2)} />
 		</div>
 	</div>
 	);
