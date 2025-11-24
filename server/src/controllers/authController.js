@@ -12,9 +12,9 @@ const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
 
 // Standardized the resopnse object for all types of accounts (customers, cashiers, managers)
 function makeAuthPayload(table, data) {
-  if (kind === "customer") {
+  if (table === "customer") {
     return {
-      id: record.customer_id,
+      id: data.customer_id,
       table: "customer",
       role: "customer",
       name: data.name,
@@ -22,7 +22,7 @@ function makeAuthPayload(table, data) {
     };
   }
   else {
-    const role = record.ismanager ? "manager" : "cashier";
+    const role = data.ismanager ? "manager" : "cashier";
     return {
       id: dat.employee_id,
       table: "employee",
@@ -94,35 +94,35 @@ export async function login(req, res) {
 
     // Look up the accoutn in both employee table and the customer table
     // Try Employee
-    let kind = null;
-    let record = await findEmployeeByEmail(email);
+    let table = null;
+    let data = await findEmployeeByEmail(email);
 
-    if (record && record.password) {
-      const ok = await bcrypt.compare(password, record.password);
+    if (data && data.password) {
+      const ok = await bcrypt.compare(password, data.password);
       if (!ok) {
         return res
           .status(401)
           .json({ error: "Invalid email or password" });
       }
-      kind = "employee";
+        table = "employee";
     } else {
       // Try customer
-      record = await findCustomerByEmail(email);
-      if (!record || !record.password) {
+      data = await findCustomerByEmail(email);
+      if (!data || !data.password) {
         return res
           .status(401)
           .json({ error: "Invalid email or password" });
       }
-      const ok = await bcrypt.compare(password, record.password);
+      const ok = await bcrypt.compare(password, data.password);
       if (!ok) {
         return res
           .status(401)
           .json({ error: "Invalid email or password" });
       }
-      kind = "customer";
+      table = "customer";
     }
 
-    const payload = makeAuthPayload(kind, record);
+    const payload = makeAuthPayload(table, data);
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
 
     res.json({
