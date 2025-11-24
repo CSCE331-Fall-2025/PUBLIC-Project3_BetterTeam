@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
 import Button from "../../components/ButtonComponents/Button.tsx";
+import type { IngredientOption, CustomLevel, CustomizationChoice } from "../../components/DishComponents/DishCard.tsx";
 import './CustomerDish.css';
 
 export type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
@@ -11,6 +12,7 @@ export interface Dish {
     name: string;
     price: number;
     type?: string;
+    customization?: Record<number, CustomLevel>;
 }
 
 type SelectedDish = Dish & { _slot?: string };
@@ -27,17 +29,22 @@ function CustomerDish() {
     const type = state?.dishType;
     const entreeCount = state?.entreeCount ?? 1;
     const cart = state?.cart ?? [];
+    const [selected, setSelected] = useState<SelectedDish[]>([]);
+    const [dishes, setDishes] = useState<Dish[]>([]);
+    const [ingredientsByDish, setIngredientsByDish] = useState<Record<number, IngredientOption[]>>({});
+    const [customization, setCustomization] = useState<Record<number, Record<number, CustomLevel>>>({});
 
+    
     if (!type) {
         return <div>Error: No dish type provided.</div>;
     }
 
-    const [selected, setSelected] = useState<SelectedDish[]>([]);
-    const [dishes, setDishes] = useState<Dish[]>([]);
-
     useEffect(() => {
-        async function loadDishes() {
+        async function loadDishesAndIngredients() {
             try {
+                
+                let loaded: Dish[] = [];
+
                 if (type === "entree") {
                     const entreeRes = await fetch(`http://localhost:4000/api/dishes/entree`);
                     const entreeData = await entreeRes.json();
@@ -45,19 +52,33 @@ function CustomerDish() {
                     const sideRes = await fetch(`http://localhost:4000/api/dishes/side`);
                     const sideData = await sideRes.json();
 
-                    setDishes([...entreeData, ...sideData]);
+                    loaded = [...entreeData, ...sideData];
                 } else {
                     const res = await fetch(`http://localhost:4000/api/dishes/${type}`);
-                    const data = await res.json();
-                    setDishes(data);
+                    loaded = await res.json();
                 }
+
+                setDishes(loaded);
+
+                const ingredientMap: Record<number, IngredientOption[]> = {};
+
+                await Promise.all(
+                    loaded.map(async (dish) => {
+                        const res = await fetch(
+                            `http://localhost:4000/api/dishes/${dish.dish_id}/ingredients`
+                        );
+                        if(!res.ok) return;
+                        ingredientMap[dish.dish_id] = await res.json();
+                    })
+                );
+                setIngredientsByDish(ingredientMap);
+                setCustomization({});
+                setSelected([]);
             } catch (err) {
                 console.error("Failed to load dishes:", err);
             }
         }
-
-        loadDishes();
-        setSelected([]);
+        loadDishesAndIngredients();
     }, [type]);
 
     const handleSelect = (dish: Dish, slot?: string) => {
@@ -80,6 +101,19 @@ function CustomerDish() {
         });
     };
 
+    const handleCustomizeChange = (
+        dish_id: number,
+        choice: CustomizationChoice
+    ) => {
+        setCustomization(prev => ({
+            ...prev,
+            [dish_id]: {
+                ...(prev[dish_id] || {}),
+                [choice.inventory_id]: choice.level
+            }
+        }));
+    };
+
     let boxes: React.ReactNode[] = [];
 
     if (type === 'entree') {
@@ -90,6 +124,9 @@ function CustomerDish() {
                 dishes={dishes.filter(d => d.type === "entree")}
                 onSelect={(dish) => handleSelect(dish, `Entree ${i + 1}`)}
                 selectedDishes={selected.filter(d => d._slot === `Entree ${i + 1}`)}
+                ingredientsByDish={ingredientsByDish}
+                customization={customization}
+                onCustomizeChange={handleCustomizeChange}
             />
         ));
 
@@ -100,6 +137,9 @@ function CustomerDish() {
                 dishes={dishes.filter(d => d.type === "side")}
                 onSelect={(dish) => handleSelect(dish, "Side")}
                 selectedDishes={selected.filter(d => d._slot === "Side")}
+                ingredientsByDish={ingredientsByDish}
+                customization={customization}
+                onCustomizeChange={handleCustomizeChange}
             />
         );
 
@@ -112,12 +152,25 @@ function CustomerDish() {
                 dishes={dishes}
                 onSelect={(dish) => handleSelect(dish, type)}
                 selectedDishes={selected.filter(d => d._slot === type)}
+                ingredientsByDish={ingredientsByDish}
+                customization={customization}
+                onCustomizeChange={handleCustomizeChange}
             />
         ];
     }
 
     const handleBack = () => navigate("/Customer/CustomerHome", { state: { cart } });
-    const handleAddToCart = () => navigate("/Customer/CustomerHome", { state: { cart: [...cart, ...selected] } });
+    const handleAddToCart = () => {
+        const selectedWithCustomization: Dish[] = selected.map(d => ({
+            ...d,
+            customization: customization[d.dish_id] || {}
+        }));
+        navigate("/Customer/CustomerHome", {
+            state: {
+                cart: [...cart, ...selectedWithCustomization]
+            }
+        });
+    };
 
     return (
         <div className="meal-builder-wrapper">

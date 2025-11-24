@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../components/ButtonComponents/Button.tsx';
 import type { Dish } from './CashierDish';
+import { useEffect, useState } from 'react';
 import './CashierHome.css';
 
 type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
@@ -9,13 +10,52 @@ interface LocationState {
   cart?: Dish[];
 }
 
+interface IngredientOption{
+  inventory_id: number;
+  name: string;
+}
+
 function CashierHome() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState;
   const cart: Dish[] = state?.cart || [];
-
   const total = cart.reduce((sum, d) => sum + d.price, 0);
+  const [ingredientNames, setIngredientNames] = useState<Record<number, Record<number, string>>>({});
+
+
+  useEffect(() => {
+    async function loadIngredients(){
+      const map: Record<number, Record<number, string>> = {};
+
+      for(const dish of cart){
+        try{
+          const res = await fetch(
+            `http://localhost:4000/api/dishes/${dish.dish_id}/ingredients`
+          );
+          if(!res.ok) continue;
+
+          const ingList: IngredientOption[] = await res.json();
+
+          map[dish.dish_id] = {};
+          for(const ing of ingList){
+            map[dish.dish_id][ing.inventory_id] = ing.name;
+          }
+        } catch(err){
+          console.error("Error loading ingredients:", err);
+        }
+      }
+      setIngredientNames(map);
+    }
+
+    if(cart.length > 0) loadIngredients();
+  }, [cart]);
+
+  const grammerLevel = (level: string) => {
+    if(level === "none") return "No";
+    if(level === "extra") return "Extra";
+    return "";
+  };
 
   const goToDishPage = (type: DishType, entreeCount = 1) => {
     navigate('/Cashier/CashierDish', { state: { type, entreeCount, cart } });
@@ -70,6 +110,22 @@ function CashierHome() {
               {cart.map((dish, i) => (
                 <li key={i}>
                   <span>{dish.name}</span> - ${dish.price.toFixed(2)}
+
+                  {dish.customization && (
+                    <ul className="customization-list">
+                      {Object.entries(dish.customization).map(([invIdStr, level]) => {
+                        const invId = Number(invIdStr);
+                        const ingName = ingredientNames[dish.dish_id]?.[invId];
+                        if(level === "normal") return null;
+
+                        return(
+                          <li key={invId} className="custom-line">
+                            {grammerLevel(level)} {ingName}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>

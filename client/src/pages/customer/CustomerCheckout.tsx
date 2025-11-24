@@ -1,18 +1,52 @@
 import Button from '../../components/ButtonComponents/Button.tsx'
 import type { Dish } from './CustomerDish';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import './CustomerCheckout.css'
 
 interface LocationState{
     cart: Dish[];
 }
 
+interface IngredientOption{
+    inventory_id: number;
+    name: string;
+}
+
 function CustomerCheckout(){
     const location = useLocation();
     const navigate = useNavigate();
     const { cart = [] } = location.state as LocationState;
-
     const total = cart.reduce((sum, dish) => sum + dish.price, 0);
+    const [ingredientNames, setIngredientNames] = useState<Record<number, Record<number, string>>>({});
+
+
+    useEffect(() => {
+        async function loadIngredients(){
+            const ingredientMap: Record<number, Record<number, string>> = {};
+            for(const dish of cart){
+                if(!dish.dish_id) continue;
+
+                try{
+                    const res = await fetch(
+                        `http://localhost:4000/api/dishes/${dish.dish_id}/ingredients`
+                    );
+                    if(!res.ok) continue;
+
+                    const ingList: IngredientOption[] = await res.json();
+
+                    ingredientMap[dish.dish_id] = {};
+                    for(const ing of ingList){
+                        ingredientMap[dish.dish_id][ing.inventory_id] = ing.name;
+                    }
+                } catch(err){
+                    console.error("Failed to load ingredients for checkout:", err);
+                }
+            }
+            setIngredientNames(ingredientMap);
+        }
+        if(cart.length > 0) loadIngredients();
+    }, [cart]);
 
     const handlePlaceOrder = async () => {
         try{
@@ -44,6 +78,11 @@ function CustomerCheckout(){
         navigate('/Customer/CustomerHome', {state: { cart } })
     };
 
+    const grammerLevel = (level : string) => {
+        if(level === "none") return "No";
+        if(level === "extra") return "Extra";
+        return "";
+    }
     return(
         <div className="checkout-page">
             <div className="receipt">
@@ -55,7 +94,23 @@ function CustomerCheckout(){
                         <ul>
                             {cart.map((dish, index) => (
                                 <li key={index}>
-                                    <span>{dish.name}</span> - <span>${dish.price.toFixed(2)}</span>
+                                    <span>{dish.name}</span> - ${dish.price.toFixed(2)}
+
+                                    {dish.customization && (
+                                        <ul className="customization-list">
+                                            {Object.entries(dish.customization).map(([invIdStr, level]) => {
+                                                const invId = Number(invIdStr);
+                                                const ingName = ingredientNames[dish.dish_id]?.[invId];
+                                                
+                                                if(level === "normal") return null;
+                                                return(
+                                                    <li key={invId} className="custom-line">
+                                                        {grammerLevel(level)} {ingName}
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    )}
                                 </li>
                             ))}
                         </ul>
@@ -77,7 +132,7 @@ function CustomerCheckout(){
                 />
             </div>
         </div>
-    )
+    );
 }
 
 export default CustomerCheckout;
