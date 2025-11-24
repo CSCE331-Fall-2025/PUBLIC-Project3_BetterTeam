@@ -1,59 +1,64 @@
+import "./NavLinks.css";
+import { Link } from "react-router-dom";
 
-import './NavLinks.css';
+type LogoutProps = {
+  onLogout: () => void;
+};
 
-import { Link } from 'react-router-dom';
-
-export function TempHomeLinks() {
-	return (
-		<div className="nav-links">
-			<Link to="/any/home">Home</Link>
-			<Link to="/Manager/Dashboard">Manager Dashboard</Link>
-			<Link to="/Customer/CustomerHome">Customer Home</Link>
-			<Link to="/Cashier/CashierHome">Cashier Home</Link>
-			<Link to="/any/Login">Login</Link>
-			<Link to="/any/MenuBoard">Menu Board</Link>
-		</div>
-	);
+// -------- Guest (not logged in) --------
+export function GuestLinks() {
+  return (
+    <div className="nav-links">
+      <Link to="/any/home">Home</Link>
+      <Link to="/customer/customerhome">Customer Home</Link>
+      <Link to="/any/login">Login</Link>
+    </div>
+  );
 }
 
-export function ManagerLinks() {
-	// add whatever manager pages:
-	// Ex:
-	// "/manager/<page>
-	return (
-		<div className="nav-links">
-			<Link to="/any/home">Home</Link>
-			<Link to="/Manager/Dashboard">Manager Dashboard</Link>
-			<Link to="/Manager/EmployeeData">Employee Data</Link>
-			<Link to="/Manager/Inventory">Inventory</Link>
-			<Link to="/Manager/OrderTrends">Order Trends</Link>
-			<Link to="/Kitchen">Kitchen</Link>
-			<Link to="/any/login">Logout</Link>
-			{/* <Link to="/Customer/CustomerHome">Customer Home</Link>
-			<Link to="/Cashier/CashierHome">Cashier Home</Link> */}
-		</div>
-	);
+
+// -------- Customer --------
+export function CustomerLinks({ onLogout }: LogoutProps) {
+  return (
+    <div className="nav-links">
+      <Link to="/any/home">Home</Link>
+      <Link to="/customer/customerhome">Customer Home</Link>
+      <Link to="/customer/profile">Profile</Link>
+      <button type="button" className="nav-link-button" onClick={onLogout}>
+        Logout
+      </button>
+    </div>
+  );
 }
 
-export function CashierLinks() {
-	return (
-		<div className="nav-links">
-			<Link to="/any/home">Home</Link>
-			<Link to="/Cashier/CashierHome">Cashier Home</Link>
-			{/* <Link to="/Customer/Checkout">Checkout</Link */}
-		</div>
-	);
+// -------- Cashier --------
+export function CashierLinks({ onLogout }: LogoutProps) {
+  return (
+    <div className="nav-links">
+      <Link to="/any/home">Home</Link>
+      <Link to="/cashier/cashierhome">Cashier Home</Link>
+      <Link to="/kitchen">Kitchen</Link>
+      <button type="button" className="nav-link-button" onClick={onLogout}>
+        Logout
+      </button>
+    </div>
+  );
 }
 
-export function CustomerLinks() {
-	return (
-		<div className="nav-links">
-			<Link to="/any/Home">Home</Link>
-			<Link to="/Customer/CustomerHome">Customer Home</Link>
-			{/*<Link to="/Customer">Home</Link>*/}
-			{/* <Link to="/Customer/Order">Order</Link */}
-			{/* <Link to="/Customer/Profile">Profile</Link */}
-		</div>
-	);
+// -------- Manager --------
+export function ManagerLinks({ onLogout }: LogoutProps) {
+  return (
+    <div className="nav-links">
+      <Link to="/any/home">Home</Link>
+      <Link to="/manager/dashboard">Manager Dashboard</Link>
+      <Link to="/manager/employeedata">Employee Data</Link>
+      <Link to="/manager/inventory">Inventory</Link>
+      <Link to="/manager/ordertrends">Order Trends</Link>
+      <Link to="/kitchen">Kitchen</Link>
+      <button type="button" className="nav-link-button" onClick={onLogout}>
+        Logout
+      </button>
+    </div>
+  );
 }
 

@@ -1,47 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './Signup.css';
-import { GoogleLogin, googleLogout } from '@react-oauth/google';
-import {jwtDecode} from 'jwt-decode';
+
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./Signup.css";
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../../context/AuthContext";
 
 function Signup() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [user, setUser] = useState<any>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [userGoogle, setUserGoogle] = useState<any>(null);
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) setUser(JSON.parse(savedUser));
+    const savedGoogle = localStorage.getItem("google_user");
+    if (savedGoogle) setUserGoogle(JSON.parse(savedGoogle));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!email || !password || !confirmPassword) {
-      setError('Please fill in all fields');
+      setError("Please fill in all fields");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError("Password must be at least 6 characters long");
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:4000/api/users/signup', {
-        method: 'POST',
+      const response = await fetch("http://localhost:4000/api/auth/signup", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
@@ -49,37 +52,35 @@ function Signup() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Failed to create account');
+        setError(data.error || "Failed to create account");
         return;
       }
 
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('token', data.token);
-      setUser(data.user);
-      
-      
-      navigate('/any/home');
+      // log in the new customer into global auth context
+      login(data.user, data.token);
+
+      navigate("/any/home");
     } catch (err) {
-      console.error('Signup error:', err);
-      setError('Network error. Please try again.');
+      console.error("Signup error:", err);
+      setError("Network error. Please try again.");
     }
   };
 
   const handleGoogleSuccess = (credentialResponse: any) => {
     if (credentialResponse.credential) {
       const decoded: any = jwtDecode(credentialResponse.credential);
-      setUser(decoded);
-      localStorage.setItem('user', JSON.stringify(decoded));
-      console.log('Google login success:', decoded);
-
+      setUserGoogle(decoded);
+      localStorage.setItem("google_user", JSON.stringify(decoded));
+      console.log("Google signup success:", decoded);
+      // TODO: later hook into backend /api/auth/google and login()
     }
   };
 
   const handleLogout = () => {
     googleLogout();
-    setUser(null);
-    localStorage.removeItem('user');
-    console.log('User logged out');
+    setUserGoogle(null);
+    localStorage.removeItem("google_user");
+    console.log("Google logged out");
   };
 
   return (
@@ -117,7 +118,7 @@ function Signup() {
               <label htmlFor="confirmPassword">Confirm Password</label>
               <input
                 type="password"
-                id="confirmPassword"    
+                id="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm your password"
@@ -136,10 +137,10 @@ function Signup() {
             <span>or</span>
           </div>
 
-          {!user ? (
+          {!userGoogle ? (
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
-              onError={() => console.log('Google login failed')}
+              onError={() => console.log("Google login failed")}
             />
           ) : (
             <button
@@ -147,7 +148,7 @@ function Signup() {
               className="google-logout-button"
               onClick={handleLogout}
             >
-              Logout {user.name}
+              Logout {userGoogle.name}
             </button>
           )}
 
@@ -163,3 +164,4 @@ function Signup() {
 }
 
 export default Signup;
+
