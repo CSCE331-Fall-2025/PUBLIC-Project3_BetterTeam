@@ -13,11 +13,11 @@ interface KitchenProps{
 	name: string;
 }*/
 const allEntrees: Dish[] = [
-  { name: "Orange Chicken", price: 7},
-  { name: "Beijing Beef", price: 7},
-  { name: "Honey Walnut Shrimp", price: 8},
-  { name: "Broccoli Beef", price: 6},
-  { name: "Kung Pao Chicken", price: 7}
+  { dish_id: 0, name: "Orange Chicken", price: 7},
+  { dish_id: 0, name: "Beijing Beef", price: 7},
+  { dish_id: 0, name: "Honey Walnut Shrimp", price: 8},
+  { dish_id: 0, name: "Broccoli Beef", price: 6},
+  { dish_id: 0, name: "Kung Pao Chicken", price: 7}
 ];
 
 const ordersNotStarted : Order[] = [
@@ -44,9 +44,9 @@ function Kitchen({orders}: KitchenProps) {
 	//<OrderBox title={"test1"} orders={testOrders1} />
 	<div className="kitchen-page">
 		<div className="slots">
-			<OrderBox title={"Not Started"} orders={ordersNotStarted} />
-			<OrderBox title={"Started"} 	orders={ordersStarted} />
-			<OrderBox title={"Completed"} 	orders={ordersDone} />
+			<OrderBox title={"Not Started"} slot={0} orders={ordersNotStarted} />
+			<OrderBox title={"Started"} 	slot={1} orders={ordersStarted} />
+			<OrderBox title={"Completed"} 	slot={2} orders={ordersDone} />
 		</div>
 	</div>
 	);

@@ -11,8 +11,8 @@ interface Order{
 }
 
 interface OrderBoxProps {
-    title?: string;
-    slot?: number;
+    title: string;
+    slot: number;
     orders: OrderCardProps[];
 }
 
@@ -24,6 +24,7 @@ export const OrderBox: React.FC<OrderBoxProps> = ({title, orders}) => {
                 {orders.map((order, index) => (
                     <OrderCard
                         key={index}
+                        slot={order.slot}
                         name={order.name}
                         items={order.items}
                     />
