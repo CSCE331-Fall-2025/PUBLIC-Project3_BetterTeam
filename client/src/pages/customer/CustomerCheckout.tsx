@@ -36,7 +36,8 @@ function CustomerCheckout(){
             let parsedOrders: Order[] = [];
             if (storedOrders){ parsedOrders = JSON.parse(storedOrders);}
             //push new order to orders
-            const newOrder: Order = {name:"0001", slot:0, items:cart};//name should be unique id somehow
+            let john = (Math.random()).toString();//uhhhh randomized id for now
+            const newOrder: Order = {name:john, slot:0, items:cart};//name should be unique id somehow
             parsedOrders.push(newOrder);
             localStorage.setItem("orders",JSON.stringify(parsedOrders));
             //log for potential debugging

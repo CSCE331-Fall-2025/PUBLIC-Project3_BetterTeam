@@ -3,6 +3,9 @@ import Button from '../../components/ButtonComponents/Button.tsx';
 import type { Dish } from './CashierDish';
 import './CashierHome.css';
 
+import type {OrderCardProps} from '../../components/KitchenComponents/OrderCard.tsx';
+type Order = OrderCardProps;
+
 type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
 
 interface LocationState {
@@ -40,6 +43,19 @@ function CashierHome() {
       });
 
       alert("Order placed!");
+
+      //retrieve orders
+      const storedOrders = localStorage.getItem("orders");
+      let parsedOrders: Order[] = [];
+      if (storedOrders){ parsedOrders = JSON.parse(storedOrders);}
+      //push new order to orders
+      let john = (Math.random()).toString();//uhhhh randomized id for now
+      const newOrder: Order = {name:john, slot:0, items:cart};//name should be unique id somehow
+      parsedOrders.push(newOrder);
+      localStorage.setItem("orders",JSON.stringify(parsedOrders));
+      //log for potential debugging
+      console.log(parsedOrders);
+
       navigate('/Cashier/CashierHome', { state: { cart: [] } });
 
     } catch (err) {
