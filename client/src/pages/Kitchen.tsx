@@ -62,7 +62,7 @@ function Kitchen() {
 			)
 		);
 	};
-	
+
 	return(
 	//any kitchenmaxxers out here
 	<div className="kitchen-page">

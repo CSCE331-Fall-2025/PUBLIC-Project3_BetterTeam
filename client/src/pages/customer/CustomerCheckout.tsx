@@ -1,7 +1,10 @@
 import Button from '../../components/ButtonComponents/Button.tsx'
 import type { Dish } from './CustomerDish';
+import type {OrderCardProps} from '../../components/KitchenComponents/OrderCard.tsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './CustomerCheckout.css'
+
+type Order = OrderCardProps;
 
 interface LocationState{
     cart: Dish[];
@@ -27,6 +30,18 @@ function CustomerCheckout(){
             });
 
             alert("Order Placed!");
+            
+            //retrieve orders
+            const storedOrders = localStorage.getItem("orders");
+            let parsedOrders: Order[] = [];
+            if (storedOrders){ parsedOrders = JSON.parse(storedOrders);}
+            //push new order to orders
+            const newOrder: Order = {name:"order number or something", slot:0, items:cart};
+            parsedOrders.push(newOrder);
+            localStorage.setItem("orders",JSON.stringify(parsedOrders));
+            //log for potential debugging
+            console.log(parsedOrders);
+
             navigate("/Customer/CustomerHome", { state: { cart: [] } });
         } catch(err){
             console.error(err);
