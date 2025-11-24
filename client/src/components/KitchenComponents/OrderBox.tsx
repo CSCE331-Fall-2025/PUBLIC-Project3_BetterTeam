@@ -14,10 +14,10 @@ interface OrderBoxProps {
     title: string;
     slot: number;
     orders: OrderCardProps[];
-    onSlotChange: (name: string, newSlot: number) => void;
+    /*onSlotChange: (name: string, newSlot: number) => void;*/
 }
 
-export const OrderBox: React.FC<OrderBoxProps> = ({title, orders, onSlotChange}) => {
+export const OrderBox: React.FC<OrderBoxProps> = ({title, orders/*, onSlotChange*/}) => {
     return (
         <div className="order-box">
             {title && <h2 className="order-box-title">{title}</h2>}
@@ -28,7 +28,7 @@ export const OrderBox: React.FC<OrderBoxProps> = ({title, orders, onSlotChange})
                         slot={order.slot}
                         name={order.name}
                         items={order.items}
-                        onSlotChange={onSlotChange}
+                        /*onSlotChange={onSlotChange}*/
                     />
                 ))}
             </div>

@@ -1,8 +1,8 @@
 //import {OrderCard} from '../components/KitchenComponents/OrderCard.tsx'
-import { useState } from "react";
+//import { useState } from "react";
 import type {OrderCardProps} from '../components/KitchenComponents/OrderCard.tsx'
 import {OrderBox} from '../components/KitchenComponents/OrderBox.tsx'
-import type { Dish } from './customer/CustomerDish';
+//import type { Dish } from './customer/CustomerDish';
 import './Kitchen.css';
 
 type Order = OrderCardProps;
@@ -22,23 +22,29 @@ const Orders : Order[] = [
 ];
 //<OrderBox title={"Completed"} 	slot={2} orders={ordersDone} />
 function Kitchen() {
-	const [orders, setOrders] = useState<Order[]>(Orders);
+	/*let [orders, setOrders] = useState<Order[]>(Orders);*/
 	
-	const updateOrderSlot = (name:string, newSlot: number) => {
+	/*const updateOrderSlot = (name:string, newSlot: number) => {
 		setOrders(prev =>
 			prev.map(order =>
 				order.name === name ? { ...order, slot: newSlot } : order
 			)
 		);
-	};
+	};*/
+	let orders = Orders;
+	//retrieve orders
+	const storedOrders = localStorage.getItem("orders");
+	let parsedOrders: Order[] = [];
+	if (storedOrders){ parsedOrders = JSON.parse(storedOrders);}
+	orders = parsedOrders;
 
 	return(
 	//any kitchenmaxxers out here
 	<div className="kitchen-page">
 		<div className="slots">
-			<OrderBox title={"Not Started"} slot={0} orders={orders.filter(order => order.slot === 0)} onSlotChange={updateOrderSlot} />
-			<OrderBox title={"Started"} 	slot={1} orders={orders.filter(order => order.slot === 1)} onSlotChange={updateOrderSlot} />
-			<OrderBox title={"Completed"} 	slot={2} orders={orders.filter(order => order.slot === 2)} onSlotChange={updateOrderSlot} />
+			<OrderBox title={"Not Started"} slot={0} orders={orders.filter(order => order.slot === 0)} /*onSlotChange={updateOrderSlot}*/ />
+			<OrderBox title={"Started"} 	slot={1} orders={orders.filter(order => order.slot === 1)} /*onSlotChange={updateOrderSlot}*/ />
+			<OrderBox title={"Completed"} 	slot={2} orders={orders.filter(order => order.slot === 2)} /*onSlotChange={updateOrderSlot}*/ />
 		</div>
 	</div>
 	);
