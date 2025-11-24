@@ -2,13 +2,14 @@ import React from "react";
 import { DishCard } from "./DishCard";
 import type { IngredientOption, CustomLevel, CustomizationChoice  } from "./DishCard";
 import type { Dish } from "../../pages/customer/CustomerDish.tsx";
+import type { SelectedDish } from "../../pages/cashier/CashierDish.tsx";
 import './DishBox.css';
 
 interface DishBoxProps {
     title?: string;
     dishes: Dish[];
     onSelect?: (dish: Dish) => void;
-    selectedDishes?: Dish[];
+    selectedDishes?: SelectedDish[];
     ingredientsByDish?: Record<number, IngredientOption[]>;
     customization?: Record<number, Record<number, CustomLevel>>;
     onCustomizeChange?: (dish_id: number, choice: CustomizationChoice) => void;

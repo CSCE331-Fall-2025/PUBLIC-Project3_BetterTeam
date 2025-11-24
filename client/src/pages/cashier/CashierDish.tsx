@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
 import Button from "../../components/ButtonComponents/Button.tsx";
 import type { IngredientOption, CustomLevel, CustomizationChoice } from '../../components/DishComponents/DishCard.tsx';
+import "./CashierDish.css";
 
 export type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
 
@@ -14,7 +15,11 @@ export interface Dish {
     customization?: Record<number, CustomLevel>;
 }
 
-type SelectedDish = Dish & { _slot?: string };
+type SelectedDish = Dish & {
+    _slot?: string;
+};
+
+export type { SelectedDish };
 
 interface LocationState {
     type: DishType;
@@ -30,6 +35,7 @@ function CashierDish(){
     const [dishes, setDishes] = useState<Dish[]>([]);
     const [ingredientsByDish, setIngredientsByDish] = useState<Record<number, IngredientOption[]>>({});
     const [customization, setCustomization] = useState<Record<number, Record<number, CustomLevel>>>({});
+    const [mealQty, setMealQty] = useState(1);
 
     useEffect(() => {
         async function loadDishesAndIngredients(){
@@ -96,7 +102,6 @@ function CashierDish(){
         });
     };
 
-
     const handleCustomizeChange = (
         dish_id: number,
         choice: CustomizationChoice
@@ -114,12 +119,19 @@ function CashierDish(){
     };
 
     const handleAddToCart = () => {
-        const selectedWithCustomization: Dish[] = selected.map((d) => ({
-            ...d,
-            customization: customization[d.dish_id] || {},
-        }));
-        const newCart = [...cart, ...selectedWithCustomization];
-        navigate('/Cashier/CashierHome', { state: { cart: newCart } });
+        const expanded: Dish[] = [];
+
+        for(let i = 0; i < mealQty; i++){
+            selected.forEach(dish => {
+                expanded.push({
+                    ...dish,
+                    customization: customization[dish.dish_id] || {}
+                });
+            });
+        }
+        navigate("/Cashier/CashierHome", {
+            state: { cart: [...cart, ...expanded] }
+        });
     };
 
     const handleBack = () => navigate('/Cashier/CashierHome', { state: { cart } });
@@ -165,13 +177,19 @@ function CashierDish(){
                 ingredientsByDish={ingredientsByDish}
                 customization={customization}
                 onCustomizeChange={handleCustomizeChange}
-            />,
+            />
         ];
     }
 
     return(
         <div className="meal-builder-wrapper">
             <div className="dish-box-row">{boxes}</div>
+            <div className="qty-row">
+                <button className="qty-btn" onClick={() => setMealQty(q => Math.max(1, q - 1))}>-</button>
+                <span className="qty-num">{mealQty}</span>
+                <button className="qty-btn" onClick={() => setMealQty(q => q + 1)}>+</button>
+            </div>
+
             <div className="button-row">
                 <Button name="Cancel" onClick={handleBack}/>
                 <Button name="Add to Cart" onClick={handleAddToCart}/>
