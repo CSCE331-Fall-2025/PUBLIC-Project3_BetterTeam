@@ -1,18 +1,18 @@
 import {
   createBrowserRouter,
   RouterProvider,
-  Navigate
+  Navigate,
 } from "react-router-dom";
 
-import { Layout } from './components/LayoutComponents/Layout.tsx';
-
-
+import { Layout } from "./components/LayoutComponents/Layout.tsx";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import type React from "react";
 
 interface RouteCommon {
   ErrorBoundary?: React.ComponentType<any>;
 }
 
-interface IRoute extends RouteCommon{
+interface IRoute extends RouteCommon {
   path: string;
   Element: React.ComponentType<any>;
 }
@@ -20,7 +20,7 @@ interface IRoute extends RouteCommon{
 interface Pages {
   [key: string]: {
     default: React.ComponentType<any>;
-  } & RouteCommon
+  } & RouteCommon;
 }
 
 const pages: Pages = import.meta.glob("./pages/**/*.tsx", { eager: true });
@@ -28,9 +28,7 @@ const pages: Pages = import.meta.glob("./pages/**/*.tsx", { eager: true });
 const routes: IRoute[] = [];
 for (const path of Object.keys(pages)) {
   const fileName = path.match(/\.\/pages\/(.*)\.tsx$/)?.[1];
-  if (!fileName) {
-    continue;
-  }
+  if (!fileName) continue;
 
   const normalizedPathName = fileName.includes("$")
     ? fileName.replace("$", ":")
@@ -43,28 +41,56 @@ for (const path of Object.keys(pages)) {
   });
 }
 
+// Wrap routes in the Protected Route Component
+function wrapRoute(route: IRoute) {
+  const { Element, ErrorBoundary, path } = route;
+  const lower = path.toLowerCase();
+
+  let element: React.ReactElement = <Element />;
+
+  if (lower.startsWith("/manager")) {
+    element = (
+      <ProtectedRoute allowedRoles={["manager"]}>
+        <Element />
+      </ProtectedRoute>
+    );
+  } else if (lower.startsWith("/cashier")) {
+    element = (
+      <ProtectedRoute allowedRoles={["cashier", "manager"]}>
+        <Element />
+      </ProtectedRoute>
+    );
+  } else if (lower.startsWith("/customer")) {
+    element = (
+      <ProtectedRoute allowedRoles={["customer", "cashier", "manager"]}>
+        <Element />
+      </ProtectedRoute>
+    );
+  }
+
+  return {
+    path,
+    element,
+    ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
+  };
+}
 
 const router = createBrowserRouter([
   {
-    path: "/", 
-    element: <Layout />,   // Layout is now the parent
+    path: "/",
+    element: <Layout />,
     children: [
       {
         index: true,
-        element: <Navigate to ="/any/home" replace /> // This puts the auto redirect to any/home
-    },
-    ...routes.map(({ Element, ErrorBoundary, ...rest }) => ({
-      ...rest,
-      element: <Element />,
-      ...(ErrorBoundary && { errorElement: <ErrorBoundary /> })
-    }))
-  ]
-  }
+        element: <Navigate to="/any/home" replace />,
+      },
+      ...routes.map(wrapRoute),
+    ],
+  },
 ]);
 
-
 const App = () => {
-	return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 };
 
 export default App;
