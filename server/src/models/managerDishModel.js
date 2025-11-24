@@ -27,6 +27,14 @@ export async function updateDish(id, name, type, price){
 }
 
 export async function deleteDish(id){
+    await pool.query(
+        'DELETE FROM transactiondish WHERE fk_dish = $1;',
+        [id]
+    );
+    await pool.query(
+        'DELETE FROM dishinventory WHERE fk_dish = $1;',
+        [id]
+    );
     const result = await pool.query(
         'DELETE FROM dish WHERE dish_id = $1 RETURNING dish_id;',
         [id]
