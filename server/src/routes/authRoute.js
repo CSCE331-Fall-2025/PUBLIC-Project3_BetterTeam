@@ -1,12 +1,24 @@
+
 import { Router } from "express";
-import { signup, login } from "../controllers/userController.js";
+
+import { 
+    signup, 
+    login, 
+    hireEmployee 
+} from "../controllers/authController.js";
+
+import { requireRole } from "../middleware/auth.js";
 
 const router = Router();
 
-// POST /api/users/signup - Create a new user account
+// Customer signup
 router.post("/signup", signup);
 
-// POST /api/users/login - Authenticate a user
+// Unified login (customer + employee)
 router.post("/login", login);
 
+// Manager Only req for hiring
+router.post("/hire", requireRole(["manager"]), hireEmployee);
+
 export default router;
+

@@ -1,111 +1,179 @@
+
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { createUser, findUserByEmail } from "../models/userModel.js";
+import {
+  createCustomer,
+  findCustomerByEmail,
+  createEmployee,
+  findEmployeeByEmail,
+} from "../models/authModel.js";
 
-// Signup controller - creates a new user account
-export async function signup(req, res) {
-	try {
-		const { email, password } = req.body;
+const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
 
-		// Validate input
-		if (!email || !password) {
-			return res.status(400).json({ error: "Email and password are required" });
-		}
-
-		// Validate email format
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		if (!emailRegex.test(email)) {
-			return res.status(400).json({ error: "Invalid email format" });
-		}
-
-		// Validate password length
-		if (password.length < 6) {
-			return res.status(400).json({ error: "Password must be at least 6 characters long" });
-		}
-
-		// Check if user already exists
-		const existingUser = await findUserByEmail(email);
-		if (existingUser) {
-			return res.status(409).json({ error: "User with this email already exists" });
-		}
-
-		// Hash password
-		const saltRounds = 10;
-		const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-		// Create user (name will be extracted from email if not provided)
-		const { name } = req.body;
-		const newUser = await createUser(email, hashedPassword, name);
-
-		// Generate JWT token
-		const token = jwt.sign(
-			{ userId: newUser.customer_id, email: newUser.email },
-			process.env.JWT_SECRET || "your-secret-key-change-in-production",
-			{ expiresIn: "7d" }
-		);
-
-		// Return user data and token (without password)
-		res.status(201).json({
-			message: "User created successfully",
-			user: {
-				id: newUser.customer_id,
-				name: newUser.name,
-				email: newUser.email,
-			},
-			token,
-		});
-	} catch (err) {
-		console.error("Error in signup:", err);
-		res.status(500).json({ error: "Failed to create user account" });
-	}
+// Standardized the resopnse object for all types of accounts (customers, cashiers, managers)
+function makeAuthPayload(table, data) {
+  if (kind === "customer") {
+    return {
+      id: record.customer_id,
+      table: "customer",
+      role: "customer",
+      name: data.name,
+      email: data.email,
+    };
+  }
+  else {
+    const role = record.ismanager ? "manager" : "cashier";
+    return {
+      id: dat.employee_id,
+      table: "employee",
+      role,
+      name: data.name,
+      email: data.email,
+    };
+  }
 }
 
-// Login controller - authenticates a user
+// Customer Sign up (onyl customer create accoutns via the signup page)
+export async function signup(req, res) {
+  try {
+    const { email, password, name } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ error: "Password must be at least 6 characters long" });
+    }
+
+    // Check existing accounts (both customer & employee table) for duplicate attempt of email
+    const existingCustomer = await findCustomerByEmail(email);
+    const existingEmployee = await findEmployeeByEmail(email);
+
+    if (existingCustomer || existingEmployee) {
+      return res
+        .status(409)
+        .json({ error: "An account with this email already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newCustomer = await createCustomer(email, hashedPassword, name);
+    const payload = makeAuthPayload("customer", newCustomer);
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+
+    res.status(201).json({
+      message: "Customer created successfully",
+      user: payload,
+      token,
+    });
+  } catch (err) {
+    console.error("Error in signup:", err);
+    res.status(500).json({ error: "Failed to create account" });
+  }
+}
+
+
+// Login... should work for both employee and customers
 export async function login(req, res) {
-	try {
-		const { email, password } = req.body;
+  try {
+    const { email, password } = req.body; 
 
-		// Validate input
-		if (!email || !password) {
-			return res.status(400).json({ error: "Email and password are required" });
-		}
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Email and password are required" });
+    }
 
-		// Find user by email
-		const user = await findUserByEmail(email);
-		if (!user) {
-			return res.status(401).json({ error: "Invalid email or password" });
-		}
+    // Look up the accoutn in both employee table and the customer table
+    // Try Employee
+    let kind = null;
+    let record = await findEmployeeByEmail(email);
 
-		// Verify password (check if password exists and is valid)
-		if (!user.password) {
-			return res.status(401).json({ error: "Invalid email or password" });
-		}
+    if (record && record.password) {
+      const ok = await bcrypt.compare(password, record.password);
+      if (!ok) {
+        return res
+          .status(401)
+          .json({ error: "Invalid email or password" });
+      }
+      kind = "employee";
+    } else {
+      // Try customer
+      record = await findCustomerByEmail(email);
+      if (!record || !record.password) {
+        return res
+          .status(401)
+          .json({ error: "Invalid email or password" });
+      }
+      const ok = await bcrypt.compare(password, record.password);
+      if (!ok) {
+        return res
+          .status(401)
+          .json({ error: "Invalid email or password" });
+      }
+      kind = "customer";
+    }
 
-		const isPasswordValid = await bcrypt.compare(password, user.password);
-		if (!isPasswordValid) {
-			return res.status(401).json({ error: "Invalid email or password" });
-		}
+    const payload = makeAuthPayload(kind, record);
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
 
-		// Generate JWT token
-		const token = jwt.sign(
-			{ userId: user.customer_id, email: user.email },
-			process.env.JWT_SECRET || "your-secret-key-change-in-production",
-			{ expiresIn: "7d" }
-		);
+    res.json({
+      message: "Login successful",
+      user: payload,
+      token,
+    });
+  } catch (err) {
+    console.error("Error in login:", err);
+    res.status(500).json({ error: "Failed to authenticate user" });
+  }
+}
 
-		// Return user data and token (without password)
-		res.json({
-			message: "Login successful",
-			user: {
-				id: user.customer_id,
-				name: user.name,
-				email: user.email,
-			},
-			token,
-		});
-	} catch (err) {
-		console.error("Error in login:", err);
-		res.status(500).json({ error: "Failed to authenticate user" });
-	}
+
+// Creating a new employee --> TODO: need to add the client side capabilities to do this
+export async function hireEmployee(req, res) {
+  try {
+    const { name, wage, email, password, isManager } = req.body;
+
+    if (!name || !wage || !email || !password) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Ensure no one else is using this email
+    const existingCustomer = await findCustomerByEmail(email);
+    const existingEmployee = await findEmployeeByEmail(email);
+    if (existingCustomer || existingEmployee) {
+      return res
+        .status(409)
+        .json({ error: "An account with this email already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newEmployee = await createEmployee({
+      name,
+      isManager: !!isManager,
+      wage,
+      email,
+      hashedPassword,
+    });
+
+    const payload = makeAuthPayload("employee", newEmployee);
+
+    res.status(201).json({
+      message: "Employee created successfully",
+      employee: payload,
+    });
+  } catch (err) {
+    console.error("Error in hireEmployee:", err);
+    res.status(500).json({ error: "Failed to create employee" });
+  }
 }
 
