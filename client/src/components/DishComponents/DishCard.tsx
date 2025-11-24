@@ -67,10 +67,7 @@ export const DishCard: React.FC<DishCardProps> = ({
                     {ingredients.map((ing) => {
                         const currentLevel = customization[ing.inventory_id] ?? "normal";
                         return(
-                            <div
-                                key={ing.inventory_id}
-                                className="custom-row"
-                            >
+                            <div key={ing.inventory_id} className="custom-row">
                                 <span className="ing-name">{ing.name}</span>
                                 <div className="level-buttons">
                                     {(["none", "normal", "extra"] as CustomLevel[]).map((level) => (
