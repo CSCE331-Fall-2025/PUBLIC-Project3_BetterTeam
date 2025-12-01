@@ -2,7 +2,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../components/ButtonComponents/Button.tsx';
 import type { Dish } from './CashierDish';
 import { useEffect, useState } from 'react';
+
 import './CashierHome.css';
+
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 import type {OrderCardProps} from '../../components/KitchenComponents/OrderCard.tsx';
 type Order = OrderCardProps;
@@ -34,7 +37,7 @@ function CashierHome() {
       for(const dish of cart){
         try{
           const res = await fetch(
-            `http://localhost:4000/api/dishes/${dish.dish_id}/ingredients`
+            `${API_BASE}/api/dishes/${dish.dish_id}/ingredients`
           );
           if(!res.ok) continue;
 
@@ -72,7 +75,7 @@ function CashierHome() {
 
   const handlePlaceOrder = async () => {
     try {
-      await fetch("http://localhost:4000/api/transactions", {
+      await fetch(`${API_BASE}/api/transactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

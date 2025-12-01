@@ -5,6 +5,8 @@ import Button from "../../components/ButtonComponents/Button.tsx";
 import type { IngredientOption, CustomLevel, CustomizationChoice } from '../../components/DishComponents/DishCard.tsx';
 import "./CashierDish.css";
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 export type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
 
 export interface Dish {
@@ -43,14 +45,14 @@ function CashierDish(){
                 let loadedDishes: Dish[] = [];
 
                 if(type === "entree"){
-                    const entreeRes = await fetch("http://localhost:4000/api/dishes/entree");
+                    const entreeRes = await fetch(`${API_BASE}/api/dishes/entree`);
                     const entreeData = await entreeRes.json();
-                    const sideRes = await fetch("http://localhost:4000/api/dishes/side");
+                    const sideRes = await fetch(`${API_BASE}/api/dishes/side`);
                     const sideData = await sideRes.json();
 
                     loadedDishes = [...entreeData, ...sideData];
                 } else {
-                    const res = await fetch(`http://localhost:4000/api/dishes/${type}`);
+                    const res = await fetch(`${API_BASE}/api/dishes/${type}`);
                     const data = await res.json();
                     loadedDishes = data;
                 }
@@ -63,7 +65,7 @@ function CashierDish(){
                     loadedDishes.map(async (dish) => {
                         try {
                             const res = await fetch(
-                                `http://localhost:4000/api/dishes/${dish.dish_id}/ingredients`
+                                `${API_BASE}/api/dishes/${dish.dish_id}/ingredients`
                             );
                             if(!res.ok) return;
                             const ingData: IngredientOption[] = await res.json();
