@@ -7,6 +7,7 @@ import Textbox from '../../components/TextboxComponents/Textbox.tsx'
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
+
 interface Employee {
     employee_id: number;
     name: string;
@@ -122,7 +123,7 @@ function EmployeeData() {
         }
 
         try{
-            const response = await fetch(`http://localhost:4000/api/manager/employee/${selectedEmployeeID}`, {
+            const response = await fetch(`${API_BASE}/api/manager/employee/${selectedEmployeeID}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(editedEmployee), 
@@ -160,7 +161,7 @@ function EmployeeData() {
             }
 
             try{
-                const response = await fetch(`http://localhost:4000/api/manager/employee/${selectedEmployeeID}`, {
+                const response = await fetch(`${API_BASE}/api/manager/employee/${selectedEmployeeID}`, {
                     method: 'DELETE',
                     headers: {'Content-Type': 'application/json'},
                 });
@@ -206,7 +207,7 @@ function EmployeeData() {
         }
 
         try{
-            const response = await fetch('http://localhost:4000/api/manager/employee', {
+            const response = await fetch(`${API_BASE}/api/manager/employee`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(newEmployee), 

@@ -5,6 +5,8 @@ import { Line } from 'react-chartjs-2'
 import Textbox from '../../components/TextboxComponents/Textbox.tsx'
 import './OrderTrends.css'
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 interface Dish {
     dish_id: number,
     name: string,
@@ -39,7 +41,7 @@ function OrderTrends() {
         const fetchDishes = async () => {
             try {
                 // sends a fetch request to the backend route
-                const response = await fetch('http://localhost:4000/api/manager/dish');
+                const response = await fetch(`${API_BASE}/api/manager/dish`);
 
                 if(!response.ok){
                     throw new Error('Failed to fetch dishes');
@@ -120,7 +122,7 @@ function OrderTrends() {
         }
 
         try{
-            const response = await fetch(`http://localhost:4000/api/manager/dish/${selectedDishID}`, {
+            const response = await fetch(`${API_BASE}/api/manager/dish/${selectedDishID}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(editedDish), 
@@ -158,7 +160,7 @@ function OrderTrends() {
             }
 
             try{
-                const response = await fetch(`http://localhost:4000/api/manager/dish/${selectedDishID}`, {
+                const response = await fetch(`${API_BASE}/api/manager/dish/${selectedDishID}`, {
                     method: 'DELETE',
                     headers: {'Content-Type': 'application/json'},
                 });
@@ -204,7 +206,7 @@ function OrderTrends() {
         }
 
         try{
-            const response = await fetch('http://localhost:4000/api/manager/dish', {
+            const response = await fetch(`${API_BASE}/api/manager/dish`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(newDish), 
