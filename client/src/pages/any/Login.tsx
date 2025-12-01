@@ -1,10 +1,13 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./Login.css";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../../context/AuthContext";
+
+import "./Login.css";
+
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 function Login() {
   const [emailInput, setEmailInput] = useState("");
@@ -29,7 +32,7 @@ function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/api/auth/login", {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +70,7 @@ function Login() {
       setUserGoogle(decoded);
       localStorage.setItem("google_user", JSON.stringify(decoded));
       console.log("Google login success:", decoded);
-      // TODO: later, call backend /api/auth/google and then login(data.user, data.token)
+      // TODO: AHAD, call backend /api/auth/google and then login(data.user, data.token)
     }
   };
 
