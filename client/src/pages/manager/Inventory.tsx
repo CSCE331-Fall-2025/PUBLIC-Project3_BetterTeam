@@ -5,6 +5,8 @@ import { Line } from 'react-chartjs-2'
 import Textbox from '../../components/TextboxComponents/Textbox.tsx'
 import './Inventory.css'
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 interface Inventory {
     inventory_id: number,
     item: string,
@@ -39,7 +41,7 @@ function Inventory() {
         const fetchInventory = async () => {
             try {
                 // sends a fetch request to the backend route
-                const response = await fetch('http://localhost:4000/api/manager/inventory');
+                const response = await fetch(`${API_BASE}/api/manager/inventory`);
 
                 if(!response.ok){
                     throw new Error('Failed to fetch inventory');
@@ -127,7 +129,7 @@ function Inventory() {
         }
 
         try{
-            const response = await fetch(`http://localhost:4000/api/manager/inventory/${selectedInventoryID}`, {
+            const response = await fetch(`${API_BASE}/api/manager/inventory/${selectedInventoryID}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(editedInventory), 
@@ -165,7 +167,7 @@ function Inventory() {
             }
 
             try{
-                const response = await fetch(`http://localhost:4000/api/manager/inventory/${selectedInventoryID}`, {
+                const response = await fetch(`${API_BASE}/api/manager/inventory/${selectedInventoryID}`, {
                     method: 'DELETE',
                     headers: {'Content-Type': 'application/json'},
                 });
@@ -211,7 +213,7 @@ function Inventory() {
         }
 
         try{
-            const response = await fetch('http://localhost:4000/api/manager/inventory', {
+            const response = await fetch(`${API_BASE}/api/manager/inventory`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(newInventory), 

@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { MenuBox } from '../../components/MenuComponents/MenuBox.tsx'
 import './MenuBoard.css'
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 export interface Dish{
   dish_id: number;
   name: string;
@@ -23,7 +25,7 @@ function MenuBoard() {
     async function load() {
       try{
         console.log("Fetching Dishes...");
-        const res = await fetch("http://localhost:4000/api/dishes");
+        const res = await fetch(`${API_BASE}/api/dishes`);
         console.log("Response status:", res.status);
         const all: Dish[] = await res.json();
         console.log("Dishes from backend", all);
