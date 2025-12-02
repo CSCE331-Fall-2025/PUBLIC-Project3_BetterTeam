@@ -4,18 +4,12 @@
     width: 100vw;
 }
 
-.dishChart{
-    display: flex;
-    flex: 1;
-    background-color: whitesmoke;
-    min-width: 0;
+.dishDisplays{
+    width: 50%;
 }
 
-.tableContainer{
-    display: flex;
+.dishChart{
     flex: 1;
-    color: white;
-    box-sizing: border-box;
-    width: 100%;
+    background-color: whitesmoke;
     min-width: 0;
 }

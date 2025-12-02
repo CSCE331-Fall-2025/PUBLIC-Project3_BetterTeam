@@ -232,12 +232,14 @@ function OrderTrends() {
 
 	return(
 		<div className='orderTrends'>
-			<div className='dishChart'>
-				<Line data={dishChartData} />
-			</div>
-			<div className='tableContainer'>
-				<Table data={dishes} columns={dishColumns}/>
-			</div>
+            <div className='dishDisplays'>
+                <div className='dishChart'>
+                    <Line data={dishChartData} />
+                </div>
+                <div className='tableContainer'>
+                    <Table data={dishes} columns={dishColumns}/>
+                </div>
+            </div>
             <div className='textContainer'>
                 <div className='editContainer'>
                     <select onChange={(d) => handleDishSelect(Number(d.target.value))} value={selectedDishID ?? ''}>

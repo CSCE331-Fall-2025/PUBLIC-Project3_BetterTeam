@@ -4,20 +4,28 @@
     width: 100vw;
 }
 
+.employeeDisplays{
+    flex-direction: column;
+    width: 50%;
+}
+
 .employeeChart{
-    display: flex;
     flex: 1;
     background-color: whitesmoke;
     min-width: 0;
 }
 
 .tableContainer{
-    display: flex;
-    flex: 1;
     color: white;
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
+}
+
+.textContainer{
+    flex-direction: row;
+    text-align: center;
+    padding: 10px;
 }
 
 .editContainer{

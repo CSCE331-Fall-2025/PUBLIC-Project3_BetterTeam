@@ -239,12 +239,14 @@ function Inventory() {
 
 	return(
 		<div className='inventory'>
-			<div className='inventoryChart'>
-				<Line data={inventoryChartData} />
-			</div>
-			<div className='tableContainer'>
-				<Table data={inventory} columns={inventoryColumns}/>
-			</div>
+            <div className='inventoryDisplays'>
+                <div className='inventoryChart'>
+                    <Line data={inventoryChartData} />
+                </div>
+                <div className='tableContainer'>
+                    <Table data={inventory} columns={inventoryColumns}/>
+                </div>
+            </div>
             <div className='textContainer'>
                 <div className='editContainer'>
                     <select onChange={(i) => handleInventorySelect(Number(i.target.value))} value={selectedInventoryID ?? ''}>
