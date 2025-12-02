@@ -36,7 +36,7 @@ function CustomerDish() {
     const [dishes, setDishes] = useState<Dish[]>([]);
     const [ingredientsByDish, setIngredientsByDish] = useState<Record<number, IngredientOption[]>>({});
     const [customization, setCustomization] = useState<Record<number, Record<number, CustomLevel>>>({});
-
+    const [mealQty, setMealQty] = useState(1);
     
     if (!type) {
         return <div>Error: No dish type provided.</div>;
@@ -164,14 +164,18 @@ function CustomerDish() {
 
     const handleBack = () => navigate("/Customer/CustomerHome", { state: { cart } });
     const handleAddToCart = () => {
-        const selectedWithCustomization: Dish[] = selected.map(d => ({
-            ...d,
-            customization: customization[d.dish_id] || {}
-        }));
+        const newItems: Dish[] = [];
+
+        for(let i = 0; i < mealQty; i++){
+            selected.forEach(dish => {
+                newItems.push({
+                    ...dish,
+                    customization: customization[dish.dish_id] || {}
+                });
+            });
+        }
         navigate("/Customer/CustomerHome", {
-            state: {
-                cart: [...cart, ...selectedWithCustomization]
-            }
+            state: { cart: [...cart, ...newItems]}
         });
     };
 
@@ -179,6 +183,12 @@ function CustomerDish() {
         <div className="meal-builder-wrapper">
             <div className="dish-box-row">
                 {boxes}
+            </div>
+
+            <div className="qty-row">
+                <button className="qty-btn" onClick={() => setMealQty(q => Math.max(1, q - 1))}>-</button>
+                <span className="qty-num">{mealQty}</span>
+                <button className="qty-btn" onClick={() => setMealQty(q => q + 1)}>+</button>
             </div>
 
             <div className="button-row">
