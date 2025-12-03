@@ -1,5 +1,5 @@
 // NEED TO IMPORT WHATEVER MODEL YOU WANT TO BE ABLE TO CALL
-import { newDish, getAllDishes, updateDish, deleteDish } from "../models/managerDishModel.js";
+import { newDish, getAllDishes, updateDish, deleteDish, getDishInventory, updateDishInventory } from "../models/managerDishModel.js";
 
 export async function createDish(req, res){
     try{
@@ -68,5 +68,33 @@ export async function deleteDishController(req, res){
     } catch(err){
         console.error("Error deleting dish:", err);
         res.status(500).json({error: "Failed to delete dish"});
+    }
+}
+
+export async function getDishInventoryController(req, res) {
+    try {
+        const items = await getDishInventory();
+        res.json(items);
+    } catch (err) {
+        console.error("Error fetching dish inventory:", err);
+        res.status(500).json({ error: "Failed to fetch dish inventory" });
+    }
+}
+
+export async function updateDishInventoryController(req, res){
+    try{
+        const {dish_id} = req.params;
+        const {newInventory} = req.body;
+
+        if(!newInventory || !Array.isArray(newInventory)) {
+            return res.status(400).json({error: "Missing or invalid inventory array"});
+        }
+
+        await updateDishInventory(dish_id, newInventory);
+
+        res.json({ message: "DishInventory updated successfully."});
+    } catch(err){
+        console.error("Error updating dish inventory:", err);
+        res.status(500).json({error: "Failed to update dish inventory"});
     }
 }

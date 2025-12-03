@@ -41,3 +41,49 @@ export async function deleteDish(id){
     );
     return result.rows[0];
 }
+
+export async function getDishInventory() {
+    const result = await pool.query(
+        'SELECT fk_dish, fk_inventory FROM dishinventory;'
+    );
+    return result.rows;
+}
+
+const formatDishInventoryInsert = (dishId, inventoryIds) => {
+    if(inventoryIds.length === 0) return null;
+
+    const values = inventoryIds.map((_, index) => 
+    `($1, $${index + 2})`
+    ).join(', ');
+
+    const params = [dishId, ...inventoryIds];
+
+    return{
+        query: `INSERT INTO dishinventory (fk_dish, fk_inventory) VALUES ${values};`,
+        params: params
+    };
+};
+
+export async function updateDishInventory(dishId, inventoryIds) {
+    const client = await pool.connect();
+
+    try{
+        await client.query('BEGIN');
+
+        await client.query('DELETE FROM dishinventory WHERE fk_dish = $1;', [dishId]);
+
+        if(inventoryIds && inventoryIds.length > 0) {
+            const insertData = formatDishInventoryInsert(dishId, inventoryIds);
+            await client.query(insertData.query, insertData.params);
+        }
+
+        await client.query('COMMIT');
+
+        return{success: true};
+    } catch(e){
+        await client.query('ROLLBACK');
+        throw e;
+    } finally{
+        client.release();
+    }
+}

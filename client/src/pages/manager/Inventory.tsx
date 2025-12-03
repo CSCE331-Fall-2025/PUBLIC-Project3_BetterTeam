@@ -7,7 +7,7 @@ import './Inventory.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
-interface Inventory {
+export interface Inventory {
     inventory_id: number,
     item: string,
     current_inventory: number,
