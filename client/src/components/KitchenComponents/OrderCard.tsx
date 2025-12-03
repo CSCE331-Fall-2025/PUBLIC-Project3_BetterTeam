@@ -1,4 +1,3 @@
-//import React, { useState } from "react";
 import '../../pages/customer/CustomerDish';
 import type { Dish } from '../../pages/customer/CustomerDish';
 import Button from "../ButtonComponents/Button.tsx";
@@ -18,9 +17,8 @@ interface IngredientOption{
 
 type Order = OrderCardProps;
 
-//export function OrderCard(props: OrderCardProps) {
 export const OrderCard: React.FC<OrderCardProps> 
-= ({name, slot, items/*, onSlotChange*/}) => {
+= ({name, slot, items}) => {
     
     const handleSlotChange = (change: number) => {
         const storedOrders = localStorage.getItem("orders");
@@ -99,9 +97,10 @@ export const OrderCard: React.FC<OrderCardProps>
     return (
         <div className="order-card" >
             <ul className="order-card-text">
+                <h3 className="order-card-number">ORDER #{name}</h3>
                 {items.map((dish, index) => (
                                 <li key={index}>
-                                    <h3 className="order-card-title">{dish.name}{name}</h3>
+                                    <h3 className="ingredient-title">{dish.name}</h3>
 
                                     {dish.customization && (
                                         <ul className="customization-list">

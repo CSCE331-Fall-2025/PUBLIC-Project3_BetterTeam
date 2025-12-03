@@ -10,12 +10,20 @@
     transition: box-shadow 0.2s ease-in-out;
     width: 24vw;
     height: auto;
-    margin: 1 auto;
+    margin:  auto;
 }
 
-.order-card-title {
-    font-size: 0.85rem;
+.ingredient-title {
+    font-size: 0.80rem;
     font-weight: 600;
+    text-align: center;
+    color: var(--defblack);
+    margin: 0;
+}
+
+.order-card-number {
+    font-size: 1rem;
+    font-weight: 700;
     text-align: center;
     color: var(--defblack);
     margin: 0;
