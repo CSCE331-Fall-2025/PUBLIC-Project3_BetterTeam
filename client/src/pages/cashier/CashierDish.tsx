@@ -7,7 +7,7 @@ import "./CashierDish.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
-export type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
+export type DishType = 'entree' | 'appetizer' | 'drink' | 'side' | 'season';
 
 export interface Dish {
     dish_id: number;

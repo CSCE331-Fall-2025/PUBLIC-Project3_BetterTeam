@@ -32,6 +32,7 @@ function CustomerHome() {
             <Button name="Appetizer" onClick={() => goToDishPage('appetizer')} />
             <Button name="Sides" onClick={() => goToDishPage('side')} />
             <Button name="Drinks" onClick={() => goToDishPage('drink')} />
+            <Button name="Seasonal" onClick={() => goToDishPage('season')}/>
         </div>
 
         <div className="checkout-buttons">
