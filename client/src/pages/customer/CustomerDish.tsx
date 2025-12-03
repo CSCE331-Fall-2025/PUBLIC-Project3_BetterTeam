@@ -164,6 +164,19 @@ function CustomerDish() {
 
     const handleBack = () => navigate("/Customer/CustomerHome", { state: { cart } });
     const handleAddToCart = () => {
+
+        if(type === "entree"){
+            const requiredCount = entreeCount + 1;
+            if(selected.length !== requiredCount){
+                alert("Please select all entrees and a side before adding to cart.");
+                return;
+            }
+        } else {
+            if(selected.length !== 1){
+                alert("Please select an item before adding to cart.");
+                return;
+            }
+        }
         const newItems: Dish[] = [];
 
         for(let i = 0; i < mealQty; i++){
