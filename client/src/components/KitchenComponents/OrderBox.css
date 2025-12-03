@@ -11,3 +11,11 @@
     font-weight: bold;
     text-align: center;
 }
+/*
+.order-box-grid {
+    display: flex;
+    gap: .5rem;
+    justify-content: center;
+    margin-top: .5rem;
+    color: blue;
+}*/
