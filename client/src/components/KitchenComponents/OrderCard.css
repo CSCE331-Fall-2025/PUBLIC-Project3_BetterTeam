@@ -10,12 +10,20 @@
     transition: box-shadow 0.2s ease-in-out;
     width: 24vw;
     height: auto;
-    margin: 1 auto;
+    margin:  auto;
 }
 
-.order-card-title {
-    font-size: 0.85rem;
+.ingredient-title {
+    font-size: 0.80rem;
     font-weight: 600;
+    text-align: center;
+    color: var(--defblack);
+    margin: 0;
+}
+
+.order-card-number {
+    font-size: 1rem;
+    font-weight: 700;
     text-align: center;
     color: var(--defblack);
     margin: 0;
@@ -23,6 +31,31 @@
 
 .order-card-text {
     font-size: 0.65rem;
-    color: var(--defblack);
+    list-style-type: none;
+    /*color: var(--defblack);*/
     margin: 0;
 }
+
+.order-buttons {
+    display: flex;
+    gap: .5rem;
+    justify-content: center;
+    margin-top: .5rem;
+    flex-wrap: wrap;
+    color: var(--defblack);
+}
+
+.down, .up{
+    all: unset;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}
+.down {
+    background-color: var(--bigred);
+}
+
+.up {
+    background-color: var(--greenidk);
+}
+

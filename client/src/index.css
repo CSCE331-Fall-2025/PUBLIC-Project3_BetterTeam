@@ -1,7 +1,9 @@
 :root {
-  background-color: #D16D69;/* was 242424*/
+  background-color: #242424;/* was 242424*/
   --primary-color: #BB2719;/*default panda red #BB2719*/
   --secondary-color: #D16D69;/*#D16D69<-- from project 2*/
   --defblack: black;/* currently black idk if we'd want to change but now we can!*/
   --defwhite: white;
+  --bigred: rgb(255, 0, 0);
+  --greenidk: rgb(0, 255, 55);
 }
