@@ -3,6 +3,10 @@ import Table, { type ColumnDefinition } from '../../components/TableComponents/T
 import 'chart.js/auto'
 import { Line } from 'react-chartjs-2'
 import Textbox from '../../components/TextboxComponents/Textbox.tsx'
+import PillBox from '../../components/MultiSelectComponents/PillBox.tsx'
+import type { Options } from '../../components/MultiSelectComponents/PillBox.tsx'
+import type { MultiValue } from 'react-select'; 
+import type { Inventory } from './Inventory.tsx'
 import './OrderTrends.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -25,39 +29,79 @@ interface ChartData {
     }[];
 }
 
+interface DishInventoryJunction {
+    fk_dish: number,
+    fk_inventory: number,
+}
+
+const mapInventoryToOrders = (ing: Inventory): Options => {
+    return{
+        value: ing.inventory_id,
+        label: ing.item,
+    }
+}
+
 function OrderTrends() {
 
+    // list of all dishes
     const [dishes, setDishes] = useState<Dish[]>([]);
+    // dish selected to be updated
     const [selectedDishID, setSelectedDishID] = useState<number | null>(null);
+    // locally stored dish with updates made
     const [editedDish, setEditedDish] = useState<{name: string, type: string, price: number} | null>(null);
+    // new dish
     const [newDish, setNewDish] = useState<Omit<Dish, 'dish_id'>>({
         name: '',
         type: 'Side',
         price: 1,
     })
+    // list of all inventory
+    const [inventory, setInventory] = useState<Options[]>([]);
+    // list of all ingredients for every dish
+    const [junction, setJunction] = useState<DishInventoryJunction[]>([]);
+    // selected ingredients for a dish being updated
+    const [selectedInventory, setSelectedInventory] = useState<MultiValue<Options>>([]);
+    // selected ingredients for a new dish
+    const [newInventory, setNewInventory] = useState<MultiValue<Options>>([]);
 
     // hook that fetches the data
     useEffect(() => {
-        const fetchDishes = async () => {
+        const fetchData = async () => {
             try {
                 // sends a fetch request to the backend route
-                const response = await fetch(`${API_BASE}/api/manager/dish`);
+                const [dishRes, inventoryRes, junctionRes] = await Promise.all([
+                    fetch(`${API_BASE}/api/manager/dish`),
+                    fetch(`${API_BASE}/api/manager/inventory`),
+                    fetch(`${API_BASE}/api/manager/dish/dishInventory`),
+                ]);
 
-                if(!response.ok){
+                if(!dishRes.ok){
                     throw new Error('Failed to fetch dishes');
                 }
+                if(!inventoryRes.ok){
+                    throw new Error('Failed to fetch inventory');
+                }
+                if(!junctionRes.ok){
+                    throw new Error('Failed to fetch junction');
+                }
 
-                // this parses the json and converts it into an inventory array
-                const data:Dish[] = await response.json();
+                const dishesData: Dish[] = await dishRes.json();
+                const inventoryData: Inventory[] = await inventoryRes.json();
+                const junctionData: DishInventoryJunction[] = await junctionRes.json();
 
-                setDishes(data);
+                // map inventory to an options array
+                const optionsData: Options[] = inventoryData.map(mapInventoryToOrders);
+
+                setDishes(dishesData);
+                setInventory(optionsData);
+                setJunction(junctionData);
 
             } catch (error) {
                 console.error('Error:', error);
             }
         };
 
-        fetchDishes();
+        fetchData();
     }, []);
 
     const selectedDish = dishes.find(e => e.dish_id === selectedDishID);
@@ -72,9 +116,17 @@ function OrderTrends() {
                 type: dishEdit.type,
                 price: dishEdit.price,
             });
+
+            // take the list of all dishinventory, filter for just the selected dish, and then map to turn it from fk_dish, fk_inventory to just be the inventory ids
+            const ingredientIDs = junction.filter(j => j.fk_dish === id).map(j => j.fk_inventory);
+            const initialIngredients = inventory.filter(i => ingredientIDs.includes(i.value));
+
+            setSelectedInventory(initialIngredients);
+
         } else{
             setSelectedDishID(null);
-            setEditedDish(null);
+            setEditedDish(null);;
+            setSelectedInventory([]);
         }
     };
 
@@ -115,6 +167,20 @@ function OrderTrends() {
         });
     };
 
+    const updateIngredients = async (dishId: number, ingredients: MultiValue<Options>) => {
+        const newIngredients = ingredients.map(item => item.value);
+
+        const response = await fetch (`${API_BASE}/api/manager/dish/${dishId}/ingredients`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ newInventory: newIngredients}),
+        });
+
+        if(!response.ok){
+            throw new Error('Failed to update dish ingredients');
+        }
+    }
+
     const handleUpdate = async () => {
         if(!selectedDishID || !editedDish){
             alert('No selected dish to change');
@@ -138,8 +204,11 @@ function OrderTrends() {
                 )
             );
 
+            await updateIngredients(selectedDishID, selectedInventory);
+
             setSelectedDishID(null);
             setEditedDish(null);
+            setSelectedInventory([]);
 
             alert('Dish updated successfully.');
 
@@ -218,9 +287,11 @@ function OrderTrends() {
 
             const addedDish: Dish = await response.json();
 
-            setDishes(prevDishes => [...prevDishes, addedDish]);
+            await updateIngredients(addedDish.dish_id, newInventory);
 
+            setDishes(prevDishes => [...prevDishes, addedDish]);
             setNewDish({ name: '', type: 'Side', price: 1 });
+            setNewInventory([]);
 
             alert(`Added ${addedDish.name} successfully`);
 
@@ -230,14 +301,24 @@ function OrderTrends() {
         }
     };
 
+    const handleUpdateIngredientChange = (selectedItems: MultiValue<Options>) => {
+        setSelectedInventory(selectedItems);
+    }
+
+    const handleAddIngredientChange = (selectedItems: MultiValue<Options>) => {
+        setNewInventory(selectedItems);
+    }
+
 	return(
 		<div className='orderTrends'>
-			<div className='dishChart'>
-				<Line data={dishChartData} />
-			</div>
-			<div className='tableContainer'>
-				<Table data={dishes} columns={dishColumns}/>
-			</div>
+            <div className='dishDisplays'>
+                <div className='dishChart'>
+                    <Line data={dishChartData} />
+                </div>
+                <div className='tableContainer'>
+                    <Table data={dishes} columns={dishColumns}/>
+                </div>
+            </div>
             <div className='textContainer'>
                 <div className='editContainer'>
                     <select onChange={(d) => handleDishSelect(Number(d.target.value))} value={selectedDishID ?? ''}>
@@ -271,6 +352,13 @@ function OrderTrends() {
                                 <option value="App">App</option>
                                 <option value="Drink">Drink</option>
                             </select>
+                            <PillBox 
+                                availableOptions={inventory}
+                                initialOptions={selectedInventory}
+                                label='Select Ingredients: '
+                                placeholder='Select Ingredients for Dish...'
+                                onSelectionChange={handleUpdateIngredientChange}
+                            />
                             <button onClick={handleUpdate}>Update Dish</button>
                             <button onClick={handleDeletion}>Remove Dish</button>
                         </>
@@ -297,6 +385,13 @@ function OrderTrends() {
                         <option value="App">App</option>
                         <option value="Drink">Drink</option>
                     </select>
+                    <PillBox 
+                        availableOptions={inventory}
+                        initialOptions={newInventory}
+                        label='Select Ingredients: '
+                        placeholder='Select Ingredients for Dish...'
+                        onSelectionChange={handleAddIngredientChange}
+                    />
                     <button onClick={handleAdd}>Add Dish</button>
                 </div>
             </div>

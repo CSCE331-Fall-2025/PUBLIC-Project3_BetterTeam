@@ -7,7 +7,6 @@ import Textbox from '../../components/TextboxComponents/Textbox.tsx'
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
-
 interface Employee {
     employee_id: number;
     name: string;
@@ -233,12 +232,14 @@ function EmployeeData() {
 
 	return(
 		<div className='employeeData'>
-			<div className='employeeChart'>
-				<Bar data={employeeChartData} />
-			</div>
-			<div className='tableContainer'>
-				<Table data={employees} columns={employeeColumns}/>
-			</div>
+            <div className='employeeDisplays'>
+                <div className='employeeChart'>
+                    <Bar data={employeeChartData} />
+                </div>
+                <div className='tableContainer'>
+                    <Table data={employees} columns={employeeColumns}/>
+                </div>
+            </div>
             <div className='textContainer'>
                 <div className='editContainer'>
                     <select onChange={(e) => handleEmployeeSelect(Number(e.target.value))} value={selectedEmployeeID ?? ''}>

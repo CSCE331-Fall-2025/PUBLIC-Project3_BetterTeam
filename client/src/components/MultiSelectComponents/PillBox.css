@@ -1,0 +1,16 @@
+.react-select__menu-list {
+    column-count: 2;
+    column-gap: 20px;
+    padding: 10px;
+    min-height: 450px;
+    overflow-y: auto;
+}
+
+.react-select__option {
+    break-inside: avoid;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
