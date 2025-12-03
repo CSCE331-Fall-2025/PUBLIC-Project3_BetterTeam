@@ -11,7 +11,7 @@ import Header from './Header';
 export function Layout() {
 	return (
 		<div className="layout">
-			<Header name={"Page Title"} />
+			<Header/>
 			<div className="layout-content">
 				<NavBar />
 				<main className="page">
