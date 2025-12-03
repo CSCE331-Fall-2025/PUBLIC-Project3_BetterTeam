@@ -4,4 +4,6 @@
   --secondary-color: #D16D69;/*#D16D69<-- from project 2*/
   --defblack: black;/* currently black idk if we'd want to change but now we can!*/
   --defwhite: white;
+  --bigred: rgb(255, 0, 0);
+  --greenidk: rgb(0, 255, 55);
 }

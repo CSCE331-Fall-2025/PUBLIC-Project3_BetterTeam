@@ -23,6 +23,31 @@
 
 .order-card-text {
     font-size: 0.65rem;
-    color: var(--defblack);
+    list-style-type: none;
+    /*color: var(--defblack);*/
     margin: 0;
 }
+
+.order-buttons {
+    display: flex;
+    gap: .5rem;
+    justify-content: center;
+    margin-top: .5rem;
+    flex-wrap: wrap;
+    color: var(--defblack);
+}
+
+.down, .up{
+    all: unset;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}
+.down {
+    background-color: var(--bigred);
+}
+
+.up {
+    background-color: var(--greenidk);
+}
+
