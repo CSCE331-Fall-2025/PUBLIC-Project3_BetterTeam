@@ -49,18 +49,24 @@ export const DishCard: React.FC<DishCardProps> = ({
                     <h3 className="dish-card-title">{name}</h3>
                     <p className="dish-card-price">${price.toFixed(2)}</p>
                 </div>
+                {isSelected && (
+                    <button
+                        className="customize-btn"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if(!isSelected){
+                                onSelect?.();
+                            }
+                            setShowOptions(prev => !prev);
+                        }}
+                    >
+                        Customize
+                    </button>
+                )}
 
-                <button
-                    className="customize-btn"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setShowOptions(!showOptions);
-                    }}
-                >
-                    Customize
-                </button>
             </div>
-            {showOptions && (
+
+            {showOptions && isSelected && (
                 <div className="custom-panel">
                     <h4 className="custom-panel-title">Ingredients</h4>
 
