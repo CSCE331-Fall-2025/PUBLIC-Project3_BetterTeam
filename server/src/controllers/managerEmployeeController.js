@@ -1,15 +1,28 @@
 // NEED TO IMPORT WHATEVER MODEL YOU WANT TO BE ABLE TO CALL
 import { newEmployee, getAllEmployees, updateEmployee, deleteEmployee } from "../models/managerEmployeeModel.js";
+import { findCustomerByEmail, findEmployeeByEmail } from "../models/authModel.js";
+import bcrypt from "bcrypt";
 
 export async function createEmployee(req, res){
     try{
-        const {name, ismanager, wage} = req.body;
+        const {name, ismanager, wage, email, password} = req.body;
 
-        if(!name || ismanager === undefined || wage === undefined) {
-            return res.status(400).json({error: "Missing required fields (name, ismanager, wage)"});
+        if(!name || ismanager === undefined || wage === undefined || !email || !password ) {
+            return res.status(400).json({error: "Missing required fields (name, ismanager, wage, email, password)"});
         }
 
-        const createdEmployeeResult = await newEmployee(name, ismanager, wage);
+        // Ensure no one else is using this email
+        const existingCustomer = await findCustomerByEmail(email);
+        const existingEmployee = await findEmployeeByEmail(email);
+        if (existingCustomer || existingEmployee) {
+            return res
+            .status(409)
+            .json({ error: "An account with this email already exists" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const createdEmployeeResult = await newEmployee(name, ismanager, wage, email, hashedPassword);
 
         if(createdEmployeeResult){
             res.json(createdEmployeeResult);

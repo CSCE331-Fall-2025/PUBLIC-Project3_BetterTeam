@@ -321,6 +321,7 @@ function OrderTrends() {
             </div>
             <div className='textContainer'>
                 <div className='editContainer'>
+                    <h2>Edit Selected Dish</h2  >
                     <select onChange={(d) => handleDishSelect(Number(d.target.value))} value={selectedDishID ?? ''}>
                         <option value='' disabled>Select Dish</option>
                         {dishes.map(d => (
@@ -331,17 +332,19 @@ function OrderTrends() {
                     </select>
                     {selectedDish && editedDish && (
                         <>
-                            <p>Currently Editing {selectedDish.name}</p>
+                            <h3>Name</h3>
                             <Textbox 
                                 value={editedDish.name} 
                                 onChange={(newName) => handleFieldChange('name', newName)} 
                                 placeholder='Enter new name here...'
                             />
+                            <h3>Price</h3>
                             <Textbox 
                                 value={String(editedDish.price)} 
                                 onChange={(newPrice) => handleFieldChange('price', newPrice)} 
                                 placeholder='Enter new price here...'
                             />
+                            <h3>Type</h3>
                             <select
                                 value={editedDish.type}
                                 onChange={(newType) => handleFieldChange('type', newType.target.value)}
@@ -352,10 +355,10 @@ function OrderTrends() {
                                 <option value="App">App</option>
                                 <option value="Drink">Drink</option>
                             </select>
+                            <h3>Ingredients</h3>
                             <PillBox 
                                 availableOptions={inventory}
                                 initialOptions={selectedInventory}
-                                label='Select Ingredients: '
                                 placeholder='Select Ingredients for Dish...'
                                 onSelectionChange={handleUpdateIngredientChange}
                             />
@@ -365,16 +368,20 @@ function OrderTrends() {
                     )}
                 </div>
                 <div className='addContainer'>
+                    <h2>Add new Dish</h2>
+                    <h3>Name</h3>
                     <Textbox 
                         value={newDish.name}
                         onChange={(newName) => handleAddFieldChange('name', newName)} 
                         placeholder='Enter name here...'
                     />
+                    <h3>Price</h3>
                     <Textbox 
                         value={String(newDish.price)}
                         onChange={(newPrice) => handleAddFieldChange('price', newPrice)} 
                         placeholder='Enter price here...'
                     />
+                    <h3>Type</h3>
                     <select
                         value={String(newDish.type)}
                         onChange={(newType) => handleAddFieldChange('type', newType.target.value)}
@@ -385,10 +392,10 @@ function OrderTrends() {
                         <option value="App">App</option>
                         <option value="Drink">Drink</option>
                     </select>
+                    <h3>Ingredients</h3>
                     <PillBox 
                         availableOptions={inventory}
                         initialOptions={newInventory}
-                        label='Select Ingredients: '
                         placeholder='Select Ingredients for Dish...'
                         onSelectionChange={handleAddIngredientChange}
                     />

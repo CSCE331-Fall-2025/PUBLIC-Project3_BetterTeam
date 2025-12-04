@@ -55,6 +55,7 @@ export function ManagerLinks({ onLogout }: LogoutProps) {
       <Link to="/any/home">Home</Link>
       <Link to="/manager/dashboard">Manager Dashboard</Link>
       <Link to="/manager/employeedata">Employee Data</Link>
+      <Link to="/manager/employeemanage">Employee Manage</Link>
       <Link to="/manager/inventory">Inventory</Link>
       <Link to="/manager/ordertrends">Order Trends</Link>
       <Link to="/kitchen">Kitchen</Link>

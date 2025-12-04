@@ -249,6 +249,7 @@ function Inventory() {
             </div>
             <div className='textContainer'>
                 <div className='editContainer'>
+                    <h2>Edit Inventory</h2>
                     <select onChange={(i) => handleInventorySelect(Number(i.target.value))} value={selectedInventoryID ?? ''}>
                         <option value='' disabled>Select Inventory</option>
                         {inventory.map(i => (
@@ -259,17 +260,19 @@ function Inventory() {
                     </select>
                     {selectedInventory && editedInventory && (
                         <>
-                            <p>Currently Editing {selectedInventory.item}</p>
+                            <h3>Name</h3>
                             <Textbox 
                                 value={editedInventory.item} 
                                 onChange={(newItem) => handleFieldChange('item', newItem)} 
                                 placeholder='Enter new ingredient name here...'
                             />
+                            <h3>Current Inventory</h3>
                             <Textbox 
                                 value={String(editedInventory.current_inventory)} 
                                 onChange={(newCurrentInventory) => handleFieldChange('current_inventory', newCurrentInventory)} 
                                 placeholder='Enter current inventory here...'
                             />
+                            <h3>Target Inventory</h3>
                             <Textbox 
                                 value={String(editedInventory.target_inventory)} 
                                 onChange={(newTargetInventory) => handleFieldChange('target_inventory', newTargetInventory)} 
@@ -281,16 +284,20 @@ function Inventory() {
                     )}
                 </div>
                 <div className='addContainer'>
+                    <h2>Add new Inventory</h2>
+                    <h3>Name</h3>
                     <Textbox 
                         value={newInventory.item}
                         onChange={(newItem) => handleAddFieldChange('item', newItem)} 
                         placeholder='Enter ingredient name here...'
                     />
+                    <h3>Current Inventory</h3>
                     <Textbox 
                         value={String(newInventory.current_inventory)}
                         onChange={(newCurrentInventory) => handleAddFieldChange('current_inventory', newCurrentInventory)} 
                         placeholder='Enter current inventory here...'
                     />
+                    <h3>Target Inventory</h3>
                     <Textbox 
                         value={String(newInventory.target_inventory)}
                         onChange={(newTargetInventory) => handleAddFieldChange('target_inventory', newTargetInventory)} 

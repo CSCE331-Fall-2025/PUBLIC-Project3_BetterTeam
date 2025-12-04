@@ -24,9 +24,16 @@
 
 .textContainer{
     flex-direction: row;
-    text-align: center;
     width: 33%;
     padding: 10px;
+
+    h3, h2, p{
+        color: white;
+    }
+
+    button{
+        margin-top: 10px;
+    }
 }
 
 .editContainer{
@@ -37,6 +44,5 @@
 
 .addContainer{
     padding: 5px;
-    padding-top: 50px;
     border: 5px solid white;
 }
