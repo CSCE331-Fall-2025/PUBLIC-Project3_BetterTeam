@@ -28,6 +28,7 @@
 .page {
     flex: 1;
     display: flex;
+    min-width: 0;
     margin: 1rem;
     justify-content: center;
 }

@@ -1,18 +1,24 @@
+
 import "./NavLinks.css";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 type LogoutProps = {
   onLogout: () => void;
 };
 
 // -------- Guest (not logged in) --------
-export function GuestLinks() {
+export function GuestLinks({ onLogout }: LogoutProps) {
   return (
-    <div className="nav-links">
-      <Link to="/any/home">Home</Link>
-      <Link to="/customer/customerhome">Customer Home</Link>
-      <Link to="/any/login">Login</Link>
-      <Link to="/any/menuboard">Menu</Link>
+    <div className="nav">
+        <div className="nav-section">
+            <p className="nav-section-title">Guest</p>
+            <NavLink className="nav-item" to="/customer/customerhome">Order</NavLink>
+            <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
+        </div>
+
+        <div className="nav-section">
+            <NavLink className="nav-item" to="/any/login">Login</NavLink>
+        </div>
     </div>
   );
 }
@@ -21,14 +27,18 @@ export function GuestLinks() {
 // -------- Customer --------
 export function CustomerLinks({ onLogout }: LogoutProps) {
   return (
-    <div className="nav-links">
-      <Link to="/any/home">Home</Link>
-      <Link to="/customer/customerhome">Customer Home</Link>
-      <Link to="/customer/profile">Profile</Link>
-      <Link to="/any/menuboard">Menu</Link>
-      <button type="button" className="nav-link-button" onClick={onLogout}>
-        Logout
-      </button>
+    <div className="nav">
+        <div className="nav-section">
+            <p className="nav-section-title">Customer</p>
+            <NavLink className="nav-item" to="/customer/customerhome">Order</NavLink>
+            <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
+        </div>
+
+        <div className="nav-section">
+            <p className="nav-section-title">Account</p>
+            <NavLink className="nav-item" to="/customer/profile">Profile</NavLink>
+            <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
+        </div>
     </div>
   );
 }
@@ -36,14 +46,19 @@ export function CustomerLinks({ onLogout }: LogoutProps) {
 // -------- Cashier --------
 export function CashierLinks({ onLogout }: LogoutProps) {
   return (
-    <div className="nav-links">
-      <Link to="/any/home">Home</Link>
-      <Link to="/cashier/cashierhome">Cashier Home</Link>
-      <Link to="/kitchen">Kitchen</Link>
-      <Link to="/any/menuboard">Menu</Link>
-      <button type="button" className="nav-link-button" onClick={onLogout}>
-        Logout
-      </button>
+    <div className="nav">
+        <div className="nav-section">
+            <p className="nav-section-title">Cashier</p>
+            <NavLink className="nav-item" to="/cashier/cashierhome">Cashier Home</NavLink>
+            <NavLink className="nav-item" to="/kitchen">Kitchen</NavLink>
+            <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
+        </div>
+
+        <div className="nav-section">
+            <p className="nav-section-title">Account</p>
+            <NavLink className="nav-item" to="/cashier/profile">Profile</NavLink>
+            <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
+        </div>
     </div>
   );
 }
@@ -51,17 +66,22 @@ export function CashierLinks({ onLogout }: LogoutProps) {
 // -------- Manager --------
 export function ManagerLinks({ onLogout }: LogoutProps) {
   return (
-    <div className="nav-links">
-      <Link to="/any/home">Home</Link>
-      <Link to="/manager/dashboard">Manager Dashboard</Link>
-      <Link to="/manager/employeedata">Employee Data</Link>
-      <Link to="/manager/inventory">Inventory</Link>
-      <Link to="/manager/ordertrends">Order Trends</Link>
-      <Link to="/kitchen">Kitchen</Link>
-      <Link to="/any/menuboard">Menu</Link>
-      <button type="button" className="nav-link-button" onClick={onLogout}>
-        Logout
-      </button>
+    <div className="nav">
+        <div className="nav-section">
+            <p className="nav-section-title">Cashier</p>
+            <NavLink className="nav-item" to="/manager/dashboard">Manager Dashboard</NavLink>
+            <NavLink className="nav-item" to="/manager/employeedata">Employee Data</NavLink>
+            <NavLink className="nav-item" to="/manager/inventory">Inventory</NavLink>
+            <NavLink className="nav-item" to="/manager/ordertrends">Order Trends</NavLink>
+            <NavLink className="nav-item" to="/kitchen">Kitchen</NavLink>
+            <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
+        </div>
+
+        <div className="nav-section">
+            <p className="nav-section-title">Account</p>
+            <NavLink className="nav-item" to="/manager/profile">Profile</NavLink>
+            <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
+        </div>
     </div>
   );
 }
