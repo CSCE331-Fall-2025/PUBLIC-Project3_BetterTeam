@@ -8,6 +8,7 @@ import './CashierHome.css';
 const API_BASE = import.meta.env.VITE_API_BASE;
 
 import type {OrderCardProps} from '../../components/KitchenComponents/OrderCard.tsx';
+
 type Order = OrderCardProps;
 
 type DishType = 'entree' | 'appetizer' | 'drink' | 'side' | 'season';
@@ -21,11 +22,47 @@ interface IngredientOption{
   name: string;
 }
 
+function groupIntoMeals(cart : Dish[]): Dish[][] {
+  const meals: Dish[][] = [];
+  let current: Dish[] = [];
+
+  for(const dish of cart){
+    current.push(dish);
+
+    if(dish.type === "side"){
+      meals.push(current);
+      current = [];
+    }
+  }
+
+  if(current.length > 0){
+    meals.push(current);
+  }
+
+  return meals;
+}
+
+function getMealName(meal: Dish[]){
+    const types = meal.map(d => d.type);
+    const entreeCount = types.filter(t => t === "entree").length;
+
+    if(entreeCount === 1) return "Bowl";
+    if(entreeCount === 2) return "Plate";
+    if(entreeCount === 3) return "Big Plate";
+
+    if(types.includes("appetizer")) return "App";
+    if(types.includes("drink")) return "Drink";
+    if(types.includes("side")) return "Side";
+    if(types.includes("season")) return "Seasonal";
+    return "Meal";
+}
+
 function CashierHome() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState;
   const cart: Dish[] = state?.cart || [];
+  const meals = groupIntoMeals(cart);
   const total = cart.reduce((sum, d) => sum + d.price, 0);
   const [ingredientNames, setIngredientNames] = useState<Record<number, Record<number, string>>>({});
 
@@ -75,17 +112,25 @@ function CashierHome() {
 
   const handlePlaceOrder = async () => {
     try {
-      await fetch(`${API_BASE}/api/transactions`, {
+      const response = await fetch(`${API_BASE}/api/transactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           cart,
-          fk_customer: 11,
-          fk_employee: 15
+          fk_customer: 26,
+          fk_employee: 29
         }),
       });
 
-      alert("Order placed!");
+      const data = await response.json();
+      const transactionId = data.transaction_id;
+
+      if(!transactionId){
+        alert("Error: No transaction ID returned.");
+        return;
+      }
+
+      alert(`Order placed! Order Number: #${transactionId}`);
 
       //retrieve orders
       const storedOrders = localStorage.getItem("orders");
@@ -127,28 +172,37 @@ function CashierHome() {
         ) : (
           <>
             <ul>
-              {cart.map((dish, i) => (
-                <li key={i}>
-                  <span>{dish.name}</span> - ${dish.price.toFixed(2)}
+              {meals.map((meal, mealIndex) => (
+                <li key={mealIndex}>
+                  <h3>{getMealName(meal)}</h3>
+                  <ul>
+                    {meal.map((dish, idx) => (
+                      <li key={idx}>
+                        {dish.name} - ${dish.price.toFixed(2)}
+                        {dish.customization && (
+                          <ul className="customization-list">
+                            {Object.entries(dish.customization).map(
+                              ([invIdStr, level]) => {
+                                const invId = Number(invIdStr);
+                                const ingName = ingredientNames[dish.dish_id]?.[invId];
+                                if(level === "normal") return null;
 
-                  {dish.customization && (
-                    <ul className="customization-list">
-                      {Object.entries(dish.customization).map(([invIdStr, level]) => {
-                        const invId = Number(invIdStr);
-                        const ingName = ingredientNames[dish.dish_id]?.[invId];
-                        if(level === "normal") return null;
-
-                        return(
-                          <li key={invId} className="custom-line">
-                            {grammerLevel(level)} {ingName}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  )}
+                                return(
+                                  <li key={invId} className="custom-line">
+                                    {grammerLevel(level)} {ingName}
+                                  </li>
+                                );
+                              }
+                            )}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 </li>
               ))}
             </ul>
+
             <h3>Total: ${total.toFixed(2)}</h3>
           </>
         )}

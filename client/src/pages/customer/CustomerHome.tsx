@@ -1,26 +1,19 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../components/ButtonComponents/Button.tsx';
-import type { Dish, DishType } from './CustomerDish';
+import type { DishType } from './CustomerDish';
 import './CustomerHome.css';
-
-interface LocationState {
-  cart?: Dish[];
-}
 
 function CustomerHome() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const state = location.state as LocationState;
-  const cart: Dish[] = state?.cart ?? [];
 
   const goToDishPage = (dishType: DishType, entreeCount?: number) => {
     navigate('/Customer/CustomerDish', {
-      state: { cart, dishType, entreeCount },
+      state: { dishType, entreeCount },
     });
   };
 
   const goToCheckout = () => {
-    navigate('/Customer/CustomerCheckout', { state: { cart } });
+    navigate('/Customer/CustomerCheckout');
   };
 
   return (

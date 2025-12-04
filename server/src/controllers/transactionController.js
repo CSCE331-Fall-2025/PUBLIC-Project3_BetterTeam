@@ -11,8 +11,8 @@ export async function createTransaction(req, res){
 
         const total = cart.reduce((sum, dish) => sum + dish.price, 0);
         // temporary hardcoded employee and customer until login is fully finished
-        const customerID = fk_customer ?? 11;
-        const employeeID = fk_employee ?? 15;
+        const customerID = fk_customer ?? 26;
+        const employeeID = fk_employee ?? 29;
 
         const transaction_id = await insertTransaction(
             customerID,

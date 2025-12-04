@@ -2,6 +2,7 @@
     width: 100%;
     max-width: 160px;
     margin: 0 auto 0.75rem auto;
+    position: relative; /* Needed for OOS ribbon */
 }
 
 /* Card */
@@ -41,7 +42,7 @@
     background: lightcoral;
 }
 
-/* Custom Panel (ingredient dropdown) */
+/* Custom Panel */
 .custom-panel {
     background: #fff;
     width: max-content;
@@ -59,7 +60,6 @@
     font-weight: bold;
 }
 
-/* Ingredient rows */
 .custom-row {
     display: flex;
     justify-content: space-between;
@@ -68,20 +68,16 @@
     gap: 6px;
 }
 
-/* Ingredient name */
 .ing-name {
     font-size: 0.6rem;
     width: 40%;
 }
 
-/* Level buttons container */
 .level-buttons {
     display: flex;
     gap: 4px;
-    
 }
 
-/* Level buttons */
 .level-btn {
     all: unset;
     border: 1px solid #ccc;
@@ -96,9 +92,47 @@
     background: #ddd;
 }
 
-/* Highlight selected level */
 .level-btn.active {
     background: lightblue;
     border-color: darkblue;
     font-weight: bold;
+}
+
+/* ------------------------------ */
+/* NEW OUT-OF-STOCK / DISABLED UI */
+/* ------------------------------ */
+
+.oos-banner {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #c62828;
+    color: white;
+    font-size: 0.55rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 4px;
+    z-index: 10;
+    pointer-events: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+
+/* Grey out the card */
+.disabled-card .dish-card {
+    opacity: 0.45;
+    filter: grayscale(80%);
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+}
+
+/* Prevent selection border for disabled dishes */
+.disabled-card .dish-card.selected {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+/* Hide customize button entirely on disabled dishes */
+.disabled-card .customize-btn {
+    display: none !important;
 }

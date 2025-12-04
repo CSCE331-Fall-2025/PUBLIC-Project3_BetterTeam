@@ -4,6 +4,7 @@ import './DishCard.css';
 export interface IngredientOption {
     inventory_id: number;
     name: string;
+    current_inventory: number;
 }
 
 export type CustomLevel = "none" | "normal" | "extra";
@@ -23,6 +24,8 @@ interface DishCardProps {
     ingredients?: IngredientOption[];
     customization?: Record<number, CustomLevel>;
     onCustomizeChange?: (dish_id: number, choice: CustomizationChoice) => void;
+
+    disabled?: boolean;
 }
 
 export const DishCard: React.FC<DishCardProps> = ({
@@ -33,7 +36,8 @@ export const DishCard: React.FC<DishCardProps> = ({
     isSelected,
     ingredients = [],
     customization = {},
-    onCustomizeChange
+    onCustomizeChange,
+    disabled = false,
 }) => {
 
     const [showOptions, setShowOptions] = React.useState(false);
@@ -43,30 +47,33 @@ export const DishCard: React.FC<DishCardProps> = ({
     };
 
     return (
-        <div className="dish-card-wrapper">
-            <div className={`dish-card ${isSelected ? "selected" : ""}`}>
-                <div onClick={onSelect}>
+        <div className={`dish-card-wrapper ${disabled ? "disabled-card" : ""}`}>
+            {disabled && <div className="oos-banner">OUTOFSTOCK</div>}
+            <div className={`dish-card ${isSelected ? "selected" : ""} ${
+                disabled ? "disabled" : ""
+            }`}
+            onClick={() => {
+                if(!disabled) onSelect?.();
+            }}
+            style={{ cursor: disabled ? "not-allowed" : "pointer" }}
+            >
                     <h3 className="dish-card-title">{name}</h3>
                     <p className="dish-card-price">${price.toFixed(2)}</p>
-                </div>
+
                 {isSelected && (
                     <button
                         className="customize-btn"
                         onClick={(e) => {
                             e.stopPropagation();
-                            if(!isSelected){
-                                onSelect?.();
-                            }
-                            setShowOptions(prev => !prev);
+                            setShowOptions((prev) => !prev);
                         }}
                     >
                         Customize
                     </button>
                 )}
-
             </div>
 
-            {showOptions && isSelected && (
+            {showOptions && isSelected && !disabled && (
                 <div className="custom-panel">
                     <h4 className="custom-panel-title">Ingredients</h4>
 
