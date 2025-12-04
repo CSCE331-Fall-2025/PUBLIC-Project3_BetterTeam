@@ -1,6 +1,6 @@
 
 .nav {
-    display: flex;
+   display: flex;
     flex-direction: column;
     gap: 3rem;
 }
