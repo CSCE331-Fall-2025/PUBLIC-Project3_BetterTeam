@@ -10,7 +10,7 @@ const API_BASE = import.meta.env.VITE_API_BASE;
 import type {OrderCardProps} from '../../components/KitchenComponents/OrderCard.tsx';
 type Order = OrderCardProps;
 
-type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
+type DishType = 'entree' | 'appetizer' | 'drink' | 'side' | 'season';
 
 interface LocationState {
   cart?: Dish[];
@@ -116,6 +116,7 @@ function CashierHome() {
         <Button name="Appetizer" onClick={() => goToDishPage('appetizer')} />
         <Button name="Sides" onClick={() => goToDishPage('side')} />
         <Button name="Drinks" onClick={() => goToDishPage('drink')} />
+        <Button name="Seasonal" onClick={() => goToDishPage('season')}/>
       </div>
 
       <div className="receipt-section">
