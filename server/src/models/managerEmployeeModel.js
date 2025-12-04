@@ -2,10 +2,10 @@
 import { pool } from "../db.js";
 
 
-export async function newEmployee(name, ismanager, wage) {
+export async function newEmployee(name, ismanager, wage, email, password) {
     const result = await pool.query(
-        'INSERT INTO employee (name, ismanager, wage) VALUES ($1, $2, $3) RETURNING *;',
-        [name, ismanager, wage]
+        'INSERT INTO employee (name, ismanager, wage, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING employee_id, name, ismanager, wage, email;',
+        [name, ismanager, wage, email, password]
     );
     return result.rows[0];
 }
@@ -13,7 +13,7 @@ export async function newEmployee(name, ismanager, wage) {
 // Simple return the employee table
 export async function getAllEmployees() {
     const result = await pool.query(
-        'SELECT employee_id, name, ismanager, wage FROM employee;'
+        'SELECT employee_id, name, ismanager, wage, email FROM employee;'
     );
     return result.rows;
 }

@@ -24,12 +24,11 @@ const Option = (props: OptionProps<Options, true>) => {
 interface PillBoxProps {
     availableOptions: Options[];
     initialOptions?: MultiValue<Options>;
-    label: string;
     placeholder?: string;
     onSelectionChange?: (selected: MultiValue<Options>) => void;
 }
 
-const PillBox = ({ availableOptions, initialOptions = [], label, placeholder, onSelectionChange }: PillBoxProps) => {
+const PillBox = ({ availableOptions, initialOptions = [], placeholder, onSelectionChange }: PillBoxProps) => {
     
     const [selectedOptions, setSelectedOptions] = useState<MultiValue<Options>>(initialOptions);
 
@@ -47,7 +46,6 @@ const PillBox = ({ availableOptions, initialOptions = [], label, placeholder, on
 
     return(
         <div className='pillBox'>
-            <label htmlFor='Inventory Select'>{label}</label>
             <Select
             inputId='Inventory-Select'
             isMulti

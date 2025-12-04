@@ -4,7 +4,7 @@ import { Router } from "express";
 import { 
     signup, 
     login, 
-    hireEmployee 
+    // hireEmployee 
 } from "../controllers/authController.js";
 
 import { requireRole } from "../middleware/auth.js";
@@ -18,7 +18,7 @@ router.post("/signup", signup);
 router.post("/login", login);
 
 // Manager Only req for hiring
-router.post("/hire", requireRole(["manager"]), hireEmployee);
+// router.post("/hire", requireRole(["manager"]), hireEmployee);
 //TODO: router.post("/fire", requireRole(["manager"]), fireEmployee);
 
 export default router;
