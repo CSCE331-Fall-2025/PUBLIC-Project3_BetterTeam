@@ -1,19 +1,34 @@
 
 .layout {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-x: hidden;
 }
 
+.header-wrapper {
+    display: flex;
+}
+
+/* Parent div for both navbar and pages */
 .layout-content {
-  display: flex;
-  flex: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.navbar-wrapper {
+    display: flex;
+    width: 20rem;
+    height: 100%;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
 }
 
 .page {
-  flex: 1;
-  padding: 1.5rem;
-  overflow-y: auto;
+    flex: 1;
+    display: flex;
+    margin: 1rem;
+    justify-content: center;
 }
 
