@@ -1,29 +1,13 @@
+
 .navbar {
-	background: var(--primary-color);
-	color: var(--defwhite);
-	display: flex;
-	padding: 1rem;
-	height: 100%;
+    flex: 1; /* fill parent (nav-bar wrapper in Layout.css) */
+    display: flex;
+    background-color: var(--primary-color);
+    padding: 0 0 0 0;
+    justify-content: center;
 }
 
-.nav-links {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-}
 
-.navbar a {
-	text-decoration: none;
-	color: var(--defwhite);
-	font-size: 1rem;
-	padding: 0.5rem 1rem;
-	border-radius: 5px;
-	transition: all 0.2s ease;
-	text-align: left;
-	background: rgba(255, 255, 255, 0.05);
-}
 
-.navbar a:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-}
+
 

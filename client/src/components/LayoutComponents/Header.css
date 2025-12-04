@@ -1,44 +1,23 @@
-/* Reset default spacing */
-/*body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #D16D69;
-}*/
 
 header {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 1rem 2rem 1rem 2rem;
     background-color: var(--primary-color);
     color: var(--defwhite);
-    width: 100%;
-    height: 6rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
 }
 
-/* header items */
 #Logo {
-    height: 100px;
-    width: auto;
+    height: 100pt;
 }
 
 #Greeting {
-    font-size: 24px;
+    font-size: 2rem;
     font-weight: bold;
 }
 
 #Time {
-    font-size: 30px;
-    margin: 0;
-}
-
-/*spacing for header*/
-body::before {
-    content: "";
-    display: block;
-    height: 100px;
+    font-size: 2rem;
 }

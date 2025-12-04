@@ -21,7 +21,6 @@ function NavBar() {
   };
 
   return (
-    <div>
       <nav className="navbar">
         {!user && <GuestLinks />}
 
@@ -37,7 +36,6 @@ function NavBar() {
           <ManagerLinks onLogout={handleLogout} />
         )}
       </nav>
-    </div>
   );
 }
 
