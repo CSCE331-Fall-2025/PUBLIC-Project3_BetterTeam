@@ -18,6 +18,7 @@ interface DishCardProps {
     dish_id: number;
     name: string;
     price: number;
+    image_url?: string;
     onSelect?: () => void;
     isSelected?: boolean;
 
@@ -32,6 +33,7 @@ export const DishCard: React.FC<DishCardProps> = ({
     dish_id,
     name,
     price,
+    image_url,
     onSelect,
     isSelected,
     ingredients = [],
@@ -48,24 +50,32 @@ export const DishCard: React.FC<DishCardProps> = ({
 
     return (
         <div className={`dish-card-wrapper ${disabled ? "disabled-card" : ""}`}>
-            {disabled && <div className="oos-banner">OUTOFSTOCK</div>}
-            <div className={`dish-card ${isSelected ? "selected" : ""} ${
-                disabled ? "disabled" : ""
-            }`}
-            onClick={() => {
-                if(!disabled) onSelect?.();
-            }}
-            style={{ cursor: disabled ? "not-allowed" : "pointer" }}
-            >
-                    <h3 className="dish-card-title">{name}</h3>
-                    <p className="dish-card-price">${price.toFixed(2)}</p>
+            {disabled && <div className="oos-banner">OUT OF STOCK</div>}
 
-                {isSelected && (
+            <div
+                className={`dish-card ${isSelected ? "selected" : ""} ${disabled ? "disabled" : ""}`}
+                onClick={() => {
+                    if (!disabled) onSelect?.();
+                }}
+                style={{ cursor: disabled ? "not-allowed" : "pointer" }}
+            >
+                {image_url && (
+                    <img
+                        src={image_url}
+                        alt={name}
+                        className="dish-card-image"
+                    />
+                )}
+
+                <h3 className="dish-card-title">{name}</h3>
+                <p className="dish-card-price">${price.toFixed(2)}</p>
+
+                {isSelected && !disabled && (
                     <button
                         className="customize-btn"
                         onClick={(e) => {
                             e.stopPropagation();
-                            setShowOptions((prev) => !prev);
+                            setShowOptions(prev => !prev);
                         }}
                     >
                         Customize
@@ -79,22 +89,16 @@ export const DishCard: React.FC<DishCardProps> = ({
 
                     {ingredients.map((ing) => {
                         const currentLevel = customization[ing.inventory_id] ?? "normal";
-                        return(
+                        return (
                             <div key={ing.inventory_id} className="custom-row">
                                 <span className="ing-name">{ing.name}</span>
+
                                 <div className="level-buttons">
                                     {(["none", "normal", "extra"] as CustomLevel[]).map((level) => (
                                         <button
                                             key={level}
-                                            className={`level-btn ${
-                                                currentLevel === level ? "active" : ""
-                                            }`}
-                                            onClick={() =>
-                                                choose(
-                                                    ing.inventory_id,
-                                                    level
-                                                )
-                                            }
+                                            className={`level-btn ${currentLevel === level ? "active" : ""}`}
+                                            onClick={() => choose(ing.inventory_id, level)}
                                         >
                                             {level}
                                         </button>
