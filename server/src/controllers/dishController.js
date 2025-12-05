@@ -51,7 +51,8 @@ export async function fetchIngredientsForDish(req, res){
         const rows= await getIngredientsForDish(dishId);
         const ingredients = rows.map((row) => ({
             inventory_id: row.inventory_id,
-            name: row.item
+            name: row.item,
+            current_inventory: row.current_inventory
         }));
         res.json(ingredients);
     } catch(err){

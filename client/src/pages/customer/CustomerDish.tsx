@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
 import Button from "../../components/ButtonComponents/Button.tsx";
 import type { IngredientOption, CustomLevel, CustomizationChoice } from "../../components/DishComponents/DishCard.tsx";
+import { useCart } from '../../context/CartContext.tsx';
 
 import './CustomerDish.css';
 
@@ -23,15 +24,17 @@ type SelectedDish = Dish & { _slot?: string };
 function CustomerDish() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { addMeal } = useCart();
+
     const state = location.state as {
         dishType: DishType;
         entreeCount?: number;
-        cart?: Dish[];
     };
+    
 
     const type = state?.dishType;
     const entreeCount = state?.entreeCount ?? 1;
-    const cart = state?.cart ?? [];
+
     const [selected, setSelected] = useState<SelectedDish[]>([]);
     const [dishes, setDishes] = useState<Dish[]>([]);
     const [ingredientsByDish, setIngredientsByDish] = useState<Record<number, IngredientOption[]>>({});
@@ -45,7 +48,6 @@ function CustomerDish() {
     useEffect(() => {
         async function loadDishesAndIngredients() {
             try {
-                
                 let loaded: Dish[] = [];
 
                 if (type === "entree") {
@@ -162,9 +164,8 @@ function CustomerDish() {
         ];
     }
 
-    const handleBack = () => navigate("/Customer/CustomerHome", { state: { cart } });
+    const handleBack = () => navigate("/Customer/CustomerHome");
     const handleAddToCart = () => {
-
         if(type === "entree"){
             const requiredCount = entreeCount + 1;
             if(selected.length !== requiredCount){
@@ -177,19 +178,16 @@ function CustomerDish() {
                 return;
             }
         }
-        const newItems: Dish[] = [];
+
+        const baseMealItems: Dish[] = selected.map(dish => ({
+            ...dish,
+            customization: customization[dish.dish_id] || {}
+        }));
 
         for(let i = 0; i < mealQty; i++){
-            selected.forEach(dish => {
-                newItems.push({
-                    ...dish,
-                    customization: customization[dish.dish_id] || {}
-                });
-            });
+            addMeal(baseMealItems);
         }
-        navigate("/Customer/CustomerHome", {
-            state: { cart: [...cart, ...newItems]}
-        });
+        navigate("/Customer/CustomerHome");
     };
 
     return (
