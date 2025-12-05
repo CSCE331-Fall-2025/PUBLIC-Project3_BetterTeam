@@ -2,10 +2,9 @@
     width: 100%;
     max-width: 160px;
     margin: 0 auto 0.75rem auto;
-    position: relative; /* Needed for OOS ribbon */
+    position: relative;
 }
 
-/* Card */
 .dish-card {
     display: flex;
     flex-direction: column;
@@ -25,14 +24,12 @@
     margin-bottom: 0.4rem;
 }
 
-/* Text sizes */
 .dish-card-title,
 .dish-card-price {
     font-size: 0.65rem;
     margin: 0;
 }
 
-/* Selected card highlight */
 .dish-card.selected {
     border: 5px solid var(--defblack);
     box-shadow: 0 0 8px rgba(0,0,0,0.3);
@@ -54,7 +51,6 @@
     color: black;
 }
 
-/* Custom Panel */
 .custom-panel {
     background: #fff;
     width: max-content;
@@ -110,10 +106,6 @@
     font-weight: bold;
 }
 
-/* ------------------------------ */
-/*        OUT-OF-STOCK UI         */
-/* ------------------------------ */
-
 .oos-banner {
     position: absolute;
     top: 4px;
@@ -130,7 +122,6 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.25);
 }
 
-/* Grey out the card */
 .disabled-card .dish-card {
     opacity: 0.45;
     filter: grayscale(80%);
@@ -138,13 +129,11 @@
     box-shadow: none !important;
 }
 
-/* Prevent selection border for disabled dishes */
 .disabled-card .dish-card.selected {
     border-color: transparent;
     box-shadow: none;
 }
 
-/* Hide customize button entirely on disabled dishes */
 .disabled-card .customize-btn {
     display: none !important;
 }
