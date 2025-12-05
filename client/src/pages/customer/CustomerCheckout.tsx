@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext.tsx';
 import { useAuth } from '../../context/AuthContext.tsx';
+import { PayPalButtons } from '@paypal/react-paypal-js';
 import './CustomerCheckout.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -36,6 +37,7 @@ function CustomerCheckout(){
     const cart: Dish[][] = items;
     const total = cart.reduce((sum, meal) => sum + meal.reduce((mSum, d) => mSum + d.price, 0), 0);
     const [ingredientNames, setIngredientNames] = useState<Record<number, Record<number, string>>>({});
+    const [isProcessing, setIsProcessing] = useState(false);
 
 
     useEffect(() => {
@@ -129,6 +131,89 @@ function CustomerCheckout(){
         if(level === "extra") return "Extra";
         return "";
     }
+
+    const handlePayPalCreateOrder = async () => {
+        try {
+            const flatCart = cart.flat();
+            const response = await fetch(`${API_BASE}/api/paypal/create-order`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ cart: flatCart }),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || "Failed to create PayPal order");
+            }
+
+            const data = await response.json();
+            return data.orderId;
+        } catch (err) {
+            console.error("Error creating PayPal order:", err);
+            alert("Failed to create PayPal order. Please try again.");
+            throw err;
+        }
+    };
+
+    const handlePayPalApprove = async (data: { orderID: string }) => {
+        try {
+            setIsProcessing(true);
+            const flatCart = cart.flat();
+            const fk_customer = user ? user.id : 26;
+            const fk_employee = 29;
+
+            const response = await fetch(`${API_BASE}/api/paypal/capture-order`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    orderId: data.orderID,
+                    cart: flatCart,
+                    fk_customer,
+                    fk_employee
+                }),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || "Failed to capture payment");
+            }
+
+            const captureData = await response.json();
+
+            if (captureData.status === "COMPLETED") {
+                // so this part is going to retrieve orders and add the new order to the list
+                const storedOrders = localStorage.getItem("orders");
+                let parsedOrders: Order[] = [];
+                if (storedOrders) { parsedOrders = JSON.parse(storedOrders); }
+                
+                // and this part will push new order to orders list
+                const newOrder: Order = {
+                    name: data.orderID,
+                    slot: 0,
+                    items: cart.flat()
+                };
+                parsedOrders.push(newOrder);
+                localStorage.setItem("orders", JSON.stringify(parsedOrders));
+
+                alert(`Payment Successful! Order Number: #${data.orderID}`);
+                clearCart();
+                navigate("/Customer/CustomerHome");
+            } else {
+                throw new Error("Payment was not completed");
+            }
+        } catch (err) {
+            console.error("Error capturing PayPal payment:", err);
+            alert("Failed to process payment. Please try again.");
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
+    const handlePayPalError = (err: any) => {
+        console.error("PayPal error:", err);
+        alert("An error occurred with PayPal. Please try again.");
+    };
+
     return(
         <div className="checkout-page">
             <div className="receipt">
@@ -180,14 +265,26 @@ function CustomerCheckout(){
                 <Button
                     name="Cancel Order"
                     onClick={handleCancelOrder}
-                    disabled={cart.length === 0}
+                    disabled={cart.length === 0 || isProcessing}
                 />
                 <Button
-                    name="Place Order"
+                    name="Place Order (No Payment)"
                     onClick={handlePlaceOrder}
-                    disabled={cart.length === 0}
+                    disabled={cart.length === 0 || isProcessing}
                 />
             </div>
+            {cart.length > 0 && (
+                <div style={{ marginTop: '20px', maxWidth: '500px', margin: '20px auto' }}>
+                    <h3 style={{ textAlign: 'center', marginBottom: '10px' }}>Pay with PayPal</h3>
+                    <PayPalButtons
+                        createOrder={handlePayPalCreateOrder}
+                        onApprove={handlePayPalApprove}
+                        onError={handlePayPalError}
+                        disabled={isProcessing}
+                        style={{ layout: "vertical" }}
+                    />
+                </div>
+            )}
         </div>
     );
 }
