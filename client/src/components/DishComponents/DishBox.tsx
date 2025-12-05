@@ -32,6 +32,7 @@ export const DishBox: React.FC<DishBoxProps> = ({ title, dishes, onSelect, selec
                             dish_id={dish.dish_id}
                             name={dish.name}
                             price={dish.price}
+                            image_url={dish.image_url}
                             onSelect={() => {
                                 if(!disabled) onSelect?.(dish);
                             }}

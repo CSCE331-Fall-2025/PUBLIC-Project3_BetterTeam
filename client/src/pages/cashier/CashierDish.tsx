@@ -14,6 +14,7 @@ export interface Dish {
     name: string;
     price: number;
     type?: string;
+    image_url?: string;
     customization?: Record<number, CustomLevel>;
 }
 
