@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../components/ButtonComponents/Button.tsx';
 import type { Dish } from './CashierDish';
 import { useEffect, useState } from 'react';
+import { useAuth } from "../../context/AuthContext.tsx";
 
 import './CashierHome.css';
 
@@ -66,6 +67,8 @@ function CashierHome() {
   const total = cart.reduce((sum, d) => sum + d.price, 0);
   const [ingredientNames, setIngredientNames] = useState<Record<number, Record<number, string>>>({});
 
+  const { user } = useAuth();
+  const employeeID = user?.id ?? 29;
 
   useEffect(() => {
     async function loadIngredients(){
@@ -112,13 +115,14 @@ function CashierHome() {
 
   const handlePlaceOrder = async () => {
     try {
+
       const response = await fetch(`${API_BASE}/api/transactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           cart,
           fk_customer: 26,
-          fk_employee: 29
+          fk_employee: employeeID
         }),
       });
 

@@ -3,7 +3,12 @@ import { getInventoryForDish, decrementInventory } from "../models/inventoryMode
 
 export async function createTransaction(req, res){
     try{
-        const{ cart, fk_customer, fk_employee } = req.body;
+        console.log("Incoming Body:", req.body);
+
+        const { cart, fk_customer, fk_employee } = req.body;
+
+        console.log("Parsed cart:", cart);
+        console.log("CustomerID:", fk_customer, "EmployeeID:", fk_employee);
 
         if(!cart || cart.length === 0){
             return res.status(400).json({ error: "Cart is empty" });

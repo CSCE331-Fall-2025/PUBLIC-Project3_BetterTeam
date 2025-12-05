@@ -4,6 +4,7 @@ import type {OrderCardProps} from '../../components/KitchenComponents/OrderCard.
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext.tsx';
+import { useAuth } from '../../context/AuthContext.tsx';
 import './CustomerCheckout.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -31,6 +32,7 @@ function getMealName(meal: Dish[]){
 function CustomerCheckout(){
     const navigate = useNavigate();
     const { items, clearCart } = useCart();
+    const { user } = useAuth();
     const cart: Dish[][] = items;
     const total = cart.reduce((sum, meal) => sum + meal.reduce((mSum, d) => mSum + d.price, 0), 0);
     const [ingredientNames, setIngredientNames] = useState<Record<number, Record<number, string>>>({});
@@ -67,15 +69,17 @@ function CustomerCheckout(){
 
     const handlePlaceOrder = async () => {
         try{
-
             const flatCart = cart.flat();
+            const fk_customer = user ? user.id : 26;
+            const fk_employee = 29;
+            console.log("Sending cart:", flatCart);
             const response = await fetch(`${API_BASE}/api/transactions`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     cart: flatCart,
-                    fk_customer: 26,
-                    fk_employee: 29
+                    fk_customer,
+                    fk_employee
                 }),
             });
 

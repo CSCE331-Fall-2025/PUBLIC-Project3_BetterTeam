@@ -6,7 +6,7 @@ import type { Role } from "../context/AuthContext";
 
 // Wraps over React-router routes to for auth
 interface ProtectedRouteProps {
-  allowedRoles: Exclude<Role, "guest">[];
+  allowedRoles: Role[];
   children: React.ReactElement;
 }
 
@@ -15,8 +15,10 @@ export function ProtectedRoute({ allowedRoles, children }: ProtectedRouteProps) 
   const location = useLocation();
 
   if (!user) {
-    // not logged in → send to login
-    return <Navigate to="/any/login" state={{ from: location }} replace />;
+    if(!allowedRoles.includes("guest")){
+      return <Navigate to="/any/login" state={{ from: location }} replace />;
+    }
+    return children;
   }
 
   if (!allowedRoles.includes(user.role)) {

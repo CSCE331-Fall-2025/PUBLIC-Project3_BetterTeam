@@ -8,12 +8,15 @@ type LogoutProps = {
 };
 
 // -------- Guest (not logged in) --------
-export function GuestLinks({ onLogout }: LogoutProps) {
+export function GuestLinks() {
+  const { count } = useCart();
+
   return (
     <div className="nav">
         <div className="nav-section">
             <p className="nav-section-title">Guest</p>
             <NavLink className="nav-item" to="/customer/customerhome">Order</NavLink>
+            <NavLink className="nav-item" to="/customer/customercheckout"> Cart{count > 0 ? ` ${count}` : ""} </NavLink>
             <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
         </div>
 
