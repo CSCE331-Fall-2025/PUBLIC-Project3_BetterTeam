@@ -1,32 +1,47 @@
-.cashier-home {
+.cashier-home-layout {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100%;
+  padding: 2rem;
+  gap: 2rem;
+  box-sizing: border-box;
+}
+
+.cashier-button-panel {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding: 1rem;
-  gap: 2rem;
 }
 
-.button-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
+.cashier-title {
+  color: white;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
 }
 
-.receipt-section {
+.cashier-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 200px);
+  gap: 1.2rem;
+}
+
+.cashier-receipt-panel {
+  flex: 0 0 350px;
   background-color: var(--defwhite);
   color: var(--defblack);
   border-radius: 1rem;
-  padding: 1rem 2rem;
-  width: 300px;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 1.2rem 1.6rem;
+  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  overflow-y: auto;
+  height: 100%;
 }
 
 .checkout-buttons {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
-  gap: 0.5rem;
+  margin-top: 1.2rem;
+  gap: 0.6rem;
 }
