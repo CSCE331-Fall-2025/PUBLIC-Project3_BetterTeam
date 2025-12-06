@@ -19,17 +19,12 @@ export const CustomerModel = {
 
         if (existing.rows.length === 0) return null;
 
-        let hashedPassword = existing.rows[0].password;
-        if (password && password.trim() !== "") {
-            hashedPassword = await bcrypt.hash(password, 10);
-        }
-
         const res = await pool.query(
             `UPDATE customer 
              SET name=$1, email=$2, username=$3, password=$4
              WHERE customer_id=$5
              RETURNING customer_id, name, email, username`,
-            [name, email, username, hashedPassword, id]
+            [name, email, username, password, id]
         );
 
         return res.rows[0];

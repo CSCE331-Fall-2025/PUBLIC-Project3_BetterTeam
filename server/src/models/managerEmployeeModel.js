@@ -27,9 +27,24 @@ export async function updateEmployee(id, name, ismanager, wage){
 }
 
 export async function deleteEmployee(id){
-    const result = await pool.query(
-        'DELETE FROM employee WHERE employee_id = $1 RETURNING employee_id;',
-        [id]
-    );
-    return result.rows[0];
+    const client = await pool.connect();
+
+    try{
+        await client.query('BEGIN;');
+
+        await client.query('UPDATE transaction SET fk_employee = NULL WHERE fk_employee = $1;', [id]);
+
+        const result = await client.query(
+            'DELETE FROM employee WHERE employee_id = $1 RETURNING employee_id;',
+            [id]
+        );
+        await client.query('COMMIT;');
+
+        return result.rows[0];
+    } catch(e){
+        await client.query('ROLLBACK;');
+        throw e;
+    } finally{
+        client.release();
+    }
 }

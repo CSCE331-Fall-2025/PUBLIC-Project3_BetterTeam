@@ -63,7 +63,7 @@ export function CashierLinks({ onLogout }: LogoutProps) {
 
         <div className="nav-section">
             <p className="nav-section-title">Account</p>
-            <NavLink className="nav-item" to="/cashier/profile">Profile</NavLink>
+            <NavLink className="nav-item" to="/cashier/cashierprofile">Profile</NavLink>
             <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
         </div>
     </div>
@@ -87,7 +87,7 @@ export function ManagerLinks({ onLogout }: LogoutProps) {
 
         <div className="nav-section">
             <p className="nav-section-title">Account</p>
-            <NavLink className="nav-item" to="/manager/profile">Profile</NavLink>
+            <NavLink className="nav-item" to="/manager/managerprofile">Profile</NavLink>
             <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
         </div>
     </div>
