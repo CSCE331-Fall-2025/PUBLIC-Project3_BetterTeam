@@ -198,18 +198,20 @@ function CustomerDish() {
             }
         }
         for (const dish of selected) {
-            const ing = customization[dish.dish_id];
-            const ingList = ingredientsByDish[dish.dish_id] || [];
+            if (dish.type !== "drink") {
+                const ing = customization[dish.dish_id];
+                const ingList = ingredientsByDish[dish.dish_id] || [];
 
-            if (ingList.length > 0) {
-                const allNone = ingList.every(ingObj => {
-                    const level = ing?.[ingObj.inventory_id] || "normal";
-                    return level === "none";
-                });
+                if (ingList.length > 0) {
+                    const allNone = ingList.every((ingObj) => {
+                        const level = ing?.[ingObj.inventory_id] || "normal";
+                        return level === "none";
+                    });
 
-                if (allNone) {
-                    alert(`You cannot set all ingredients of ${dish.name} to None.`);
-                    return;
+                    if (allNone) {
+                        alert(`You cannot set all ingredients of ${dish.name} to None.`);
+                        return;
+                    }
                 }
             }
         }

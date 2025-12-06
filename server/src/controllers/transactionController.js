@@ -1,19 +1,57 @@
 import { insertTransaction, insertTransactionDish } from "../models/transactionModel.js";
-import { getInventoryForDish, decrementInventory } from "../models/inventoryModel.js";
+import { getInventoryForDish, decrementInventory, getInventoryItemById } from "../models/inventoryModel.js";
 
 const ICE_ID = 58;
 
 export async function createTransaction(req, res){
     try{
-        console.log("Incoming Body:", req.body);
-
         const { cart, fk_customer, fk_employee } = req.body;
-
-        console.log("Parsed cart:", cart);
-        console.log("CustomerID:", fk_customer, "EmployeeID:", fk_employee);
-
         if(!cart || cart.length === 0){
             return res.status(400).json({ error: "Cart is empty" });
+        }
+
+        const required = {};
+
+        for(const dish of cart){
+            const ingredients = await getInventoryForDish(dish.dish_id);
+            const custom = dish.customization || {};
+
+            for(const ing of ingredients){
+                const invId = ing.fk_inventory;
+                if(dish.type === "drink" && invId !== ICE_ID) continue;
+
+                const level = custom[invId] || "normal";
+
+                let amount = 1;
+                if(level === "none") amount = 0;
+                if(level === "extra") amount = 2;
+
+                if(invId === ICE_ID){
+                    const iceItem = await getInventoryItemById(ICE_ID);
+                    if(iceItem.current_inventory <= 0){
+                        amount = 0;
+                    }
+                }
+
+                if(!required[invId]) required[invId] = 0;
+                required[invId] += amount;
+            }
+        }
+
+        for(const invId of Object.keys(required)){
+            const needed = required[invId];
+            if(needed === 0) continue;
+
+            const item = await getInventoryItemById(invId);
+
+            if(!item) continue;
+
+            if(item.current_inventory < needed) {
+                return res.status(400).json({
+                    error: `Not enough ${item.item}! Need ${needed}, only ${item.current_inventory} available.`,
+                    shortage: item.item
+                });
+            }
         }
 
         const total = cart.reduce((sum, dish) => sum + dish.price, 0);
@@ -30,31 +68,28 @@ export async function createTransaction(req, res){
             await insertTransactionDish(transaction_id, dish.dish_id);
 
             const ingredients =  await getInventoryForDish(dish.dish_id);
-            for(const item of ingredients){
-                const invId = item.fk_inventory;
-                const customLevels = dish.customization || {};
-                const level = customLevels[invId] || "normal";
-                
-                let decrementBy = 1;
-                if(level === "none") decrementBy = 0;
-                else if (level === "extra") decrementBy = 2;
+            const custom = dish.customization || {};
 
-                if(decrementBy > 0){
-                    await decrementInventory(invId, decrementBy);
+            for(const ing of ingredients){
+                const invId = ing.fk_inventory;
+
+                if(dish.type === "drink" && invId !== ICE_ID) continue;
+
+                const level = custom[invId] || "normal";
+
+                let dec = 1;
+                if(level === "none") dec = 0;
+                if(level === "extra") dec = 2;
+
+                if(invId === ICE_ID){
+                    const iceItem = await getInventoryItemById(ICE_ID);
+                    if(iceItem.current_inventory <= 0){
+                        dec = 0;
+                    }
                 }
-            }
 
-            if(dish.type === "drink"){
-                const customIceLevel = dish.customization?.[ICE_ID] ?? "normal";
-
-                let iceDecrement = 0;
-
-                if(customIceLevel === "normal") iceDecrement = 1;
-                if(customIceLevel === "extra") iceDecrement = 2;
-                if(customIceLevel === "none") iceDecrement = 0;
-
-                if (iceDecremenet > 0) {
-                    await decrementInventory(ICE_ID, iceDecrement);
+                if(dec > 0){
+                    await decrementInventory(invId,dec);
                 }
             }
         }

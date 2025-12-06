@@ -23,10 +23,11 @@ export const DishBox: React.FC<DishBoxProps> = ({ title, dishes, onSelect, selec
             {title && <h2 className="dish-box-title">{title}</h2>}
             <div className="dish-box-grid">
                 {dishes.map((dish) => {
-                    const ingList = ingredientsByDish[dish.dish_id] ?? [];
-                    const disabled = dish.type === "drink"
-                        ? ingList.some(ing => ing.inventory_id !== ICE_ID && ing.current_inventory <= 0)
-                        : ingList.some(ing => ing.current_inventory <= 0);
+                    const rawList = ingredientsByDish[dish.dish_id] ?? [];
+                    
+                    const ingList = dish.type === "drink" ? rawList.filter((i) => i.inventory_id === ICE_ID) : rawList;
+                    
+                    const disabled = dish.type === "drink" ? false : rawList.some((ing) => ing.current_inventory <= 0);
 
                     return(
                         <DishCard

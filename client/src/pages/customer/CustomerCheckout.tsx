@@ -91,7 +91,6 @@ function CustomerCheckout(){
             const flatCart = cart.flat();
             const fk_customer = user ? user.id : 26;
             const fk_employee = 29;
-            console.log("Sending cart:", flatCart);
             const response = await fetch(`${API_BASE}/api/transactions`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -103,6 +102,12 @@ function CustomerCheckout(){
             });
 
             const data = await response.json();
+
+            if(!response.ok){
+                alert(data.error || "Order failed.");
+                return;
+            }
+            
             const transactionId = data.transaction_id;
 
             if(!transactionId){
