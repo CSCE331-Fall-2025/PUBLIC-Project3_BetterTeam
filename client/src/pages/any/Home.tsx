@@ -19,9 +19,8 @@ function Home() {
                 </p>
 
                 <div className="home-buttons">
-                    <button onClick={() => navigate("/Customer/CustomerHome")}>Customer Portal</button>
-                    <button onClick={() => navigate("/any/login")}>Cashier Portal</button>
-                    <button onClick={() => navigate("/any/login")}>Manager Tools</button>
+                    <button onClick={() => navigate("/Customer/CustomerHome")}>Begin Operation (Order)</button>
+                    <button onClick={() => navigate("/any/login")}>Request Clearanace (Login)</button>
                 </div>
 
             </div>

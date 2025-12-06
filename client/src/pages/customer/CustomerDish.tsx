@@ -126,7 +126,7 @@ function CustomerDish() {
         const entreeBoxes = Array.from({ length: entreeCount }).map((_, i) => (
             <DishBox
                 key={`entree-${i}`}
-                title={`Entree ${i + 1}`}
+                title={`Objective ${i + 1}`}
                 dishes={dishes.filter(d => d.type === "entree")}
                 onSelect={(dish) => handleSelect(dish, `Entree ${i + 1}`)}
                 selectedDishes={selected.filter(d => d._slot === `Entree ${i + 1}`)}
@@ -139,7 +139,7 @@ function CustomerDish() {
         const sideBox = (
             <DishBox
                 key="side"
-                title="Choose your Side"
+                title="Side Mission"
                 dishes={dishes.filter(d => d.type === "side")}
                 onSelect={(dish) => handleSelect(dish, "Side")}
                 selectedDishes={selected.filter(d => d._slot === "Side")}
@@ -196,7 +196,7 @@ function CustomerDish() {
             <div className="dish-box-row">
                 {boxes}
             </div>
-
+            
             <div className="qty-row">
                 <button className="qty-btn" onClick={() => setMealQty(q => Math.max(1, q - 1))}>-</button>
                 <span className="qty-num">{mealQty}</span>
@@ -205,7 +205,7 @@ function CustomerDish() {
 
             <div className="button-row">
                 <Button name="Cancel" onClick={handleBack} />
-                <Button name="Add to Cart" onClick={handleAddToCart} />
+                <Button name="Add Mission" onClick={handleAddToCart} />
             </div>
         </div>
     );

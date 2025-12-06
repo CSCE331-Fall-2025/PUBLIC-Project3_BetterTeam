@@ -4,6 +4,9 @@
     flex-direction: column;
     height: 100vh;
     overflow-x: hidden;
+    background-color: #101010;
+    background-image: radial-gradient(rgba(255,0,0,0.15), transparent 70%);
+    background-size: 600px 600px;
 }
 
 .header-wrapper {

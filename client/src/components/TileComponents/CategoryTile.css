@@ -1,0 +1,52 @@
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.category-tile {
+  background: #111;
+  border: 2px solid #BB2719;
+  border-radius: 18px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.category-tile:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+.tile-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+}
+
+.tile-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.tile-sub {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* 🔥 Seasonal Highlight */
+.tile-highlight {
+  border-color: gold;
+  box-shadow: 0 0 12px gold;
+  background: linear-gradient(135deg, #111, #2b0000);
+}
