@@ -13,6 +13,7 @@ import managerInventoryRoute from "./routes/managerInventoryRoute.js";
 import dishRoute from "./routes/dishRoute.js";
 import transactionRoute from "./routes/transactionRoute.js"
 import customerRoutes from "./routes/customerRoutes.js"
+import employeeRoute from "./routes/employeeRoute.js"
 import paypalRoute from "./routes/paypal.js";
 import inventoryRoute from "./routes/inventoryRoute.js";
 
@@ -45,6 +46,7 @@ app.use("/api/transactions", transactionRoute);
 app.use("/api/customers", customerRoutes);
 app.use("/api/inventory", inventoryRoute);
 
+app.use("/api/employees", employeeRoute);
 
 
 // Start server
