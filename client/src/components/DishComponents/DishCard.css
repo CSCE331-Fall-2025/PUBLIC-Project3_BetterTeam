@@ -9,16 +9,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: var(--defwhite);
+    background-color: #111;
     border-radius: 0.5rem;
     padding: 0.4rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    box-shadow: 0 1px 4px rgba(255, 0, 0, 0.15); /* faint red glow */
     cursor: pointer;
+    border: 1px solid #222;
+    transition: 0.15s ease-in-out;
+}
+
+.dish-card:hover {
+    border-color: #BB2719;
+    box-shadow: 0 0 8px rgba(187, 39, 25, 0.4);
 }
 
 .dish-card-image {
     width: 100%;
-    height: 110px;
+    height: 120px;
     object-fit: cover;
     border-radius: 0.35rem;
     margin-bottom: 0.4rem;
@@ -26,39 +33,45 @@
 
 .dish-card-title,
 .dish-card-price {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     margin: 0;
-}
-
-.dish-card.selected {
-    border: 5px solid var(--defblack);
-    box-shadow: 0 0 8px rgba(0,0,0,0.3);
-}
-
-.customize-btn {
-    height: 20px;
-    font-size: 0.65rem;
-    padding: 0;
-    border: 1px solid #999;
-    background: red;
     color: white;
-    border-radius: 4px;
+}
+
+/* SELECTED STATE */
+.dish-card.selected {
+    border: 2px solid #BB2719;
+    box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
+}
+
+/* CUSTOMIZE BUTTON */
+.customize-btn {
+    all: unset;
+    height: 1rem;
+    padding: 0 6px;
+    font-size: 0.65rem;
+    background: #BB2719;
+    color: white;
+    border-radius: 6px;
     margin-top: 6px;
+    cursor: pointer;
+    text-align: center;
 }
 
 .customize-btn:hover {
-    background: lightcoral;
-    color: black;
+    background: #d6453a;
+    color: white;
 }
 
+/* CUSTOM PANEL – NOW DARK MODE */
 .custom-panel {
-    background: #fff;
+    background: #181818;
     width: max-content;
-    border: 1px solid #ccc;
+    border: 1px solid #BB2719;
     border-radius: 6px;
     padding: 6px;
     margin-top: 4px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(255, 0, 0, 0.2);
     font-size: 0.6rem;
 }
 
@@ -66,8 +79,10 @@
     font-size: 0.7rem;
     margin: 0 0 4px 0;
     font-weight: bold;
+    color: #FFCCCC;
 }
 
+/* ROWS & LABELS */
 .custom-row {
     display: flex;
     justify-content: space-between;
@@ -77,10 +92,12 @@
 }
 
 .ing-name {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
+    color: #eee;
     width: 40%;
 }
 
+/* LEVEL BUTTONS */
 .level-buttons {
     display: flex;
     gap: 4px;
@@ -88,24 +105,29 @@
 
 .level-btn {
     all: unset;
-    border: 1px solid #ccc;
-    background: #eee;
+    padding: 2px 4px;
     border-radius: 4px;
     font-size: 0.55rem;
-    padding: 2px 4px;
     cursor: pointer;
+    border: 1px solid #333;
+    background: #222;
+    color: #eee;
+    transition: 0.15s;
 }
 
 .level-btn:hover {
-    background: #ddd;
+    background: #333;
 }
 
 .level-btn.active {
-    background: lightblue;
-    border-color: darkblue;
+    background: #BB2719;
+    border-color: #FFCDD2;
+    color: white;
     font-weight: bold;
+    box-shadow: 0 0 6px rgba(255, 80, 80, 0.5);
 }
 
+/* OUT OF STOCK — KEEP EXACT SAME */
 .oos-banner {
     position: absolute;
     top: 4px;
@@ -113,15 +135,16 @@
     transform: translateX(-50%);
     background: #c62828;
     color: white;
-    font-size: 0.50rem;
+    font-size: 0.75rem;
     font-weight: bold;
     padding: 2px 6px;
-    border-radius: 4px;
+    border-radius: 5px;
     z-index: 10;
     pointer-events: none;
     box-shadow: 0 1px 4px rgba(0,0,0,0.25);
 }
 
+/* DISABLED STATE */
 .disabled-card .dish-card {
     opacity: 0.45;
     filter: grayscale(80%);

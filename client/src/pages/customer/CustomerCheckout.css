@@ -4,23 +4,68 @@
     align-items: center;
     padding: 2rem;
 }
-
 .receipt {
-    color: var(--defblack);
-    background: var(--defwhite);
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    width: 300px;
+    width: 360px;
+    background: #ffffff;
+    color: #222;
+    padding: 1.5rem 1.8rem;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.12);
+}
+
+.receipt h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #BB2719;
+    font-weight: bold;
+    letter-spacing: 0.5px;
 }
 
 .receipt ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
-.receipt li {
+.meal-block {
+    margin-bottom: 1.4rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.meal-title {
+    font-size: 1.1rem;
+    color: #BB2719;
+    margin-bottom: 0.4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.dish-line {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
+    padding: 0.25rem 0;
+    font-size: 0.95rem;
+}
+
+.customization-list {
+    margin-left: 1rem;
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.custom-line {
+    padding: 2px 0;
+    color: #BB2719; /* subtle red for "No" or "Extra" */
+    font-style: italic;
+}
+
+.receipt-total {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1.3rem;
+    color: #BB2719;
+    font-weight: bold;
 }
