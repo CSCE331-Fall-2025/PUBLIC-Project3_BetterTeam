@@ -27,3 +27,7 @@
     width: 100%;
     box-sizing: border-box;
 }
+
+.zDisplay, .historyContainer{
+    color: white;
+}

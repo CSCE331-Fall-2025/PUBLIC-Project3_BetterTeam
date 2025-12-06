@@ -6,6 +6,7 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 
 import { AuthProvider } from "./context/AuthContext.tsx"
 import { CartProvider } from './context/CartContext.tsx'
+import { ReportProvider } from './context/ReportContext.tsx'
 import App from './App.tsx'
 import './index.css'
 
@@ -17,7 +18,9 @@ createRoot(document.getElementById('root')!).render(
       <PayPalScriptProvider options={{ clientId: paypalClientId, currency: "USD" }}>
         <AuthProvider>
           <CartProvider>
-            <App />
+            <ReportProvider>
+              <App />
+            </ReportProvider>
           </CartProvider>
         </AuthProvider>
       </PayPalScriptProvider>

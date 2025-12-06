@@ -177,7 +177,8 @@ function OrderTrends() {
         });
 
         if(!response.ok){
-            throw new Error('Failed to update dish ingredients');
+            const errorText = await response.text();
+            throw new Error(`Failed to update dish ingredients: ${errorText}`);
         }
     }
 
@@ -195,7 +196,8 @@ function OrderTrends() {
             });
 
             if(!response.ok){
-                throw new Error('Failed to update dish');
+                const errorText = await response.text();
+                throw new Error(`Failed to update dish: ${errorText}`);
             }
 
             setDishes(prevDishes =>
@@ -235,7 +237,8 @@ function OrderTrends() {
                 });
 
                 if(!response.ok){
-                    throw new Error('Failed to delete dish');
+                    const errorText = await response.text();
+                    throw new Error(`Failed to delete dish: ${errorText}`);
                 }
 
                 setDishes(prevDishes =>
@@ -282,7 +285,8 @@ function OrderTrends() {
             });
 
             if(!response.ok){
-                throw new Error('Failed to add dish');
+                const errorText = await response.text();
+                throw new Error(`Failed to add dish: ${errorText}`);
             }
 
             const addedDish: Dish = await response.json();
