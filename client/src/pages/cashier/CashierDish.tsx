@@ -6,6 +6,7 @@ import type { IngredientOption, CustomLevel, CustomizationChoice } from '../../c
 import "./CashierDish.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
+const ICE_ID = 58;
 
 export type DishType = 'entree' | 'appetizer' | 'drink' | 'side' | 'season';
 
@@ -79,6 +80,22 @@ function CashierDish(){
                         }
                     })
                 );
+
+                const iceRes = await fetch(`${API_BASE}/api/inventory/${ICE_ID}`);
+                const iceData = iceRes.ok ? await iceRes.json() : { current_inventory: 0 };
+
+                loadedDishes.forEach(dish => {
+                    if (dish.type === "drink") {
+                        ingredientMap[dish.dish_id] = [
+                            {
+                                inventory_id: ICE_ID,
+                                name: "Ice",
+                                current_inventory: iceData.current_inventory
+                            }
+                        ];
+                    }
+                });
+
                 setIngredientsByDish(ingredientMap);
                 setCustomization({});
             } catch(err){
@@ -135,6 +152,27 @@ function CashierDish(){
                 return;
             }
         }
+
+        for (const dish of selected) {
+            if (dish.type !== "drink") {
+                const ing = customization[dish.dish_id];
+                const ingList = ingredientsByDish[dish.dish_id] || [];
+
+                if (ingList.length > 0) {
+                    const allNone = ingList.every(ingObj => {
+                        const level = ing?.[ingObj.inventory_id] || "normal";
+                        return level === "none";
+                    });
+
+                    if (allNone) {
+                        alert(`You cannot set all ingredients of ${dish.name} to None.`);
+                        return;
+                    }
+                }
+            }
+        }
+
+
         const expanded: Dish[] = [];
 
         for(let i = 0; i < mealQty; i++){
