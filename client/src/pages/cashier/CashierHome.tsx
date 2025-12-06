@@ -127,6 +127,12 @@ function CashierHome() {
       });
 
       const data = await response.json();
+
+      if(!response.ok){
+        alert(data.error || "Failed to place order.");
+        return;
+      }
+      
       const transactionId = data.transaction_id;
 
       if(!transactionId){

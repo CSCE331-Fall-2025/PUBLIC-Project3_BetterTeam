@@ -22,3 +22,14 @@ export async function decrementInventory(inventory_id, amount = 1){
         [inventory_id, amount]
     );
 }
+
+export async function getInventoryItemById(id) {
+    const result = await pool.query(
+        `SELECT inventory_id, item, current_inventory
+         FROM inventory
+         WHERE inventory_id = $1`,
+        [id]
+    );
+
+    return result.rows[0];
+}

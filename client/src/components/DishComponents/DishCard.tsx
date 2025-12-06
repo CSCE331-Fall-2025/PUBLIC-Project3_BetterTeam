@@ -45,8 +45,16 @@ export const DishCard: React.FC<DishCardProps> = ({
     const [showOptions, setShowOptions] = React.useState(false);
 
     const choose = (inventory_id: number, level: CustomLevel) => {
+        const isIce = inventory_id === 58;
+
+        if(level === "extra" && !isIce){
+            alert("+$0.50 charge for extra");
+        }
         onCustomizeChange?.(dish_id, { inventory_id, level });
     };
+
+    const ice = ingredients.find(i => i.inventory_id === 58);
+    const noIce = ice && ice.current_inventory <= 0;
 
     return (
         <div className={`dish-card-wrapper ${disabled ? "disabled-card" : ""}`}>
@@ -71,6 +79,9 @@ export const DishCard: React.FC<DishCardProps> = ({
                 <p className="dish-card-price">${price.toFixed(2)}</p>
 
                 {isSelected && !disabled && (
+                    noIce ? (
+                        <div className="no-ice-label">No Ice Available</div>
+                    ) : (
                     <button
                         className="customize-btn"
                         onClick={(e) => {
@@ -80,10 +91,11 @@ export const DishCard: React.FC<DishCardProps> = ({
                     >
                         Customize
                     </button>
+                    )
                 )}
             </div>
 
-            {showOptions && isSelected && !disabled && (
+            {showOptions && isSelected && !disabled && !noIce && (
                 <div className="custom-panel">
                     <h4 className="custom-panel-title">Ingredients</h4>
 
@@ -100,7 +112,7 @@ export const DishCard: React.FC<DishCardProps> = ({
                                             className={`level-btn ${currentLevel === level ? "active" : ""}`}
                                             onClick={() => choose(ing.inventory_id, level)}
                                         >
-                                            {level}
+                                            {level === "extra" && ing.inventory_id !== 58 ? "extra (+$0.50)": level}
                                         </button>
                                     ))}
                                 </div>
