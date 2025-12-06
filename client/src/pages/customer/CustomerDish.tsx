@@ -3,18 +3,20 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DishBox } from "../../components/DishComponents/DishBox.tsx";
 import Button from "../../components/ButtonComponents/Button.tsx";
 import type { IngredientOption, CustomLevel, CustomizationChoice } from "../../components/DishComponents/DishCard.tsx";
+import { useCart } from '../../context/CartContext.tsx';
 
 import './CustomerDish.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
-export type DishType = 'entree' | 'appetizer' | 'drink' | 'side';
+export type DishType = 'entree' | 'appetizer' | 'drink' | 'side' | 'season';
 
 export interface Dish {
     dish_id: number;
     name: string;
     price: number;
     type?: string;
+    image_url?: string;
     customization?: Record<number, CustomLevel>;
 }
 
@@ -23,15 +25,17 @@ type SelectedDish = Dish & { _slot?: string };
 function CustomerDish() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { addMeal } = useCart();
+
     const state = location.state as {
         dishType: DishType;
         entreeCount?: number;
-        cart?: Dish[];
     };
+    
 
     const type = state?.dishType;
     const entreeCount = state?.entreeCount ?? 1;
-    const cart = state?.cart ?? [];
+
     const [selected, setSelected] = useState<SelectedDish[]>([]);
     const [dishes, setDishes] = useState<Dish[]>([]);
     const [ingredientsByDish, setIngredientsByDish] = useState<Record<number, IngredientOption[]>>({});
@@ -45,7 +49,6 @@ function CustomerDish() {
     useEffect(() => {
         async function loadDishesAndIngredients() {
             try {
-                
                 let loaded: Dish[] = [];
 
                 if (type === "entree") {
@@ -162,21 +165,30 @@ function CustomerDish() {
         ];
     }
 
-    const handleBack = () => navigate("/Customer/CustomerHome", { state: { cart } });
+    const handleBack = () => navigate("/Customer/CustomerHome");
     const handleAddToCart = () => {
-        const newItems: Dish[] = [];
+        if(type === "entree"){
+            const requiredCount = entreeCount + 1;
+            if(selected.length !== requiredCount){
+                alert("Please select all entrees and a side before adding to cart.");
+                return;
+            }
+        } else {
+            if(selected.length !== 1){
+                alert("Please select an item before adding to cart.");
+                return;
+            }
+        }
+
+        const baseMealItems: Dish[] = selected.map(dish => ({
+            ...dish,
+            customization: customization[dish.dish_id] || {}
+        }));
 
         for(let i = 0; i < mealQty; i++){
-            selected.forEach(dish => {
-                newItems.push({
-                    ...dish,
-                    customization: customization[dish.dish_id] || {}
-                });
-            });
+            addMeal(baseMealItems);
         }
-        navigate("/Customer/CustomerHome", {
-            state: { cart: [...cart, ...newItems]}
-        });
+        navigate("/Customer/CustomerHome");
     };
 
     return (

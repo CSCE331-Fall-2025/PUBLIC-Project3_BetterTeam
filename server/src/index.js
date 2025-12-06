@@ -12,12 +12,15 @@ import managerEmployeeRoute from "./routes/managerEmployeeRoute.js";
 import managerInventoryRoute from "./routes/managerInventoryRoute.js";
 import dishRoute from "./routes/dishRoute.js";
 import transactionRoute from "./routes/transactionRoute.js"
+import customerRoutes from "./routes/customerRoutes.js"
+import paypalRoute from "./routes/paypal.js";
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use("/api/paypal", paypalRoute);
 
 // Test DB connection
 pool.connect()
@@ -37,6 +40,7 @@ app.use("/api/manager/employee", managerEmployeeRoute);
 app.use("/api/manager/inventory", managerInventoryRoute);
 app.use("/api/dishes", dishRoute);
 app.use("/api/transactions", transactionRoute);
+app.use("/api/customers", customerRoutes);
 
 
 // Start server

@@ -46,17 +46,17 @@ export async function findCustomerById(id) {
 // ~~~~~~~~~~~~~~~~~~~~
 // EMPLOYEE TABLE
 // ~~~~~~~~~~~~~~~~~~~~
-export async function createEmployee({ name, isManager, wage, email, hashedPassword }) {
-  const result = await pool.query(
-    `
-    INSERT INTO employee (name, ismanager, wage, email, password) 
-    VALUES ($1, $2, $3, $4, $5) 
-    RETURNING employee_id, name, ismanager, wage, email
-    `,
-    [name, isManager, wage, email, hashedPassword]
-  );
-  return result.rows[0];
-}
+// export async function createEmployee({ name, isManager, wage, email, hashedPassword }) {
+//   const result = await pool.query(
+//     `
+//     INSERT INTO employee (name, ismanager, wage, email, password) 
+//     VALUES ($1, $2, $3, $4, $5) 
+//     RETURNING employee_id, name, ismanager, wage, email
+//     `,
+//     [name, isManager, wage, email, hashedPassword]
+//   );
+//   return result.rows[0];
+// }
 
 export async function findEmployeeByEmail(email) {
   const result = await pool.query(

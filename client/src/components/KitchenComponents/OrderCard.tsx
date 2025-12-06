@@ -34,6 +34,9 @@ export const OrderCard: React.FC<OrderCardProps>
         //log for potential debugging
         console.log(newOrders);
         window.location.reload();
+
+
+        // parse then push
     }
 
     const handleUpSlot = () => {

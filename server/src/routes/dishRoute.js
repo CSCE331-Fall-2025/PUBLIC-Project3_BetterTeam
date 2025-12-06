@@ -5,8 +5,8 @@ const router = Router();
 
 router.get("/", fetchAllDishes);
 
-router.get("/:type", fetchDishesByType);
-
 router.get("/:dishId/ingredients", fetchIngredientsForDish);
+
+router.get("/:type", fetchDishesByType);
 
 export default router;

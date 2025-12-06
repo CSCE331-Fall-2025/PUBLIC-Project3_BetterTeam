@@ -61,11 +61,19 @@ function wrapRoute(route: IRoute) {
       </ProtectedRoute>
     );
   } else if (lower.startsWith("/customer")) {
-    element = (
-      <ProtectedRoute allowedRoles={["customer", "cashier", "manager"]}>
-        <Element />
-      </ProtectedRoute>
-    );
+    if(lower.endsWith("/profile")){
+      element = (
+        <ProtectedRoute allowedRoles={["customer"]}>
+          <Element />
+        </ProtectedRoute>
+      );
+    } else {
+      element = (
+        <ProtectedRoute allowedRoles={["guest", "customer", "cashier", "manager"]}>
+          <Element />
+        </ProtectedRoute>
+      );
+    }
   }
 
   return {

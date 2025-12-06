@@ -1,5 +1,32 @@
+import { useNavigate } from "react-router-dom";
+import "./Home.css";
+
 function Home() {
-	return;
+    const navigate = useNavigate();
+
+    return (
+        <div className="home-wrapper">
+            <div className="home-card">
+                <img 
+                    src="/assets/panda.png" 
+                    alt="Agent Red Logo" 
+                    className="home-logo"
+                />
+
+                <h1 className="home-title">Welcome to Agent Red</h1>
+                <p className="home-subtitle">
+                    Precision. Flavor. Delivery.
+                </p>
+
+                <div className="home-buttons">
+                    <button onClick={() => navigate("/Customer/CustomerHome")}>Customer Portal</button>
+                    <button onClick={() => navigate("/any/login")}>Cashier Portal</button>
+                    <button onClick={() => navigate("/any/login")}>Manager Tools</button>
+                </div>
+
+            </div>
+        </div>
+    );
 }
 
 export default Home;
