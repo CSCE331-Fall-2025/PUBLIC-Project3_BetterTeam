@@ -3,6 +3,7 @@ import Button from '../../components/ButtonComponents/Button.tsx';
 import type { Dish } from './CashierDish';
 import { useEffect, useState } from 'react';
 import { useAuth } from "../../context/AuthContext.tsx";
+import CategoryTile from '../../components/TileComponents/CategoryTile.tsx';
 
 import './CashierHome.css';
 
@@ -161,69 +162,79 @@ function CashierHome() {
       alert("Failed to place order.");
     }
   };
+    return (
+      <div className="cashier-home-layout">
+        <div className="cashier-button-panel">
+          <h1 className="cashier-title">Cashier Menu</h1>
 
-  return (
-    <div className="cashier-home">
-      <div className="button-container">
-        <Button name="Bowl" onClick={() => goToDishPage('entree', 1)} />
-        <Button name="Plate" onClick={() => goToDishPage('entree', 2)} />
-        <Button name="Big Plate" onClick={() => goToDishPage('entree', 3)} />
-        <Button name="Appetizer" onClick={() => goToDishPage('appetizer')} />
-        <Button name="Sides" onClick={() => goToDishPage('side')} />
-        <Button name="Drinks" onClick={() => goToDishPage('drink')} />
-        <Button name="Seasonal" onClick={() => goToDishPage('season')}/>
-      </div>
+          <div className="cashier-tile-grid">
+            <CategoryTile title="Bowl" subtitle="1 Entrée + Side" onClick={() => goToDishPage('entree', 1)} />
+            <CategoryTile title="Plate" subtitle="2 Entrées + Side" onClick={() => goToDishPage('entree', 2)} />
+            <CategoryTile title="Big Plate" subtitle="3 Entrées + Side" onClick={() => goToDishPage('entree', 3)} />
 
-      <div className="receipt-section">
-        <h2>Current Order</h2>
+            <CategoryTile title="Appetizers" image="/assets/rangoon.png" onClick={() => goToDishPage('appetizer')} />
+            <CategoryTile title="Sides" image="/assets/ricefried.png" onClick={() => goToDishPage('side')} />
+            <CategoryTile title="Drinks" image="/assets/coke.png" onClick={() => goToDishPage('drink')} />
 
-        {cart.length === 0 ? (
-          <p>Your cart is empty.</p>
-        ) : (
-          <>
-            <ul>
-              {meals.map((meal, mealIndex) => (
-                <li key={mealIndex}>
-                  <h3>{getMealName(meal)}</h3>
-                  <ul>
-                    {meal.map((dish, idx) => (
-                      <li key={idx}>
-                        {dish.name} - ${dish.price.toFixed(2)}
-                        {dish.customization && (
-                          <ul className="customization-list">
-                            {Object.entries(dish.customization).map(
-                              ([invIdStr, level]) => {
+            <CategoryTile
+              title="Seasonal Ops"
+              subtitle="⚠ Limited Time ⚠"
+              highlight
+              onClick={() => goToDishPage('season')}
+            />
+          </div>
+        </div>
+        <div className="cashier-receipt-panel">
+          <h2>Current Order</h2>
+
+          {cart.length === 0 ? (
+            <p>Your cart is empty.</p>
+          ) : (
+            <>
+              <ul>
+                {meals.map((meal, mealIndex) => (
+                  <li key={mealIndex}>
+                    <h3>{getMealName(meal)}</h3>
+                    <ul>
+                      {meal.map((dish, idx) => (
+                        <li key={idx}>
+                          {dish.name} - ${dish.price.toFixed(2)}
+
+                          {dish.customization && (
+                            <ul className="customization-list">
+                              {Object.entries(dish.customization).map(([invIdStr, level]) => {
                                 const invId = Number(invIdStr);
                                 const ingName = ingredientNames[dish.dish_id]?.[invId];
+
                                 if(level === "normal") return null;
 
-                                return(
+                                return (
                                   <li key={invId} className="custom-line">
                                     {grammerLevel(level)} {ingName}
                                   </li>
                                 );
-                              }
-                            )}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
+                              })}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
 
-            <h3>Total: ${total.toFixed(2)}</h3>
-          </>
-        )}
+              <h3>Total: ${total.toFixed(2)}</h3>
+            </>
+          )}
 
-        <div className="checkout-buttons">
-          <Button name="Clear Order" onClick={handleClearCart} disabled={cart.length === 0} />
-          <Button name="Place Order" onClick={handlePlaceOrder} disabled={cart.length === 0} />
+          <div className="checkout-buttons">
+            <Button name="Clear Order" onClick={handleClearCart} disabled={cart.length === 0} />
+            <Button name="Place Order" onClick={handlePlaceOrder} disabled={cart.length === 0} />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+
 }
 
 export default CashierHome;
