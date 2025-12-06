@@ -13,6 +13,7 @@ import managerInventoryRoute from "./routes/managerInventoryRoute.js";
 import dishRoute from "./routes/dishRoute.js";
 import transactionRoute from "./routes/transactionRoute.js"
 import customerRoutes from "./routes/customerRoutes.js"
+import employeeRoute from "./routes/employeeRoute.js"
 import paypalRoute from "./routes/paypal.js";
 
 const app = express();
@@ -41,6 +42,7 @@ app.use("/api/manager/inventory", managerInventoryRoute);
 app.use("/api/dishes", dishRoute);
 app.use("/api/transactions", transactionRoute);
 app.use("/api/customers", customerRoutes);
+app.use("/api/employees", employeeRoute);
 
 
 // Start server

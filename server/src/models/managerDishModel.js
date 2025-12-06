@@ -27,11 +27,26 @@ export async function updateDish(id, name, type, price){
 }
 
 export async function deleteDish(id){
-    const result = await pool.query(
-        'DELETE FROM dish WHERE dish_id = $1 RETURNING dish_id;',
-        [id]
-    );
-    return result.rows[0];
+    const client = await pool.connect();
+
+    try{
+        await client.query('BEGIN;');
+
+        await client.query('UPDATE transactiondish SET fk_dish = 0 WHERE fk_dish = $1;', [id]);
+
+        const result = await client.query(
+            'DELETE FROM dish WHERE dish_id = $1 RETURNING dish_id;',
+            [id]
+        );
+        await client.query('COMMIT;');
+
+        return result.rows[0];
+    } catch(e){
+        await client.query('ROLLBACK;');
+        throw e;
+    } finally{
+        client.release();
+    }
 }
 
 export async function getDishInventory() {
