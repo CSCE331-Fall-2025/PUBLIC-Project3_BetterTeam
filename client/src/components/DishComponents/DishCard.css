@@ -38,13 +38,11 @@
     color: white;
 }
 
-/* SELECTED STATE */
 .dish-card.selected {
     border: 2px solid #BB2719;
     box-shadow: 0 0 10px rgba(255, 50, 50, 0.6);
 }
 
-/* CUSTOMIZE BUTTON */
 .customize-btn {
     all: unset;
     height: 1rem;
@@ -63,7 +61,6 @@
     color: white;
 }
 
-/* CUSTOM PANEL – NOW DARK MODE */
 .custom-panel {
     background: #181818;
     width: max-content;
@@ -82,7 +79,6 @@
     color: #FFCCCC;
 }
 
-/* ROWS & LABELS */
 .custom-row {
     display: flex;
     justify-content: space-between;
@@ -97,7 +93,6 @@
     width: 40%;
 }
 
-/* LEVEL BUTTONS */
 .level-buttons {
     display: flex;
     gap: 4px;
@@ -127,7 +122,6 @@
     box-shadow: 0 0 6px rgba(255, 80, 80, 0.5);
 }
 
-/* OUT OF STOCK — KEEP EXACT SAME */
 .oos-banner {
     position: absolute;
     top: 4px;
@@ -144,7 +138,6 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.25);
 }
 
-/* DISABLED STATE */
 .disabled-card .dish-card {
     opacity: 0.45;
     filter: grayscale(80%);
@@ -159,4 +152,14 @@
 
 .disabled-card .customize-btn {
     display: none !important;
+}
+
+.no-ice-label {
+    color: white;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-align: center;
+    margin-top: 6px;
+    font-size: 0.9rem;
 }

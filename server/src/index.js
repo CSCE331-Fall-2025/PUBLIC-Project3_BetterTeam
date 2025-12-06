@@ -14,6 +14,8 @@ import dishRoute from "./routes/dishRoute.js";
 import transactionRoute from "./routes/transactionRoute.js"
 import customerRoutes from "./routes/customerRoutes.js"
 import paypalRoute from "./routes/paypal.js";
+import inventoryRoute from "./routes/inventoryRoute.js";
+
 
 const app = express();
 
@@ -41,6 +43,8 @@ app.use("/api/manager/inventory", managerInventoryRoute);
 app.use("/api/dishes", dishRoute);
 app.use("/api/transactions", transactionRoute);
 app.use("/api/customers", customerRoutes);
+app.use("/api/inventory", inventoryRoute);
+
 
 
 // Start server

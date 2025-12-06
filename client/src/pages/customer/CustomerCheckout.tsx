@@ -35,7 +35,24 @@ function CustomerCheckout(){
     const { items, clearCart } = useCart();
     const { user } = useAuth();
     const cart: Dish[][] = items;
-    const total = cart.reduce((sum, meal) => sum + meal.reduce((mSum, d) => mSum + d.price, 0), 0);
+    const total = cart.reduce((sum, meal) => {
+    return (
+        sum +
+        meal.reduce((mSum, d) => {
+            let base = d.price;
+            if (d.customization) {
+                for (const [invIdStr, lvl] of Object.entries(d.customization)) {
+                    const invId = Number(invIdStr);
+                    if (lvl === "extra" && invId !== 58) {
+                        base += 0.5;
+                    }
+                }
+            }
+            return mSum + base;
+        }, 0)
+    );
+}, 0);
+
     const [ingredientNames, setIngredientNames] = useState<Record<number, Record<number, string>>>({});
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -243,7 +260,7 @@ function CustomerCheckout(){
                                                                 if(level === "normal") return null;
                                                                 return(
                                                                     <li key={invId} className="custom-line">
-                                                                        {grammerLevel(level)} {ingName}
+                                                                        {grammerLevel(level)} {ingName} {level === "extra" && invId !== 58 && "(+$0.50)"}
                                                                     </li>
                                                                 );
                                                             })}

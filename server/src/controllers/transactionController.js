@@ -1,6 +1,8 @@
 import { insertTransaction, insertTransactionDish } from "../models/transactionModel.js";
 import { getInventoryForDish, decrementInventory } from "../models/inventoryModel.js";
 
+const ICE_ID = 58;
+
 export async function createTransaction(req, res){
     try{
         console.log("Incoming Body:", req.body);
@@ -15,7 +17,6 @@ export async function createTransaction(req, res){
         }
 
         const total = cart.reduce((sum, dish) => sum + dish.price, 0);
-        // temporary hardcoded employee and customer until login is fully finished
         const customerID = fk_customer ?? 26;
         const employeeID = fk_employee ?? 29;
 
@@ -40,6 +41,20 @@ export async function createTransaction(req, res){
 
                 if(decrementBy > 0){
                     await decrementInventory(invId, decrementBy);
+                }
+            }
+
+            if(dish.type === "drink"){
+                const customIceLevel = dish.customization?.[ICE_ID] ?? "normal";
+
+                let iceDecrement = 0;
+
+                if(customIceLevel === "normal") iceDecrement = 1;
+                if(customIceLevel === "extra") iceDecrement = 2;
+                if(customIceLevel === "none") iceDecrement = 0;
+
+                if (iceDecremenet > 0) {
+                    await decrementInventory(ICE_ID, iceDecrement);
                 }
             }
         }

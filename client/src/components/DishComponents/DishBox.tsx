@@ -5,6 +5,8 @@ import type { Dish } from "../../pages/customer/CustomerDish.tsx";
 import type { SelectedDish } from "../../pages/cashier/CashierDish.tsx";
 import './DishBox.css';
 
+const ICE_ID = 58;
+
 interface DishBoxProps {
     title?: string;
     dishes: Dish[];
@@ -22,9 +24,9 @@ export const DishBox: React.FC<DishBoxProps> = ({ title, dishes, onSelect, selec
             <div className="dish-box-grid">
                 {dishes.map((dish) => {
                     const ingList = ingredientsByDish[dish.dish_id] ?? [];
-                    const disabled = ingList.some(
-                        (ing) => ing.current_inventory === 0
-                    );
+                    const disabled = dish.type === "drink"
+                        ? ingList.some(ing => ing.inventory_id !== ICE_ID && ing.current_inventory <= 0)
+                        : ingList.some(ing => ing.current_inventory <= 0);
 
                     return(
                         <DishCard
