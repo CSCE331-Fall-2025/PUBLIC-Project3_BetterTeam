@@ -19,7 +19,7 @@ export function GoogleTranslate() {
       new window.google.translate.TranslateElement(
         {
           pageLanguage: "en", // initial language
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+          layout: window.google.translate.TranslateElement.InlineLayout.VERTICAL,
         },
         // the actual div that widget will appear in --> the returned html component
         "google_translate_element"
