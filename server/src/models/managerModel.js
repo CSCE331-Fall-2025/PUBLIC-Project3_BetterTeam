@@ -35,3 +35,18 @@ export async function getZReport() {
         client.release();
     }
 }
+
+export async function getDailyReportDates() {
+    const result = await pool.query(
+        'SELECT report_date::text from dailyreports ORDER BY report_date DESC;'
+    );
+    return result.rows.map(d => d.report_date.slice(0, 10));
+}
+
+export async function getDailyReportByDate(date) {
+    const result = await pool.query(
+        'SELECT report_date::text, total_revenue, transaction_count FROM dailyreports WHERE report_date = $1;',
+        [date]
+    );
+    return result.rows[0];
+}

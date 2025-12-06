@@ -44,7 +44,8 @@ function Inventory() {
                 const response = await fetch(`${API_BASE}/api/manager/inventory`);
 
                 if(!response.ok){
-                    throw new Error('Failed to fetch inventory');
+                    const errorText = await response.text();
+                    throw new Error(`Failed to fetch inventory: ${errorText}`);
                 }
 
                 // this parses the json and converts it into an inventory array
@@ -136,7 +137,8 @@ function Inventory() {
             });
 
             if(!response.ok){
-                throw new Error('Failed to update inventory');
+                const errorText = await response.text();
+                throw new Error(`Failed to update inventory: ${errorText}`);
             }
 
             setInventory(prevInventory =>
@@ -173,7 +175,8 @@ function Inventory() {
                 });
 
                 if(!response.ok){
-                    throw new Error('Failed to delete inventory');
+                    const errorText = await response.text();
+                    throw new Error(`Failed to delete inventory: ${errorText}`);
                 }
 
                 setInventory(prevInventory =>
@@ -220,7 +223,8 @@ function Inventory() {
             });
 
             if(!response.ok){
-                throw new Error('Failed to add inventory');
+                const errorText = await response.text();
+                throw new Error(`Failed to add inventory: ${errorText}`);
             }
 
             const addedInventory: Inventory = await response.json();

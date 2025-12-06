@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useReport } from '../../context/ReportContext.tsx';
 import Button from '../../components/ButtonComponents/Button.tsx'
 import './Dashboard.css'
 
@@ -10,7 +11,7 @@ interface XReport {
     total_sales: number,
 }
 
-interface ZReport {
+export interface ZReport {
     report_date: string,
     total_revenue: number,
     transaction_count: number,
@@ -19,8 +20,13 @@ interface ZReport {
 function ManagerHome() {
 
     const [xReportData, setXReportData] = useState<XReport[] | null>(null); 
-    const [zReportData, setZReportData] = useState<ZReport | null>(null); 
+    // const [zReportData, setZReportData] = useState<ZReport | null>(null); 
+    const { zReportData, setZReportData } = useReport();
     const [isProcessing, setIsProcessing] = useState(false);
+    const [showHistory, setShowHistory] = useState(false);
+    const [reportDates, setReportDates] = useState<string[] | null>(null);
+    const [histReportData, setHistReportData] = useState<ZReport | null>(null);
+    const [fetchingHistory, setFetchingHistory] = useState(false);
 
     function handleXReport() {
         if(!xReportData || xReportData.length === 0){
@@ -54,7 +60,8 @@ function ManagerHome() {
                 const response = await fetch(`${API_BASE}/api/manager/xReport`);
 
                 if(!response.ok){
-                    throw new Error('Failed to fetch X Report');
+                    const errorText = await response.text();
+                    throw new Error(`Failed to fetch X Report: ${errorText}`);
                 }
 
                 // this parses the json and converts it into an XReport array
@@ -85,6 +92,11 @@ function ManagerHome() {
                     });
 
                     if(!response.ok){
+                        if(response.status === 409){
+                            alert('Z Report already made for today');
+                            return;
+                        }
+
                         const errorText = await response.text();
                         throw new Error(`Failed to close day: ${errorText}`);
                     }
@@ -93,7 +105,7 @@ function ManagerHome() {
                     const data = await response.json();
 
                     const processedData: ZReport = {
-                        report_date: data.report_date,
+                        report_date: data.report_date.slice(0, 10),
                         total_revenue: parseFloat(data.total_revenue),
                         transaction_count: parseInt(data.transaction_count, 10),
                     };
@@ -105,12 +117,71 @@ function ManagerHome() {
 
                 } catch (error) {
                     console.error('Z Report Error:', error);
-                    alert('Error closing day, check console for logs.')
+                    alert('Unknown error occurred during Z Report processing. Please check console for details.');
                 } finally {
                     setIsProcessing(false);
                 }
             };
             fetchZReport();
+        }
+    }
+
+    async function fetchReportDates(){
+        setFetchingHistory(true);
+        try{
+            const response = await fetch(`${API_BASE}/api/manager/dailyReports`);
+
+            if(!response.ok){
+                const errorText = await response.text();
+                throw new Error(`Failed to fetch report dates: ${errorText}`);
+            }
+
+            const dates: string[] = await response.json();
+            setReportDates(dates);
+        } catch(error){
+            console.error('Report Dates Error:', error);
+            alert('Could not load historical report dates.');
+        } finally{
+            setFetchingHistory(false);
+        }
+    }
+
+    function handleViewHistory(){
+        setShowHistory(prev => !prev);
+        setHistReportData(null);
+
+        if(!showHistory && !reportDates){
+            fetchReportDates();
+        }
+    }
+
+    async function handleSelectReport(date: string){
+        if(!date){
+            setHistReportData(null);
+            return;
+        }
+
+        setFetchingHistory(true);
+        try{
+            const response = await fetch(`${API_BASE}/api/manager/dailyReports?date=${date}`);
+
+            if(!response.ok){
+                const errorText = await response.text();
+                throw new Error(`Failed to fetch report for ${date}: ${errorText}`);
+            }
+
+            const data: ZReport = await response.json();
+
+            setHistReportData({
+                report_date: data.report_date.slice(0, 10),
+                total_revenue: parseFloat(data.total_revenue as unknown as string),
+                transaction_count: parseInt(data.transaction_count as unknown as string, 10),
+            });
+        } catch(error){
+            console.error(`Error fetching report for ${date}:`, error);
+            alert(`Could not load report for ${date}`);
+        } finally{
+            setFetchingHistory(false);
         }
     }
 
@@ -128,6 +199,33 @@ function ManagerHome() {
                     <p>Daily sales totals have been archived and reset for the next business day.</p>
                 </div>
             )}
+            <div className='historyContainer'>
+                <Button name={showHistory ? 'Hide Prev Reports' : 'View Prev Z Reports'} onClick={handleViewHistory} />
+                {showHistory && (
+                    <div className='historyPanel'>
+                        {fetchingHistory && !reportDates && <div>Loading Report History...</div>}
+                        {reportDates && reportDates.length > 0 && (
+                            <div className='reportList'>
+                                <h3>Select a report date:</h3>
+                                <select onChange={(e) => handleSelectReport(e.target.value)} disabled={fetchingHistory}>
+                                    <option value=''>Select Date</option>
+                                    {reportDates.map((date) => (
+                                        <option key={date} value={date}>{date}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                        {reportDates && reportDates.length === 0 && <div>No previous reports found.</div>}
+                        {histReportData && (
+                            <div className='historicalZDisplay'>
+                                <h4>Z Report for: {histReportData.report_date}</h4>
+                                <p>Revenue: ${histReportData.total_revenue}</p>
+                                <p>Transactions: {histReportData.transaction_count}</p>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
             <div className = 'buttonContainer'>
                 <Button name={'X Report'} onClick={handleXReport}/>
                 <Button name={'Z Report'} onClick={handleZReport}/>

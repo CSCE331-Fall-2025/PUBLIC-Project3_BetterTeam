@@ -35,7 +35,8 @@ function EmployeeManage() {
                 const response = await fetch(`${API_BASE}/api/manager/employee`);
 
                 if(!response.ok){
-                    throw new Error('Failed to fetch employees');
+                    const errorText = await response.text();
+                    throw new Error(`Failed to fetch employees: ${errorText}`);
                 }
 
                 // this parses the json and converts it into an employee array
@@ -110,7 +111,8 @@ function EmployeeManage() {
             });
 
             if(!response.ok){
-                throw new Error('Failed to update employee');
+                const errorText = await response.text();
+                throw new Error(`Failed to update employee: ${errorText}`);
             }
 
             setEmployees(prevEmployees =>
@@ -147,7 +149,8 @@ function EmployeeManage() {
                 });
 
                 if(!response.ok){
-                    throw new Error('Failed to delete employee');
+                    const errorText = await response.text();
+                    throw new Error(`Failed to delete employee: ${errorText}`);
                 }
 
                 setEmployees(prevEmployees =>
@@ -202,7 +205,12 @@ function EmployeeManage() {
             });
 
             if(!response.ok){
-                throw new Error('Failed to add employee');
+                if(response.status === 409){
+                    alert('Employee with this email already exists.');
+                    return;
+                }
+                const errorText = await response.text();
+                throw new Error(`Failed to add employee: ${errorText}`);
             }
 
             const addedEmployee: Employee = await response.json();
