@@ -20,13 +20,18 @@ export interface ZReport {
 function ManagerHome() {
 
     const [xReportData, setXReportData] = useState<XReport[] | null>(null); 
-    // const [zReportData, setZReportData] = useState<ZReport | null>(null); 
-    const { zReportData, setZReportData } = useReport();
+    const { zReportData, setZReportData, fetchTodaysReport } = useReport();
     const [isProcessing, setIsProcessing] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
     const [reportDates, setReportDates] = useState<string[] | null>(null);
     const [histReportData, setHistReportData] = useState<ZReport | null>(null);
     const [fetchingHistory, setFetchingHistory] = useState(false);
+
+    useEffect(() => {
+        if(zReportData === null){
+            fetchTodaysReport();
+        }
+    }, [zReportData, fetchTodaysReport]);
 
     function handleXReport() {
         if(!xReportData || xReportData.length === 0){
