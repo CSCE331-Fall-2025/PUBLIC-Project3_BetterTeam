@@ -5,8 +5,10 @@
     background: linear-gradient(180deg, #BB2719, #8C1E16);
     border-right: none;
     box-shadow: 2px 0 12px rgba(0,0,0,0.3);
-    padding: 0 0 0 0;
+    justify-content: space-between;
     justify-content: center;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
 }
 
 

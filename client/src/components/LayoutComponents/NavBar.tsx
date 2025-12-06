@@ -7,6 +7,7 @@ import {
   CustomerLinks,
   GuestLinks,
 } from "./NavLinks";
+import { GoogleTranslate } from "./Translate";
 
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +36,9 @@ function NavBar() {
         {user?.role === "manager" && (
           <ManagerLinks onLogout={handleLogout} />
         )}
+
+        <GoogleTranslate />
+
       </nav>
   );
 }
