@@ -60,7 +60,7 @@ export async function updateDishInventory(dishId, inventoryIds) {
     const client = await pool.connect();
 
     try{
-        await client.query('BEGIN');
+        await client.query('BEGIN;');
 
         await client.query('DELETE FROM dishinventory WHERE fk_dish = $1;', [dishId]);
 
@@ -69,11 +69,11 @@ export async function updateDishInventory(dishId, inventoryIds) {
             await client.query(insertData.query, insertData.params);
         }
 
-        await client.query('COMMIT');
+        await client.query('COMMIT;');
 
         return{success: true};
     } catch(e){
-        await client.query('ROLLBACK');
+        await client.query('ROLLBACK;');
         throw e;
     } finally{
         client.release();

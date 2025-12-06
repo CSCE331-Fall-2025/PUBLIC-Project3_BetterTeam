@@ -36,7 +36,8 @@ function EmployeeData() {
                 const response = await fetch(`${API_BASE}/api/manager/employee`);
 
                 if(!response.ok){
-                    throw new Error('Failed to fetch employees');
+                    const errorText = await response.text();
+                    throw new Error(`Failed to fetch employees: ${errorText}`);
                 }
 
                 // this parses the json and converts it into an employee array

@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(null);
     localStorage.removeItem("auth_user");
     localStorage.removeItem("token");
+    localStorage.removeItem("z_report_data");
   };
 
   return (
