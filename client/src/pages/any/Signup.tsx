@@ -13,15 +13,9 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [userGoogle, setUserGoogle] = useState<any>(null);
 
   const navigate = useNavigate();
-  const { login } = useAuth();
-
-  useEffect(() => {
-    const savedGoogle = localStorage.getItem("google_user");
-    if (savedGoogle) setUserGoogle(JSON.parse(savedGoogle));
-  }, []);
+  const { user, login, logout } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,23 +62,39 @@ function Signup() {
     }
   };
 
-  const handleGoogleSuccess = (credentialResponse: any) => {
-    if (credentialResponse.credential) {
-      const decoded: any = jwtDecode(credentialResponse.credential);
-      setUserGoogle(decoded);
-      localStorage.setItem("google_user", JSON.stringify(decoded));
-      console.log("Google signup success:", decoded);
-      // TODO: later hook into backend /api/auth/google and login()
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    const credential = credentialResponse.credential;
+    if (!credential) return;
+
+    try {
+        // kinda hacky, but in order to resue the same API call for login/signup, decode the google API response and forward
+        // the email (duh), but make up a password via the "stub" field from google. Thus creating a "password" for the google
+        // user
+      const response = await fetch(`${API_BASE}/api/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+            email: decoded.email,
+            password: 'GOOGLE-${decoded.sub}',
+            name: decoded.user
+        }),
+      });
+      
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Google OAuth backend error:", data.error);
+        return;
+      }
+
+      // Login new user --> will also add to authContext
+      login(data.user, data.token);
+
+      navigate("/any/home");
+    } catch (err) {
+      console.error("Google OAuth network error:", err);
     }
   };
-
-  const handleLogout = () => {
-    googleLogout();
-    setUserGoogle(null);
-    localStorage.removeItem("google_user");
-    console.log("Google logged out");
-  };
-
   return (
     <div className="signup-page-wrapper">
       <div className="signup-container">
@@ -139,20 +149,14 @@ function Signup() {
             <span>or</span>
           </div>
 
-          {!userGoogle ? (
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => console.log("Google login failed")}
-            />
-          ) : (
-            <button
-              type="button"
-              className="google-logout-button"
-              onClick={handleLogout}
-            >
-              Logout {userGoogle.name}
+         {!user ? (
+             <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => console.log("Google login failed")} />
+         ) : (
+            <button type="button" className="google-logout-button" onClick={() => logout()}>
+                Logout {user.email}
             </button>
-          )}
+         )}
+         
 
           <div className="signup-footer">
             <p>
