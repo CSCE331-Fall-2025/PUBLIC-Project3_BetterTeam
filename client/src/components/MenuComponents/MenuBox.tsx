@@ -5,6 +5,7 @@ import './MenuBox.css';
 interface Dish {
     name: string;
     price: number;
+    image_url: string;
 }
 
 interface MenuBoxProps {
@@ -12,7 +13,7 @@ interface MenuBoxProps {
     dishes: Dish[];
 }
 
-export const MenuBox: React.FC<MenuBoxProps> = ({title, dishes }) => {
+export const MenuBox: React.FC<MenuBoxProps> = ({ title, dishes }) => {
     return (
         <div className="menu-box">
             {title && <h2 className="menu-box-title">{title}</h2>}
@@ -22,6 +23,7 @@ export const MenuBox: React.FC<MenuBoxProps> = ({title, dishes }) => {
                         key={index}
                         name={dish.name}
                         price={dish.price}
+                        image_url={dish.image_url}
                     />
                 ))}
             </div>
