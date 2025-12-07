@@ -301,6 +301,11 @@ function OrderTrends() {
             return;
         }
 
+        if(dishes.find(d => d.name === newDish.name)){
+            alert('Please enter a unique name.');
+            return;
+        }
+
         const priceValue = parseFloat(newDish.price);
 
         if(newDish.price === '' || isNaN(priceValue) || priceValue <= 0){

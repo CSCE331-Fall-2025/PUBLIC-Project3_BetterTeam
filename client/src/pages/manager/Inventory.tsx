@@ -1,9 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Table, { type ColumnDefinition } from '../../components/TableComponents/Table.tsx'
 import 'chart.js/auto'
-import { Line } from 'react-chartjs-2'
+import { 
+    Chart as ChartJS, 
+    CategoryScale, 
+    LinearScale, 
+    PointElement, 
+    LineElement, 
+    Title, 
+    Tooltip, 
+    Legend
+} from 'chart.js';
+import type {ChartArea, ChartData } from 'chart.js';
+import { Chart } from 'react-chartjs-2'
 import Textbox from '../../components/TextboxComponents/Textbox.tsx'
 import './Inventory.css'
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
@@ -14,16 +35,19 @@ export interface Inventory {
     target_inventory: number,
 }
 
-interface ChartData {
-    labels: string[];
-    datasets: {
-        label: string;
-        data: number[];
-        borderColor: string;
-        backgroundColor: string;
-        borderWidth: number;
-    }[];
-}
+const MAX_TARGET_INVENTORY = 10000;
+const MAX_CURRENT_INVENTORY = 12000;
+const MAX_CURRENT_MULT = 1.2;
+
+function createGradient(ctx: CanvasRenderingContext2D, area: ChartArea) {
+    const gradient = ctx.createLinearGradient(0, area.bottom, 0, area.top);
+
+    gradient.addColorStop(0, 'rgba(255, 0, 0, 1)');
+    gradient.addColorStop(0.5, 'rgba(255, 206, 86, 1)');
+    gradient.addColorStop(1, 'rgba(75, 192, 192, 1)');
+
+    return gradient;
+};
 
 function Inventory() {
 
@@ -35,6 +59,12 @@ function Inventory() {
         current_inventory: 0,
         target_inventory: 1000,
     })
+
+    const chartRef = useRef<ChartJS>(null);
+    const [chartData, setChartData] = useState<ChartData<'line'>>({
+        labels: [],
+        datasets: [],
+    });
 
     // hook that fetches the data
     useEffect(() => {
@@ -61,6 +91,37 @@ function Inventory() {
         fetchInventory();
     }, []);
 
+    useEffect(() => {
+        const chart = chartRef.current;
+
+        if(!chart){
+            return;
+        }
+
+        const calculatedData: ChartData<'line'> = {
+            labels: inventory.map(i => i.item),
+            datasets: [
+                {
+                    label: 'Current Quantity',
+                    data: inventory.map(i => i.current_inventory),
+                    borderColor: createGradient(chart.ctx, chart.chartArea),
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderWidth: 2,
+                    tension: 0.25,
+                },
+                {
+                    label: 'Reccomended Quantity',
+                    data: inventory.map(i => i.target_inventory),
+                    borderColor: 'rgba(133, 38, 38, 0.3)',
+                    backgroundColor: 'rgba(150, 31, 31, 0.1)',
+                    borderWidth: 2,
+                    borderDash: [5,5],
+                },
+            ],
+        };
+        setChartData(calculatedData);
+    }, [inventory]);
+
     const selectedInventory = inventory.find(i => i.inventory_id === selectedInventoryID);
 
     const handleInventorySelect = (id: number) => {
@@ -79,24 +140,6 @@ function Inventory() {
         }
     };
 
-    const inventoryChartData: ChartData = {
-        labels: inventory.map(i => i.item),
-        datasets: [{
-            label: 'Current Quantity',
-            data: inventory.map(i => i.current_inventory),
-            borderColor: 'rgba(75, 75, 75, 1)',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            borderWidth: 2,
-        },
-        {
-            label: 'Reccomended Quantity',
-            data: inventory.map(i => i.target_inventory),
-            borderColor: 'rgba(133, 38, 38, 1)',
-            backgroundColor: 'rgba(150, 31, 31, 0.5)',
-            borderWidth: 2,
-        },],
-    };
-
     const inventoryColumns: ColumnDefinition<Inventory>[] = [
         {header: 'Inventory Id', accessor: (i) => i.inventory_id },
         {header: 'Inventory Name', accessor: (i) => i.item },
@@ -110,7 +153,17 @@ function Inventory() {
         let finalValue: string | number = newValue;
 
         if( (field === 'current_inventory' || field === 'target_inventory') && typeof newValue === 'string'){
-            finalValue = parseFloat(newValue) || 0;
+            finalValue = Math.floor(parseFloat(newValue)) || 0;
+
+            if(field === 'current_inventory' && finalValue > MAX_CURRENT_INVENTORY){
+                alert(`Current inventory cannot exceed ${MAX_CURRENT_INVENTORY}.`);
+                finalValue = MAX_CURRENT_INVENTORY;
+            }
+
+            if(field === 'target_inventory' && finalValue > MAX_TARGET_INVENTORY){
+                alert(`Target inventory cannot exceed ${MAX_TARGET_INVENTORY}.`);
+                finalValue = MAX_TARGET_INVENTORY;
+            }
         }
 
         setEditedInventory(prev => {
@@ -127,6 +180,17 @@ function Inventory() {
         if(!selectedInventoryID || !editedInventory){
             alert('No selected inventory to change');
             return;
+        }
+
+        const maxCurrent = editedInventory.target_inventory * MAX_CURRENT_MULT;
+        if(editedInventory.current_inventory > maxCurrent){
+            const confirm = window.confirm(
+                `Warning: Current inventory (${editedInventory.current_inventory}) is significantly higher than the target (${editedInventory.target_inventory}).` + 
+                `This might lead to overstocking. Max reccomended is ${maxCurrent.toFixed(0)}. Do you wish to proceed?`
+            );
+            if(!confirm){
+                return;
+            }
         }
 
         try{
@@ -200,7 +264,17 @@ function Inventory() {
         let finalValue: string | number = value;
 
         if( (field === 'current_inventory' || field === 'target_inventory') && typeof value === 'string'){
-            finalValue = parseFloat(value) || 0;
+            finalValue = Math.floor(parseFloat(value)) || 0;
+
+            if(field === 'current_inventory' && finalValue > MAX_CURRENT_INVENTORY){
+                alert(`Current inventory cannot exceed ${MAX_CURRENT_INVENTORY}.`);
+                finalValue = MAX_CURRENT_INVENTORY;
+            }
+
+            if(field === 'target_inventory' && finalValue > MAX_TARGET_INVENTORY){
+                alert(`Target inventory cannot exceed ${MAX_TARGET_INVENTORY}.`);
+                finalValue = MAX_TARGET_INVENTORY;
+            }
         }
 
         setNewInventory(prev => ({
@@ -213,6 +287,23 @@ function Inventory() {
         if(!newInventory.item || newInventory.current_inventory <= 0 || newInventory.target_inventory <=0 ){
             alert('Please enter a valid name and current and target inventories.');
             return;
+        }
+
+        if(inventory.find(i => i.item === newInventory.item)){
+            alert('Please enter a unique name.');
+            return;
+        }
+
+
+        const maxCurrent = newInventory.target_inventory * MAX_CURRENT_MULT;
+        if(newInventory.current_inventory > maxCurrent){
+            const confirm = window.confirm(
+                `Warning: Current inventory (${newInventory.current_inventory}) is significantly higher than the target (${newInventory.target_inventory}).` + 
+                `This might lead to overstocking. Max reccomended is ${maxCurrent.toFixed(0)}. Do you wish to proceed?`
+            );
+            if(!confirm){
+                return;
+            }
         }
 
         try{
@@ -231,7 +322,7 @@ function Inventory() {
 
             setInventory(prevInventory => [...prevInventory, addedInventory]);
 
-            setNewInventory({ item: '', current_inventory: 0, target_inventory: 0 });
+            setNewInventory({ item: '', current_inventory: 0, target_inventory: 1000 });
 
             alert(`Added ${addedInventory.item} successfully`);
 
@@ -245,7 +336,7 @@ function Inventory() {
 		<div className='inventory'>
             <div className='inventoryDisplays'>
                 <div className='inventoryChart'>
-                    <Line data={inventoryChartData} />
+                    <Chart ref={chartRef} type='line' data={chartData} />
                 </div>
                 <div className='tableContainer'>
                     <Table data={inventory} columns={inventoryColumns}/>
