@@ -152,8 +152,15 @@ function Inventory() {
 
         let finalValue: string | number = newValue;
 
+        if(typeof newValue === 'string' && field === 'item' ){
+            finalValue = newValue.trim();
+        }
+
         if( (field === 'current_inventory' || field === 'target_inventory') && typeof newValue === 'string'){
-            finalValue = Math.floor(parseFloat(newValue)) || 0;
+            if(!/^\d*$/.test(newValue)){
+                return;
+            }
+            finalValue = parseInt(newValue) || 0;
 
             if(field === 'current_inventory' && finalValue > MAX_CURRENT_INVENTORY){
                 alert(`Current inventory cannot exceed ${MAX_CURRENT_INVENTORY}.`);
@@ -179,6 +186,11 @@ function Inventory() {
     const handleUpdate = async () => {
         if(!selectedInventoryID || !editedInventory){
             alert('No selected inventory to change');
+            return;
+        }
+
+        if(!editedInventory.item || editedInventory.current_inventory <= 0 || editedInventory.target_inventory <=0 || editedInventory.item.length > 255){
+            alert('Please enter a valid name and current and target inventories.');
             return;
         }
 
@@ -263,8 +275,15 @@ function Inventory() {
 
         let finalValue: string | number = value;
 
+        if(typeof value === 'string' && field === 'item'){
+            finalValue = value.trim();
+        }
+
         if( (field === 'current_inventory' || field === 'target_inventory') && typeof value === 'string'){
-            finalValue = Math.floor(parseFloat(value)) || 0;
+            if(!/^\d*$/.test(value)){
+                return;
+            }
+            finalValue = parseInt(value) || 0;
 
             if(field === 'current_inventory' && finalValue > MAX_CURRENT_INVENTORY){
                 alert(`Current inventory cannot exceed ${MAX_CURRENT_INVENTORY}.`);
@@ -284,7 +303,7 @@ function Inventory() {
     };
 
     const handleAdd = async () => {
-        if(!newInventory.item || newInventory.current_inventory <= 0 || newInventory.target_inventory <=0 ){
+        if(!newInventory.item || newInventory.current_inventory <= 0 || newInventory.target_inventory <=0 || newInventory.item.length > 255){
             alert('Please enter a valid name and current and target inventories.');
             return;
         }

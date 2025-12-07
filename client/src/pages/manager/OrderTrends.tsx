@@ -159,6 +159,10 @@ function OrderTrends() {
 
         let finalValue: string = newValue;
 
+        if(typeof newValue === 'string' && field === 'name'){
+            finalValue = newValue.trim();
+        }
+
         if(field === 'price'){
             // regex to check if its a valid decimal or is ending with a decimal
             if(!/^\d*(\.\d{0,2})?$/.test(newValue) && newValue !== ''){
@@ -195,6 +199,11 @@ function OrderTrends() {
     const handleUpdate = async () => {
         if(!selectedDishID || !editedDish){
             alert('No selected dish to change');
+            return;
+        }
+
+        if(!editedDish.name || parseFloat(editedDish.price) <= 0 || editedDish.name.length > 255){
+            alert('Please enter a valid name and price.');
             return;
         }
 
@@ -282,6 +291,10 @@ function OrderTrends() {
 
         let finalValue: string = value;
 
+        if(typeof value === 'string' && field === 'name'){
+            finalValue = value.trim();
+        }
+
         if(field === 'price'){
             if(!/^\d*(\.\d{0,2})?$/.test(value) && value !== ''){
                 return;
@@ -296,7 +309,7 @@ function OrderTrends() {
     };
 
     const handleAdd = async () => {
-        if(!newDish.name || parseFloat(newDish.price) <= 0){
+        if(!newDish.name || parseFloat(newDish.price) <= 0 || newDish.name.length > 255){
             alert('Please enter a valid name and price.');
             return;
         }

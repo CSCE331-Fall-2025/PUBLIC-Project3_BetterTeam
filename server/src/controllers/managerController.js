@@ -12,8 +12,15 @@ export async function xReport(req, res) {
 }
 
 export async function zReport(req, res) {
+
+    const { managerId } = req.body;
+
+    if(!managerId){
+        return res.status(400).json({ error: "Manager ID required to process Z-Report." });
+    }
+
     try {
-        const items = await getZReport();
+        const items = await getZReport(managerId);
         res.json(items);
     } catch (err) {
         console.error("Error fetching Z-Report:", err);

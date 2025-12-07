@@ -15,6 +15,7 @@ export interface ZReport {
     report_date: string,
     total_revenue: number,
     transaction_count: number,
+    manager_name?: string,
 }
 
 function ManagerHome() {
@@ -90,10 +91,32 @@ function ManagerHome() {
 
                 setIsProcessing(true);
 
+                const authUser = localStorage.getItem('auth_user');
+                let managerId = null;
+
+                if(authUser){
+                    try{
+                        const user = JSON.parse(authUser);
+                        managerId = user.id;
+                    } catch(e){
+                        console.error('Failed to parse auth_user from localStorage:', e);
+                        alert('Could not identify manager. Cannot process Z Report.');
+                        setIsProcessing(false);
+                        return;
+                    }
+                }
+
+                if(!managerId){
+                    alert('Could not identify manager. Cannot process Z Report.');
+                    setIsProcessing(false);
+                    return;  
+                }
+
                 try {
                     const response = await fetch(`${API_BASE}/api/manager/zReport`, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({managerId}),
                     });
 
                     if(!response.ok){
@@ -181,6 +204,7 @@ function ManagerHome() {
                 report_date: data.report_date.slice(0, 10),
                 total_revenue: parseFloat(data.total_revenue as unknown as string),
                 transaction_count: parseInt(data.transaction_count as unknown as string, 10),
+                manager_name: data.manager_name,
             });
         } catch(error){
             console.error(`Error fetching report for ${date}:`, error);
@@ -224,6 +248,7 @@ function ManagerHome() {
                         {histReportData && (
                             <div className='historicalZDisplay'>
                                 <h4>Z Report for: {histReportData.report_date}</h4>
+                                <p>Report filed by: {histReportData.manager_name}</p>
                                 <p>Revenue: ${histReportData.total_revenue}</p>
                                 <p>Transactions: {histReportData.transaction_count}</p>
                             </div>
