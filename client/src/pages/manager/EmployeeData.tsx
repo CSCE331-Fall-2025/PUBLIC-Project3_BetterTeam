@@ -18,8 +18,8 @@ interface ChartData {
     datasets: {
         label: string;
         data: number[];
-        borderColor: string;
-        backgroundColor: string;
+        borderColor: string[];
+        backgroundColor: string[];
         borderWidth: number;
     }[];
 }
@@ -55,13 +55,15 @@ function EmployeeData() {
 
     const employeeChartData: ChartData = {
         labels: employees.map(e => e.name),
-        datasets: [{
+        datasets: [
+            {
             label: 'Employee Wages',
-            data: employees.map(e => e.wage),
-            borderColor: 'rgba(75, 75, 75, 1)',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            data: employees.sort((a, b) => a.wage - b.wage).map(e => e.wage),
+            borderColor: employees.map(e => e.ismanager ? 'rgba(75, 205, 75, 1)' : 'rgba(75, 75, 205, 1)'),
+            backgroundColor: employees.map(e => e.ismanager ? 'rgba(0, 75, 0, 0.5)' : 'rgba(0, 0, 75, 0.5)'),
             borderWidth: 2,
-        },],
+            },
+        ],
     };
 
     const employeeColumns: ColumnDefinition<Employee>[] = [

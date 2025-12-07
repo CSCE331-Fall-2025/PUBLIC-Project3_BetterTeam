@@ -254,7 +254,7 @@ function CustomerCheckout(){
                                         <ul>
                                             {meal.map((dish, index) => (
                                                 <li key={index}>
-                                                    {dish.name} - ${dish.price}
+                                                    {dish.name} - ${Number(dish.price).toFixed(2)}
 
                                                     {dish.customization && (
                                                         <ul className="customization-list">
@@ -278,7 +278,7 @@ function CustomerCheckout(){
                                 );
                             })}
                         </ul>
-                        <h3>Total: ${total}</h3>
+                        <h3>Total: ${total.toFixed(2)}</h3>
                     </>
                 )}
             </div>

@@ -34,6 +34,8 @@ export async function deleteEmployee(id){
 
         await client.query('UPDATE transaction SET fk_employee = NULL WHERE fk_employee = $1;', [id]);
 
+        await client.query('UPDATE dailyreports SET fk_employee = NULL WHERE fk_employee = $1;', [id]);
+
         const result = await client.query(
             'DELETE FROM employee WHERE employee_id = $1 RETURNING employee_id;',
             [id]
