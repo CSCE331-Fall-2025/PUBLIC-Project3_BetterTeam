@@ -4,11 +4,10 @@ import jwt from "jsonwebtoken";
 import {
   createCustomer,
   findCustomerByEmail,
-  // createEmployee,
   findEmployeeByEmail,
 } from "../models/authModel.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
+const JWT_SECRET = process.env.JWT_SECRET || "";
 
 // Standardized the resopnse object for all types of accounts (customers, cashiers, managers)
 function makeAuthPayload(table, data) {
@@ -38,16 +37,20 @@ export async function signup(req, res) {
   try {
     const { email, password, name } = req.body;
 
-    if (!email || !password) {
+    // Google accounts send passwords like GOOGLE-<id>
+    const isGoogle = password && password.startsWith("GOOGLE-");
+
+    if (!email || (!password && !isGoogle)) {
       return res.status(400).json({ error: "Email and password are required" });
     }
+ 
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ error: "Invalid email format" });
     }
 
-    if (password.length < 6) {
+    if (!isGoogle && password.length < 6) {
       return res
         .status(400)
         .json({ error: "Password must be at least 6 characters long" });
@@ -85,6 +88,7 @@ export async function signup(req, res) {
 export async function login(req, res) {
   try {
     const { email, password } = req.body; 
+    const isGoogle = password && password.startsWith("GOOGLE-");
 
     if (!email || !password) {
       return res
@@ -99,7 +103,7 @@ export async function login(req, res) {
 
     if (data && data.password) {
       const ok = await bcrypt.compare(password, data.password);
-      if (!ok) {
+      if (!ok && !isGoogle) {
         return res
           .status(401)
           .json({ error: "Invalid email or password" });
@@ -136,46 +140,3 @@ export async function login(req, res) {
   }
 }
 
-
-// TODO: Full API (route/controller/model) needs to be made for hiring/firigin EMPLOYEES
-// TODO: ALso the client side ability (a manager page that can send these hiring/firing backend request)
-// export async function hireEmployee(req, res) {
-//   try {
-//     const { name, wage, email, password, isManager } = req.body;
-
-//     if (!name || !wage || !email || !password) {
-//       return res.status(400).json({ error: "Missing required fields" });
-//     }
-
-//     // Ensure no one else is using this email
-//     const existingCustomer = await findCustomerByEmail(email);
-//     const existingEmployee = await findEmployeeByEmail(email);
-//     if (existingCustomer || existingEmployee) {
-//       return res
-//         .status(409)
-//         .json({ error: "An account with this email already exists" });
-//     }
-
-//     const hashedPassword = await bcrypt.hash(password, 10);
-
-//     const newEmployee = await createEmployee({
-//       name,
-//       isManager: !!isManager,
-//       wage,
-//       email,
-//       hashedPassword,
-//     });
-
-//     const payload = makeAuthPayload("employee", newEmployee);
-
-//     res.status(201).json({
-//       message: "Employee created successfully",
-//       employee: payload,
-//     });
-//   } catch (err) {
-//     console.error("Error in hireEmployee:", err);
-//     res.status(500).json({ error: "Failed to create employee" });
-//   }
-// }
-
-// TODO: Fire an Employee

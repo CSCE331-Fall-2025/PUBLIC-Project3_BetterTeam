@@ -1,7 +1,6 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../../context/AuthContext";
 
@@ -13,23 +12,16 @@ function Login() {
   const [emailInput, setEmailInput] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [userGoogle, setUserGoogle] = useState<any>(null);
+
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  useEffect(() => {
-    const savedGoogle = localStorage.getItem("google_user");
-    if (savedGoogle) setUserGoogle(JSON.parse(savedGoogle));
-  }, []);
-
+  // ------------------------
+  // Standard email/password login
+  // ------------------------
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    if (!emailInput || !password) {
-      setError("Please fill in all fields");
-      return;
-    }
 
     try {
       const response = await fetch(`${API_BASE}/api/auth/login`, {
@@ -47,10 +39,9 @@ function Login() {
         return;
       }
 
-      // store in global auth context
       login(data.user, data.token);
 
-      // redirect by role
+      // Redirect based on role
       if (data.user.role === "manager") {
         navigate("/manager/dashboard");
       } else if (data.user.role === "cashier") {
@@ -64,21 +55,64 @@ function Login() {
     }
   };
 
-  const handleGoogleSuccess = (credentialResponse: any) => {
-    if (credentialResponse.credential) {
-      const decoded: any = jwtDecode(credentialResponse.credential);
-      setUserGoogle(decoded);
-      localStorage.setItem("google_user", JSON.stringify(decoded));
-      console.log("Google login success:", decoded);
-      // TODO: AHAD, call backend /api/auth/google and then login(data.user, data.token)
-    }
-  };
+  // ------------------------
+  // Google Login Flow
+  // ------------------------
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    const credential = credentialResponse.credential;
+    if (!credential) return;
 
-  const handleLogout = () => {
-    googleLogout();
-    setUserGoogle(null);
-    localStorage.removeItem("google_user");
-    console.log("Google logged out");
+    const decoded: any = jwtDecode(credential);
+    const googleEmail = decoded.email;
+    const googleName = decoded.name;
+    const googleSub = decoded.sub;
+
+    const googlePassword = `GOOGLE-${googleSub}`;
+
+    // 1) Try SIGNUP first
+    let response = await fetch(`${API_BASE}/api/auth/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: googleEmail,
+        password: googlePassword,
+        name: googleName,
+      }),
+    });
+
+    let data = await response.json();
+
+    // If user already exists → go to LOGIN instead
+    if (response.status === 409) {
+      response = await fetch(`${API_BASE}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: googleEmail,
+          password: googlePassword,
+        }),
+      });
+
+      data = await response.json();
+    }
+
+    if (!response.ok) {
+      console.error("Google OAuth backend error:", data.error);
+      setError(data.error || "Google login failed.");
+      return;
+    }
+
+    // 2) AuthContext login
+    login(data.user, data.token);
+
+    // 3) Redirect by role
+    if (data.user.role === "manager") {
+      navigate("/manager/dashboard");
+    } else if (data.user.role === "cashier") {
+      navigate("/cashier/cashierhome");
+    } else {
+      navigate("/any/home");
+    }
   };
 
   return (
@@ -86,9 +120,10 @@ function Login() {
       <div className="login-container">
         <div className="login-card">
           <h2>Login</h2>
+
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="username"> Email</label>
+              <label htmlFor="username">Email</label>
               <input
                 type="text"
                 id="username"
@@ -98,6 +133,7 @@ function Login() {
                 required
               />
             </div>
+
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input
@@ -109,30 +145,20 @@ function Login() {
                 required
               />
             </div>
+
             {error && <div className="error-message">{error}</div>}
+
             <button type="submit" className="login-button">
               Login
             </button>
           </form>
 
-          <div className="divider">
-            <span>or</span>
-          </div>
+          <div className="divider"><span>or</span></div>
 
-          {!userGoogle ? (
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => console.log("Google login failed")}
-            />
-          ) : (
-            <button
-              type="button"
-              className="google-logout-button"
-              onClick={handleLogout}
-            >
-              Logout {userGoogle.name}
-            </button>
-          )}
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => console.log("Google login failed")}
+          />
 
           <div className="login-footer">
             <p>
