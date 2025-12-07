@@ -74,7 +74,7 @@ function EmployeeManage() {
         {header: 'Employee Id', accessor: (e) => e.employee_id },
         {header: 'Employee Name', accessor: (e) => e.name },
         {header: 'Is Manager?', accessor: (e) => (e.ismanager ? 'Yes' : 'No') },
-        {header: 'Wage', accessor: (e) => e.wage},
+        {header: 'Wage', accessor: (e) => `$${e.wage.toFixed(2)}`},
         {header: 'Email', accessor: (e) => e.email},
     ];
 
@@ -83,7 +83,15 @@ function EmployeeManage() {
 
         let finalValue: string | boolean | number = newValue;
 
+        if(typeof newValue === 'string' && field === 'name'){
+            finalValue = newValue.trim();
+        }
+
         if(field === 'wage' && typeof newValue === 'string'){
+            // regex to check if its a valid decimal or is ending with a decimal
+            if(!/^\d*(\.\d{0,2})?$/.test(newValue) && newValue !== ''){
+                return;
+            }
             finalValue = parseFloat(newValue) || 0;
         }
 
@@ -100,6 +108,11 @@ function EmployeeManage() {
     const handleUpdate = async () => {
         if(!selectedEmployeeID || !editedEmployee){
             alert('No selected employee to change');
+            return;
+        }
+
+        if(!editedEmployee.name || editedEmployee.wage <= 0 || editedEmployee.name.length > 255){
+            alert('Please enter a valid name and wage.');
             return;
         }
 
@@ -173,7 +186,15 @@ function EmployeeManage() {
 
         let finalValue: string | boolean | number = value;
 
+        if(typeof value === 'string' && (field === 'name' || field === 'email' || field === 'password')){
+            finalValue = value.trim();
+        }
+
         if(field === 'wage' && typeof value === 'string'){
+            // regex to check if its a valid decimal or is ending with a decimal
+            if(!/^\d*(\.\d{0,2})?$/.test(value) && value !== ''){
+                return;
+            }
             finalValue = parseFloat(value) || 0;
         }
 
@@ -184,16 +205,20 @@ function EmployeeManage() {
     };
 
     const handleAdd = async () => {
-        if(!newEmployee.name || newEmployee.wage <= 0){
+        if(!newEmployee.name || newEmployee.wage <= 0 || newEmployee.name.length > 255){
             alert('Please enter a valid name and wage.');
             return;
         }
-        if(!newEmployee.email || !newEmployee.email.includes('@') || !newEmployee.email.includes('.')){
+        if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(newEmployee.email) || newEmployee.email.length > 255){
             alert('Please enter a valid email.')
             return;
         }
-        if(!newEmployee.password){
+        if(!newEmployee.password || newEmployee.password.length > 255){
             alert('Please enter a valid password.')
+            return;
+        }
+        if(newEmployee.password.length < 6){
+            alert('Password must be at least 6 characters long.')
             return;
         }
 
@@ -269,8 +294,8 @@ function EmployeeManage() {
                                 <option value="false">No</option>
                             </select>
                             <div>
-                                <button onClick={handleUpdate}>Update Employee</button>
-                                <button onClick={handleDeletion}>Fire Employee</button>
+                                <button onClick={handleUpdate} className='man-btn'>Update Employee</button>
+                                <button onClick={handleDeletion} className='man-btn'>Fire Employee</button>
                             </div>
                         </>
                     )}
@@ -311,7 +336,7 @@ function EmployeeManage() {
                         placeholder='Enter password here...'
                     />
                     <div>
-                        <button onClick={handleAdd}>Add Employee</button>
+                        <button onClick={handleAdd} className='man-btn'>Add Employee</button>
                     </div>
                 </div>
             </div>

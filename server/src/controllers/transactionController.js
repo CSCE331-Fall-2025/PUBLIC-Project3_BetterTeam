@@ -54,7 +54,7 @@ export async function createTransaction(req, res){
             }
         }
 
-        const total = cart.reduce((sum, dish) => sum + dish.price, 0);
+        const total = cart.reduce((sum, dish) => sum + Number(dish.price), 0);
         const customerID = fk_customer ?? 26;
         const employeeID = fk_employee ?? 29;
 

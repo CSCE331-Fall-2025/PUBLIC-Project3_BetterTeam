@@ -24,6 +24,14 @@ interface IngredientOption{
   name: string;
 }
 
+interface DishTyped{
+  dish_id: number;
+  name: string;
+  price: number;
+  type: string;
+  image_url: string;
+}
+
 function groupIntoMeals(cart : Dish[]): Dish[][] {
   const meals: Dish[][] = [];
   let current: Dish[] = [];
@@ -65,7 +73,7 @@ function CashierHome() {
   const state = location.state as LocationState;
   const cart: Dish[] = state?.cart || [];
   const meals = groupIntoMeals(cart);
-  const total = cart.reduce((sum, d) => sum + d.price, 0);
+  const total = cart.reduce((sum, d) => sum + Number(d.price), 0);
   const [ingredientNames, setIngredientNames] = useState<Record<number, Record<number, string>>>({});
 
   const { user } = useAuth();
@@ -162,6 +170,22 @@ function CashierHome() {
       alert("Failed to place order.");
     }
   };
+
+    const [seasonal, setSeasonal] = useState<DishTyped[]>([]);
+    
+      useEffect(() => {
+        async function load() {
+          try{
+            const res = await fetch(`${API_BASE}/api/dishes`);
+            const all: DishTyped[] = await res.json();
+            setSeasonal(all.filter(d => d.type.toLowerCase() === "seasonal"));
+          } catch(err){
+            console.error("Failed to fetch menu:", err);
+          }
+        }
+        load();
+      }, []);
+
     return (
       <div className="cashier-home-layout">
         <div className="cashier-button-panel">
@@ -176,12 +200,13 @@ function CashierHome() {
             <CategoryTile title="Sides" image="/assets/ricefried.png" onClick={() => goToDishPage('side')} />
             <CategoryTile title="Drinks" image="/assets/coke.png" onClick={() => goToDishPage('drink')} />
 
+            {seasonal.length > 0 && (
             <CategoryTile
               title="Seasonal Ops"
               subtitle="⚠ Limited Time ⚠"
               highlight
               onClick={() => goToDishPage('season')}
-            />
+            />)}
           </div>
         </div>
         <div className="cashier-receipt-panel">
@@ -198,7 +223,7 @@ function CashierHome() {
                     <ul>
                       {meal.map((dish, idx) => (
                         <li key={idx}>
-                          {dish.name} - ${dish.price.toFixed(2)}
+                          {dish.name} - ${dish.price}
 
                           {dish.customization && (
                             <ul className="customization-list">
@@ -223,7 +248,7 @@ function CashierHome() {
                 ))}
               </ul>
 
-              <h3>Total: ${total.toFixed(2)}</h3>
+              <h3>Total: ${total}</h3>
             </>
           )}
 

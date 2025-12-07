@@ -39,7 +39,7 @@ function CustomerCheckout(){
     return (
         sum +
         meal.reduce((mSum, d) => {
-            let base = d.price;
+            let base = Number(d.price);
             if (d.customization) {
                 for (const [invIdStr, lvl] of Object.entries(d.customization)) {
                     const invId = Number(invIdStr);
@@ -254,7 +254,7 @@ function CustomerCheckout(){
                                         <ul>
                                             {meal.map((dish, index) => (
                                                 <li key={index}>
-                                                    {dish.name} - ${dish.price.toFixed(2)}
+                                                    {dish.name} - ${dish.price}
 
                                                     {dish.customization && (
                                                         <ul className="customization-list">
@@ -278,7 +278,7 @@ function CustomerCheckout(){
                                 );
                             })}
                         </ul>
-                        <h3>Total: ${total.toFixed(2)}</h3>
+                        <h3>Total: ${total}</h3>
                     </>
                 )}
             </div>

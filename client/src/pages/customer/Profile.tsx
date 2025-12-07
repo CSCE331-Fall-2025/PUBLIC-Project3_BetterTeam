@@ -74,6 +74,13 @@ function Profile() {
     async function saveChanges() {
         if (!profile) return;
 
+        if(profile.password){
+            if(profile.password.length < 6){
+                alert('Password must be at least 6 characters long.');
+                return;
+            }
+        }
+
         const res = await fetch(`${API_BASE}/api/customers/${user!.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },

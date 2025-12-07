@@ -79,8 +79,8 @@ export function ManagerLinks({ onLogout }: LogoutProps) {
             <NavLink className="nav-item" to="/manager/dashboard">Manager Dashboard</NavLink>
             <NavLink className="nav-item" to="/manager/employeedata">Employee Data</NavLink>
             <NavLink className="nav-item" to="/manager/employeemanage">Employee Manage</NavLink>
-            <NavLink className="nav-item" to="/manager/inventory">Inventory</NavLink>
-            <NavLink className="nav-item" to="/manager/ordertrends">Order Trends</NavLink>
+            <NavLink className="nav-item" to="/manager/inventory">Inventory Manage</NavLink>
+            <NavLink className="nav-item" to="/manager/ordertrends">Dish Manage</NavLink>
             <NavLink className="nav-item" to="/kitchen">Kitchen</NavLink>
             <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
         </div>

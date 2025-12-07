@@ -1,33 +1,70 @@
-/* html, body{
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    color: white;
-} */
-
 .managerHome{
     display: flex;
     flex-direction: column;
     width: 100vw;
+    align-items: center;
 }
-
-/* .chartContainer{
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: center;
-    padding-bottom: 10px;
-    flex-grow: 1;
-    box-sizing: border-box;
-} */
 
 .buttonContainer{
     display: flex;
     justify-content: center;
-    width: 100%;
+    width: 90%;
     box-sizing: border-box;
+}
+
+.reports{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 50%;
 }
 
 .zDisplay, .historyContainer{
     color: white;
+}
+
+.zDisplay{
+    width: 75%;
+}
+
+.agentImg{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    opacity: 1%;
+    color: white;
+}
+
+.man-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 0.8rem;
+    margin-left: 1rem;
+    background: #222;
+    color: #eee;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 1px solid #222;
+
+    transition: 150ms ease;
+}
+
+.man-btn:hover {
+    background: #BB2719;
+    color: white;
+    border-color: #BB2719;
+    box-shadow: 0 0 10px rgba(187,39,25,0.4);
+}
+
+.man-btn.active {
+    background: #BB2719;
+    color: white;
+    font-weight: 600;
+    border-color: #BB2719;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
 }

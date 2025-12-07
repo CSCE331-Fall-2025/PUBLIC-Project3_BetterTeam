@@ -11,7 +11,7 @@ export interface Dish{
   name: string;
   price: number;
   type: string;
-  imageUrl?: string;
+  image_url: string;
 }
 
 
@@ -20,6 +20,7 @@ function MenuBoard() {
   const [sides, setSides] = useState<Dish[]>([]);
   const [drinks, setDrinks] = useState<Dish[]>([]);
   const [apps, setApps] = useState<Dish[]>([]);
+  const [seasonal, setSeasonal] = useState<Dish[]>([]);
 
   useEffect(() => {
     async function load() {
@@ -33,6 +34,7 @@ function MenuBoard() {
         setEntrees(all.filter(d => d.type.toLowerCase() === "entree"));
         setSides(all.filter(d => d.type.toLowerCase() === "side"));
         setDrinks(all.filter(d => d.type.toLowerCase() === "drink"));
+        setSeasonal(all.filter(d => d.type.toLowerCase() === "seasonal"));
 
         setApps(
           all.filter(d => {
@@ -54,6 +56,7 @@ function MenuBoard() {
       <MenuBox title="Sides" dishes={sides}/>
       <MenuBox title="Drinks" dishes={drinks}/>
       <MenuBox title="Apps" dishes={apps}/>
+      {seasonal.length > 0 && (<MenuBox title="Seasonal" dishes={seasonal}/>)}
     </div>
   );
 }

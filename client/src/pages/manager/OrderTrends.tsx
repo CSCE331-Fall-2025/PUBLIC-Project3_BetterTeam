@@ -18,6 +18,12 @@ interface Dish {
     type: string,
 }
 
+interface DishFormState {
+    name: string,
+    price: string,
+    type: string,
+}
+
 interface ChartData {
     labels: string[];
     datasets: {
@@ -48,12 +54,12 @@ function OrderTrends() {
     // dish selected to be updated
     const [selectedDishID, setSelectedDishID] = useState<number | null>(null);
     // locally stored dish with updates made
-    const [editedDish, setEditedDish] = useState<{name: string, type: string, price: number} | null>(null);
+    const [editedDish, setEditedDish] = useState<DishFormState | null>(null);
     // new dish
-    const [newDish, setNewDish] = useState<Omit<Dish, 'dish_id'>>({
+    const [newDish, setNewDish] = useState<DishFormState>({
         name: '',
         type: 'Side',
-        price: 1,
+        price: '1.00',
     })
     // list of all inventory
     const [inventory, setInventory] = useState<Options[]>([]);
@@ -114,7 +120,7 @@ function OrderTrends() {
             setEditedDish({
                 name: dishEdit.name,
                 type: dishEdit.type,
-                price: dishEdit.price,
+                price: String(dishEdit.price),
             });
 
             // take the list of all dishinventory, filter for just the selected dish, and then map to turn it from fk_dish, fk_inventory to just be the inventory ids
@@ -151,10 +157,18 @@ function OrderTrends() {
     const handleFieldChange = (field: 'name' | 'price' | 'type', newValue: string ) => {
         if(!editedDish) return;
 
-        let finalValue: string | number = newValue;
+        let finalValue: string = newValue;
 
-        if(field === 'price' && typeof newValue === 'string'){
-            finalValue = parseFloat(newValue) || 1;
+        if(typeof newValue === 'string' && field === 'name'){
+            finalValue = newValue.trim();
+        }
+
+        if(field === 'price'){
+            // regex to check if its a valid decimal or is ending with a decimal
+            if(!/^\d*(\.\d{0,2})?$/.test(newValue) && newValue !== ''){
+                return;
+            }
+            finalValue = newValue;
         }
 
         setEditedDish(prev => {
@@ -163,7 +177,7 @@ function OrderTrends() {
             return({
                 ...prev,
                 [field]: finalValue,
-            });
+            }); 
         });
     };
 
@@ -188,11 +202,27 @@ function OrderTrends() {
             return;
         }
 
+        if(!editedDish.name || parseFloat(editedDish.price) <= 0 || editedDish.name.length > 255){
+            alert('Please enter a valid name and price.');
+            return;
+        }
+
+        const priceValue = parseFloat(editedDish.price);
+
+        if(editedDish.price === '' || isNaN(priceValue) || priceValue <= 0){
+            alert('Please enter a valid price greater than zero.');
+            return;
+        }
+
         try{
+            const finalDish = {
+                ...editedDish,
+                price: parseFloat(editedDish.price) || 1,
+            }
             const response = await fetch(`${API_BASE}/api/manager/dish/${selectedDishID}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(editedDish), 
+                body: JSON.stringify(finalDish), 
             });
 
             if(!response.ok){
@@ -202,7 +232,7 @@ function OrderTrends() {
 
             setDishes(prevDishes =>
                 prevDishes.map(d => 
-                    d.dish_id === selectedDishID ? { ...d, ...editedDish } : d
+                    d.dish_id === selectedDishID ? { ...d, ...finalDish } : d
                 )
             );
 
@@ -257,12 +287,19 @@ function OrderTrends() {
         }
     };
 
-    const handleAddFieldChange = (field: keyof Omit<Dish, 'dish_id'>, value: string | number) => {
+    const handleAddFieldChange = (field: keyof DishFormState, value: string) => {
 
-        let finalValue: string | number = value;
+        let finalValue: string = value;
 
-        if(field === 'price' && typeof value === 'string'){
-            finalValue = parseFloat(value) || 1;
+        if(typeof value === 'string' && field === 'name'){
+            finalValue = value.trim();
+        }
+
+        if(field === 'price'){
+            if(!/^\d*(\.\d{0,2})?$/.test(value) && value !== ''){
+                return;
+            }
+            finalValue = value;
         }
 
         setNewDish(prev => ({
@@ -272,16 +309,37 @@ function OrderTrends() {
     };
 
     const handleAdd = async () => {
-        if(!newDish.name || newDish.price <= 0){
+        if(!newDish.name || parseFloat(newDish.price) <= 0 || newDish.name.length > 255){
             alert('Please enter a valid name and price.');
             return;
         }
 
+        if(dishes.find(d => d.name === newDish.name)){
+            alert('Please enter a unique name.');
+            return;
+        }
+
+        const priceValue = parseFloat(newDish.price);
+
+        if(newDish.price === '' || isNaN(priceValue) || priceValue <= 0){
+            alert('Please enter a valid price greater than zero.');
+            return;
+        }
+
+        if(newInventory.length === 0){
+            alert('A new dish must have at least one ingredient.');
+            return;
+        }
+
         try{
+            const finalDish = {
+                ...newDish,
+                price: parseFloat(newDish.price),
+            }
             const response = await fetch(`${API_BASE}/api/manager/dish`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(newDish), 
+                body: JSON.stringify(finalDish), 
             });
 
             if(!response.ok){
@@ -293,8 +351,15 @@ function OrderTrends() {
 
             await updateIngredients(addedDish.dish_id, newInventory);
 
+            const newJunctionEntries: DishInventoryJunction[] = newInventory.map(item => ({
+                fk_dish: addedDish.dish_id,
+                fk_inventory: item.value,
+            }));
+
+            setJunction(prevJunction => [...prevJunction, ...newJunctionEntries]);
+
             setDishes(prevDishes => [...prevDishes, addedDish]);
-            setNewDish({ name: '', type: 'Side', price: 1 });
+            setNewDish({ name: '', type: 'Side', price: '1.00' });
             setNewInventory([]);
 
             alert(`Added ${addedDish.name} successfully`);
@@ -358,6 +423,7 @@ function OrderTrends() {
                                 <option value="Entree">Entree</option>
                                 <option value="App">App</option>
                                 <option value="Drink">Drink</option>
+                                <option value="Seasonal">Seasonal</option>
                             </select>
                             <h3>Ingredients</h3>
                             <PillBox 
@@ -366,8 +432,8 @@ function OrderTrends() {
                                 placeholder='Select Ingredients for Dish...'
                                 onSelectionChange={handleUpdateIngredientChange}
                             />
-                            <button onClick={handleUpdate}>Update Dish</button>
-                            <button onClick={handleDeletion}>Remove Dish</button>
+                            <button onClick={handleUpdate} className='man-btn'>Update Dish</button>
+                            <button onClick={handleDeletion} className='man-btn'>Remove Dish</button>
                         </>
                     )}
                 </div>
@@ -395,6 +461,7 @@ function OrderTrends() {
                         <option value="Entree">Entree</option>
                         <option value="App">App</option>
                         <option value="Drink">Drink</option>
+                        <option value="Seasonal">Seasonal</option>
                     </select>
                     <h3>Ingredients</h3>
                     <PillBox 
@@ -403,7 +470,7 @@ function OrderTrends() {
                         placeholder='Select Ingredients for Dish...'
                         onSelectionChange={handleAddIngredientChange}
                     />
-                    <button onClick={handleAdd}>Add Dish</button>
+                    <button onClick={handleAdd} className='man-btn'>Add Dish</button>
                 </div>
             </div>
 		</div>

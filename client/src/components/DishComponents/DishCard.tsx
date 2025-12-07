@@ -76,7 +76,7 @@ export const DishCard: React.FC<DishCardProps> = ({
                 )}
 
                 <h3 className="dish-card-title">{name}</h3>
-                <p className="dish-card-price">${price.toFixed(2)}</p>
+                <p className="dish-card-price">${price}</p>
 
                 {isSelected && !disabled && (
                     noIce ? (

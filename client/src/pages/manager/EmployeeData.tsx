@@ -68,7 +68,7 @@ function EmployeeData() {
         {header: 'Employee Id', accessor: (e) => e.employee_id },
         {header: 'Employee Name', accessor: (e) => e.name },
         {header: 'Is Manager?', accessor: (e) => (e.ismanager ? 'Yes' : 'No') },
-        {header: 'Wage', accessor: (e) => e.wage},
+        {header: 'Wage', accessor: (e) => `$${e.wage.toFixed(2)}`},
     ];
 
 	return(

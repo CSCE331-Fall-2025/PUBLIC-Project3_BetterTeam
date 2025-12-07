@@ -1,4 +1,5 @@
 .menu-card {
+    all: unset;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,6 +10,7 @@
     cursor: pointer;
     transition: box-shadow 0.2s ease-in-out;
     width: 7vw;
+    height: 10vw;
     margin: 0 auto;
 }
 
