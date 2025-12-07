@@ -19,6 +19,7 @@ export async function fetchDishesByType(req, res) {
         else if (type === "entree") type = "Entree";
         else if (type === "side") type = "Side";
         else if (type === "drink") type = "Drink";
+        else if (type === "season") type = "Seasonal";
 
         const dishes = await getDishesByType(type);
 
@@ -28,6 +29,7 @@ export async function fetchDishesByType(req, res) {
             if (lowered.startsWith("ent")) return "entree";
             if (lowered.startsWith("sid")) return "side";
             if (lowered.startsWith("dri")) return "drink";
+            if (lowered.startsWith("sea")) return "season";
 
             return lowered;
         };

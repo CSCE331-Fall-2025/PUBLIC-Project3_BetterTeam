@@ -65,7 +65,7 @@ function CashierHome() {
   const state = location.state as LocationState;
   const cart: Dish[] = state?.cart || [];
   const meals = groupIntoMeals(cart);
-  const total = cart.reduce((sum, d) => sum + d.price, 0);
+  const total = cart.reduce((sum, d) => sum + Number(d.price), 0);
   const [ingredientNames, setIngredientNames] = useState<Record<number, Record<number, string>>>({});
 
   const { user } = useAuth();
@@ -198,7 +198,7 @@ function CashierHome() {
                     <ul>
                       {meal.map((dish, idx) => (
                         <li key={idx}>
-                          {dish.name} - ${dish.price.toFixed(2)}
+                          {dish.name} - ${dish.price}
 
                           {dish.customization && (
                             <ul className="customization-list">
@@ -223,7 +223,7 @@ function CashierHome() {
                 ))}
               </ul>
 
-              <h3>Total: ${total.toFixed(2)}</h3>
+              <h3>Total: ${total}</h3>
             </>
           )}
 
