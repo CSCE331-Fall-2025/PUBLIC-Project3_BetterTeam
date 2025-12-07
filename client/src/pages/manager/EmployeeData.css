@@ -39,7 +39,7 @@
 .editContainer{
     padding: 5px;
     padding-bottom: 50px;
-    border: 5px solid white;
+    border: 5px solid #BB2719;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     border-bottom: none;
@@ -47,7 +47,7 @@
 
 .addContainer{
     padding: 5px;
-    border: 5px solid white;
+    border: 5px solid #BB2719;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }

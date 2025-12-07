@@ -294,8 +294,8 @@ function EmployeeManage() {
                                 <option value="false">No</option>
                             </select>
                             <div>
-                                <button onClick={handleUpdate}>Update Employee</button>
-                                <button onClick={handleDeletion}>Fire Employee</button>
+                                <button onClick={handleUpdate} className='man-btn'>Update Employee</button>
+                                <button onClick={handleDeletion} className='man-btn'>Fire Employee</button>
                             </div>
                         </>
                     )}
@@ -336,7 +336,7 @@ function EmployeeManage() {
                         placeholder='Enter password here...'
                     />
                     <div>
-                        <button onClick={handleAdd}>Add Employee</button>
+                        <button onClick={handleAdd} className='man-btn'>Add Employee</button>
                     </div>
                 </div>
             </div>

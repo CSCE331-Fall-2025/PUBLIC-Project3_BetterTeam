@@ -10,7 +10,7 @@ interface MenuCardProps {
 
 export const MenuCard: React.FC<MenuCardProps> = ({ name, price, image_url }) => {
     return (
-        <div>
+        <div className='menu-card'>
             {image_url && (
                 <img
                     src={image_url}

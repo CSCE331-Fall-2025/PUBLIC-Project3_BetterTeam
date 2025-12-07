@@ -432,8 +432,8 @@ function OrderTrends() {
                                 placeholder='Select Ingredients for Dish...'
                                 onSelectionChange={handleUpdateIngredientChange}
                             />
-                            <button onClick={handleUpdate}>Update Dish</button>
-                            <button onClick={handleDeletion}>Remove Dish</button>
+                            <button onClick={handleUpdate} className='man-btn'>Update Dish</button>
+                            <button onClick={handleDeletion} className='man-btn'>Remove Dish</button>
                         </>
                     )}
                 </div>
@@ -470,7 +470,7 @@ function OrderTrends() {
                         placeholder='Select Ingredients for Dish...'
                         onSelectionChange={handleAddIngredientChange}
                     />
-                    <button onClick={handleAdd}>Add Dish</button>
+                    <button onClick={handleAdd} className='man-btn'>Add Dish</button>
                 </div>
             </div>
 		</div>

@@ -392,8 +392,8 @@ function Inventory() {
                                 onChange={(newTargetInventory) => handleFieldChange('target_inventory', newTargetInventory)} 
                                 placeholder='Enter target inventory here...'
                             />
-                            <button onClick={handleUpdate}>Update Inventory</button>
-                            <button onClick={handleDeletion}>Remove from Inventory</button>
+                            <button onClick={handleUpdate} className='man-btn'>Update Inventory</button>
+                            <button onClick={handleDeletion} className='man-btn'>Remove from Inventory</button>
                         </>
                     )}
                 </div>
@@ -417,7 +417,7 @@ function Inventory() {
                         onChange={(newTargetInventory) => handleAddFieldChange('target_inventory', newTargetInventory)} 
                         placeholder='Enter target inventory here...'
                     />
-                    <button onClick={handleAdd}>Add to Inventory</button>
+                    <button onClick={handleAdd} className='man-btn'>Add to Inventory</button>
                 </div>
             </div>
 		</div>

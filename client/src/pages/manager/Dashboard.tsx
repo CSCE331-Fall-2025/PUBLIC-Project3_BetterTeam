@@ -218,47 +218,56 @@ function ManagerHome() {
         <div className='managerHome'>
 
             {isProcessing && <div>Processing Z Report... Please wait.</div>}
-
-            {zReportData && (
-                <div className='zDisplay'>
-                    <h2>Z Report Finalized: {zReportData.report_date}</h2>
-                    <p>Total Revenue: ${zReportData.total_revenue.toFixed(2)}</p>
-                    <p>Total Transactions: {zReportData.transaction_count}</p>
-                    <hr/>
-                    <p>Daily sales totals have been archived and reset for the next business day.</p>
-                </div>
-            )}
-            <div className='historyContainer'>
-                <Button name={showHistory ? 'Hide Prev Reports' : 'View Prev Z Reports'} onClick={handleViewHistory} />
-                {showHistory && (
-                    <div className='historyPanel'>
-                        {fetchingHistory && !reportDates && <div>Loading Report History...</div>}
-                        {reportDates && reportDates.length > 0 && (
-                            <div className='reportList'>
-                                <h3>Select a report date:</h3>
-                                <select onChange={(e) => handleSelectReport(e.target.value)} disabled={fetchingHistory}>
-                                    <option value=''>Select Date</option>
-                                    {reportDates.map((date) => (
-                                        <option key={date} value={date}>{date}</option>
-                                    ))}
-                                </select>
-                            </div>
-                        )}
-                        {reportDates && reportDates.length === 0 && <div>No previous reports found.</div>}
-                        {histReportData && (
-                            <div className='historicalZDisplay'>
-                                <h4>Z Report for: {histReportData.report_date}</h4>
-                                <p>Report filed by: {histReportData.manager_name}</p>
-                                <p>Revenue: ${histReportData.total_revenue}</p>
-                                <p>Transactions: {histReportData.transaction_count}</p>
-                            </div>
-                        )}
+            <div className='reports'>
+                {zReportData && (
+                    <div className='zDisplay'>
+                        <h2>Z Report Finalized: {zReportData.report_date}</h2>
+                        <p>Total Revenue: ${zReportData.total_revenue.toFixed(2)}</p>
+                        <p>Total Transactions: {zReportData.transaction_count}</p>
+                        <hr/>
+                        <p>Daily sales totals have been archived and reset for the next business day.</p>
                     </div>
                 )}
+                <div className='historyContainer'>
+                    <Button name={showHistory ? 'Hide Prev Reports' : 'View Prev Z Reports'} onClick={handleViewHistory} className='man-btn' />
+                    {showHistory && (
+                        <div className='historyPanel'>
+                            {fetchingHistory && !reportDates && <div>Loading Report History...</div>}
+                            {reportDates && reportDates.length > 0 && (
+                                <div className='reportList'>
+                                    <h3>Select a report date:</h3>
+                                    <select onChange={(e) => handleSelectReport(e.target.value)} disabled={fetchingHistory}>
+                                        <option value=''>Select Date</option>
+                                        {reportDates.map((date) => (
+                                            <option key={date} value={date}>{date}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+                            {reportDates && reportDates.length === 0 && <div>No previous reports found.</div>}
+                            {histReportData && (
+                                <div className='historicalZDisplay'>
+                                    <h4>Z Report for: {histReportData.report_date}</h4>
+                                    <p>Report filed by: {histReportData.manager_name}</p>
+                                    <p>Revenue: ${histReportData.total_revenue}</p>
+                                    <p>Transactions: {histReportData.transaction_count}</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
             <div className = 'buttonContainer'>
-                <Button name={'X Report'} onClick={handleXReport}/>
-                <Button name={'Z Report'} onClick={handleZReport}/>
+                <Button name={'X Report'} onClick={handleXReport} className='man-btn'/>
+                <Button name={'Z Report'} onClick={handleZReport} className='man-btn'/>
+            </div>
+            <div className='agentImg'>
+                <img
+                    src='/assets/panda.png'
+                    alt='Agent Red Icon'
+                    style={{ width: '25%' }}
+                />
+                <p>Don't forget your mission.</p>
             </div>
         </div>
     );
