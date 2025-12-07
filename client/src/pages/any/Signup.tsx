@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Signup.css";
-import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../../context/AuthContext";
 
@@ -61,38 +61,59 @@ function Signup() {
       setError("Network error. Please try again.");
     }
   };
-
   const handleGoogleSuccess = async (credentialResponse: any) => {
     const credential = credentialResponse.credential;
     if (!credential) return;
 
     try {
-        // kinda hacky, but in order to resue the same API call for login/signup, decode the google API response and forward
-        // the email (duh), but make up a password via the "stub" field from google. Thus creating a "password" for the google
-        // user
-      const response = await fetch(`${API_BASE}/api/auth/signup`, {
+      // Decode Google ID token
+      const decoded: any = jwtDecode(credential);
+
+      const googleEmail = decoded.email;
+      const googleName = decoded.name;
+      const googleSub = decoded.sub; // Google user ID
+      const googlePassword = `GOOGLE-${googleSub}`; // Dummy password
+
+      // Try to sign up first
+      let response = await fetch(`${API_BASE}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-            email: decoded.email,
-            password: 'GOOGLE-${decoded.sub}',
-            name: decoded.user
+        body: JSON.stringify({
+          email: googleEmail,
+          password: googlePassword,
+          name: googleName,
         }),
       });
-      
-      const data = await response.json();
+
+      let data = await response.json();
+
+      // If user already exists → fallback login
+      if (response.status === 409) {
+        response = await fetch(`${API_BASE}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: googleEmail,
+            password: googlePassword,
+          }),
+        });
+
+        data = await response.json();
+      }
 
       if (!response.ok) {
         console.error("Google OAuth backend error:", data.error);
+        setError(data.error || "Google signup/login failed");
         return;
       }
 
-      // Login new user --> will also add to authContext
+      // Success → store in AuthContext
       login(data.user, data.token);
-
       navigate("/any/home");
+
     } catch (err) {
       console.error("Google OAuth network error:", err);
+      setError("Google login error");
     }
   };
   return (
