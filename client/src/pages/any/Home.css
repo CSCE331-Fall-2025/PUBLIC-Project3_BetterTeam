@@ -1,11 +1,26 @@
 .home-wrapper {
-    height: 100vh;
+    height: calc(100vh - 146px);
     width: 100%;
+    background: url("/assets/chinese.png") center/cover no-repeat;
+    position: relative;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
+
+.home-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    z-index: 0;
+}
+
 
 .home-card {
     background: linear-gradient(150deg, #BB2719, #8C1E16);
@@ -17,7 +32,8 @@
     text-align: center;
     max-width: 450px;
     width: 100%;
-
+    position: relative;
+    z-index: 1;
     border: 2px solid rgba(255, 255, 255, 0.15);
 }
 

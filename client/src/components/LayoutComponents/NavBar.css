@@ -1,17 +1,29 @@
-
+/* 
 .navbar {
-    flex: 1; /* fill parent (nav-bar wrapper in Layout.css) */
+    flex: 1; fill parent (nav-bar wrapper in Layout.css)
     display: flex;
     background: linear-gradient(180deg, #BB2719, #8C1E16);
     border-right: none;
     box-shadow: 2px 0 12px rgba(0,0,0,0.3);
-    justify-content: space-between;
+    justify-content: space-between; 
     justify-content: center;
     padding: 0 1rem 0 0;
     margin: 0 0 0 0;
 }
+*/
 
 
+.navbar {
+    width: 100%;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
 
+    gap: 1rem;
+    
+    background: linear-gradient(90deg, #bb2719, #d83a2e);
 
-
+    padding: 0 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}

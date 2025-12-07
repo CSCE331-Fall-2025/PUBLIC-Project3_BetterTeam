@@ -1,7 +1,28 @@
-
+/* 
 #google_translate_element {
     position: absolute;
-    bottom: 0;
+    bottom: 0; 
     padding: 0 0 2rem 1rem;
     overflow: hidden;
+} */
+
+#google_translate_element {
+    position: relative;
+    padding: 0;
+    margin-left: auto;
+    margin-right: 1rem;
+    transform: scale(0.95);
+}
+
+.goog-te-gadget {
+    font-size: 0 !important;
+}
+
+.goog-te-gadget .goog-te-combo {
+    font-size: 0.9rem !important;
+    padding: 0.4rem;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    border: 1px solid #444;
 }
