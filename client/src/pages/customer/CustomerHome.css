@@ -9,12 +9,31 @@ body {
 }
 
 .customer-home {
+    position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100vh;
     width: 100%;
+    overflow: hidden;
 }
+
+.customer-home::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: url("/assets/spy.png") center/cover no-repeat;
+
+    filter: blur(6px) brightness(0.6);
+    transform: scale(1.05);
+
+    z-index: -1;
+}
+
+
+
 
 .button-container {
     display: flex;

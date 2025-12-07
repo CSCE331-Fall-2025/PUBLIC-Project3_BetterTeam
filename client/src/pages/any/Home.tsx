@@ -15,6 +15,7 @@ function Home() {
 
                 <h1 className="home-title">Welcome to Agent Red</h1>
                 <p className="home-subtitle">
+                    Our Mission:
                     Precision. Flavor. Delivery.
                 </p>
 

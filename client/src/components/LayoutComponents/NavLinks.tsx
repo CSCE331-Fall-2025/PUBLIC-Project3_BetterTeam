@@ -1,4 +1,3 @@
-
 import "./NavLinks.css";
 import { NavLink } from "react-router-dom";
 import { useCart } from "../../context/CartContext.tsx";
@@ -13,17 +12,14 @@ export function GuestLinks() {
 
   return (
     <div className="nav">
-        <div className="nav-section">
-            <p className="nav-section-title">Guest</p>
-            <NavLink className="nav-item" to="/any/home">Home Screen</NavLink>
-            <NavLink className="nav-item" to="/customer/customerhome">Order</NavLink>
-            <NavLink className="nav-item" to="/customer/customercheckout"> Cart{count > 0 ? ` ${count}` : ""} </NavLink>
-            <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
-        </div>
-
-        <div className="nav-section">
-            <NavLink className="nav-item" to="/any/login">Login</NavLink>
-        </div>
+      <span className="nav-section-title">Guest</span>
+      
+      <NavLink className="nav-item" to="/any/home">Home</NavLink>
+      <NavLink className="nav-item" to="/customer/customerhome">Order</NavLink>
+      <NavLink className="nav-item" to="/customer/customercheckout"> Cart{count > 0 ? ` ${count}` : ""} </NavLink>
+      <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
+      <div className="nav-spacer"></div>
+      <NavLink className="nav-item" to="/any/login">Login</NavLink>
     </div>
   );
 }
@@ -34,18 +30,16 @@ export function CustomerLinks({ onLogout }: LogoutProps) {
   const { count } = useCart();
   return (
     <div className="nav">
-        <div className="nav-section">
-            <p className="nav-section-title">Customer</p>
-            <NavLink className="nav-item" to="/customer/customerhome">Order</NavLink>
-            <NavLink className="nav-item" to="/customer/customercheckout"> Cart{count > 0 ? ` ${count}` : ""}</NavLink>
-            <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
-        </div>
+      <span className="nav-section-title">Customer</span>
 
-        <div className="nav-section">
-            <p className="nav-section-title">Account</p>
-            <NavLink className="nav-item" to="/customer/profile">Profile</NavLink>
-            <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
-        </div>
+      <NavLink className="nav-item" to="/customer/customerhome">Order</NavLink>
+      <NavLink className="nav-item" to="/customer/customercheckout">Cart{count > 0 ? ` ${count}` : ""}</NavLink>
+      <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
+
+      <div className="nav-spacer"></div>
+
+      <NavLink className="nav-item" to="/customer/profile">Profile</NavLink>
+      <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
     </div>
   );
 }
@@ -54,18 +48,16 @@ export function CustomerLinks({ onLogout }: LogoutProps) {
 export function CashierLinks({ onLogout }: LogoutProps) {
   return (
     <div className="nav">
-        <div className="nav-section">
-            <p className="nav-section-title">Cashier</p>
-            <NavLink className="nav-item" to="/cashier/cashierhome">Cashier Home</NavLink>
-            <NavLink className="nav-item" to="/kitchen">Kitchen</NavLink>
-            <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
-        </div>
+      <span className="nav-section-title">Cashier</span>
 
-        <div className="nav-section">
-            <p className="nav-section-title">Account</p>
-            <NavLink className="nav-item" to="/cashier/cashierprofile">Profile</NavLink>
-            <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
-        </div>
+      <NavLink className="nav-item" to="/cashier/cashierhome">Home</NavLink>
+      <NavLink className="nav-item" to="/kitchen">Kitchen</NavLink>
+      <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
+
+      <div className="nav-spacer"></div>
+
+      <NavLink className="nav-item" to="/cashier/cashierprofile">Profile</NavLink>
+      <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
     </div>
   );
 }
@@ -74,22 +66,20 @@ export function CashierLinks({ onLogout }: LogoutProps) {
 export function ManagerLinks({ onLogout }: LogoutProps) {
   return (
     <div className="nav">
-        <div className="nav-section">
-            <p className="nav-section-title">Cashier</p>
-            <NavLink className="nav-item" to="/manager/dashboard">Manager Dashboard</NavLink>
-            <NavLink className="nav-item" to="/manager/employeedata">Employee Data</NavLink>
-            <NavLink className="nav-item" to="/manager/employeemanage">Employee Manage</NavLink>
-            <NavLink className="nav-item" to="/manager/inventory">Inventory Manage</NavLink>
-            <NavLink className="nav-item" to="/manager/ordertrends">Dish Manage</NavLink>
-            <NavLink className="nav-item" to="/kitchen">Kitchen</NavLink>
-            <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
-        </div>
+      <span className="nav-section-title">Manager</span>
 
-        <div className="nav-section">
-            <p className="nav-section-title">Account</p>
-            <NavLink className="nav-item" to="/manager/managerprofile">Profile</NavLink>
-            <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
-        </div>
+      <NavLink className="nav-item" to="/manager/dashboard">Dashboard</NavLink>
+      <NavLink className="nav-item" to="/manager/employeedata">Employees</NavLink>
+      <NavLink className="nav-item" to="/manager/employeemanage">Manage Staff</NavLink>
+      <NavLink className="nav-item" to="/manager/inventory">Inventory</NavLink>
+      <NavLink className="nav-item" to="/manager/ordertrends">Dishes</NavLink>
+      <NavLink className="nav-item" to="/kitchen">Kitchen</NavLink>
+      <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
+
+      <div className="nav-spacer"></div>
+
+      <NavLink className="nav-item" to="/manager/managerprofile">Profile</NavLink>
+      <button type="button" className="nav-item" onClick={onLogout}>Logout</button>
     </div>
   );
 }

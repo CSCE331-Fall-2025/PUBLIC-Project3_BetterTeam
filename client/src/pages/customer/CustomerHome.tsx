@@ -40,9 +40,9 @@ function CustomerHome() {
     <div className="customer-home">
       <h1 className="mission-title">Agent, Choose Your Operation</h1>
         <div className="tile-grid">
-          <CategoryTile title="Bowl" subtitle="1 Entrée + Side" onClick={() => goToDishPage('entree', 1)} />
-          <CategoryTile title="Plate" subtitle="2 Entrées + Side" onClick={() => goToDishPage('entree', 2)} />
-          <CategoryTile title="Big Plate" subtitle="3 Entrées + Side" onClick={() => goToDishPage('entree', 3)} />
+          <CategoryTile title="Bowl" image="/assets/bowl.png" subtitle="1 Entrée + Side" onClick={() => goToDishPage('entree', 1)} />
+          <CategoryTile title="Plate" image="/assets/plate.png" subtitle="2 Entrées + Side" onClick={() => goToDishPage('entree', 2)} />
+          <CategoryTile title="Big Plate" image="/assets/bigplate.png"  subtitle="3 Entrées + Side" onClick={() => goToDishPage('entree', 3)} />
 
           <CategoryTile title="Appetizers" image="/assets/rangoon.png" onClick={() => goToDishPage('appetizer')} />
           <CategoryTile title="Sides" image="/assets/ricefried.png" onClick={() => goToDishPage('side')} />
