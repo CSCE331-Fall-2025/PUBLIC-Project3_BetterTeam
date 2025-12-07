@@ -238,7 +238,6 @@ function Inventory() {
         if (!window.confirm('Delete this inventory?')) {
             alert('inventory saved...');
         } else{
-            alert('Yeah lets delete this item, lets delete this item with database calls.');
             if(!selectedInventoryID || !editedInventory){
                 alert('No selected inventory to delete.');
                 return;

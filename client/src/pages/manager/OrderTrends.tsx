@@ -254,7 +254,6 @@ function OrderTrends() {
         if (!window.confirm('Delete this dish?')) {
             alert('dish saved...');
         } else{
-            alert('Yeah lets delete this dish, lets delete this dish with database calls.');
             if(!selectedDishID || !editedDish){
                 alert('No selected dish to delete.');
                 return;

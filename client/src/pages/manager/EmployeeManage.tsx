@@ -149,7 +149,6 @@ function EmployeeManage() {
         if (!window.confirm('Delete this employee?')) {
             alert('employee saved...');
         } else{
-            alert('Deleting employee.');
             if(!selectedEmployeeID || !editedEmployee){
                 alert('No selected employee to delete.');
                 return;

@@ -38,7 +38,7 @@ router.post("/create-order", async (req, res) => {
             return res.status(400).json({ error: "Cart is empty" });
         }
 
-        const total = cart.reduce((sum, dish) => sum + dish.price, 0);
+        const total = cart.reduce((sum, dish) => sum + Number(dish.price), 0);
 
         const accessToken = await getAccessToken();
 
@@ -48,7 +48,7 @@ router.post("/create-order", async (req, res) => {
                 {
                     amount: {
                         currency_code: "USD",
-                        value: total.toFixed(2)
+                        value: Number(total).toFixed(2)
                     },
                     description: "Restaurant Order"
                 }
