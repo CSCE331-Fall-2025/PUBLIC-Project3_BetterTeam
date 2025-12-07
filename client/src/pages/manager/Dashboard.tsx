@@ -41,7 +41,7 @@ function ManagerHome() {
         }
 
         const detailLines = xReportData.map(x => 
-            `Hour ${x.hour_of_day}: ${x.total_transactions} transactions, $${x.total_sales.toFixed(2)} sales`
+            `Hour ${x.hour_of_day - 6}: ${x.total_transactions} transactions, $${x.total_sales.toFixed(2)} sales`
         ).join('\n');
 
         const grandTotalSales = xReportData.reduce((sum, report) => sum + report.total_sales, 0);

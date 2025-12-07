@@ -1,7 +1,7 @@
 .employeeData{
     display: flex;
     flex-direction: row;
-    width: 100vw;
+    width: 90vw;
 }
 
 .employeeDisplays{

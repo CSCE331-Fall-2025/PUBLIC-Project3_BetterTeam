@@ -252,7 +252,7 @@ function EmployeeManage() {
     };
 
     return(
-        <div className='employeeData'>
+        <div className='employeeManage'>
             <div className='employeeDisplays'>
                 <div className='tableContainer'>
                     <Table data={employees} columns={employeeColumns}/>
