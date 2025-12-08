@@ -47,7 +47,7 @@ function Login() {
       } else if (data.user.role === "cashier") {
         navigate("/cashier/cashierhome");
       } else {
-        navigate("/any/home");
+        navigate("/customer/customerhome");
       }
     } catch (err) {
       console.error("Login error:", err);
