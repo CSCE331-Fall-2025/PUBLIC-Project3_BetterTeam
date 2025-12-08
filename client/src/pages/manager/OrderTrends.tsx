@@ -7,6 +7,8 @@ import PillBox from '../../components/MultiSelectComponents/PillBox.tsx'
 import type { Options } from '../../components/MultiSelectComponents/PillBox.tsx'
 import type { MultiValue } from 'react-select'; 
 import type { Inventory } from './Inventory.tsx'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import './OrderTrends.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -40,6 +42,12 @@ interface DishInventoryJunction {
     fk_inventory: number,
 }
 
+interface DishSalesData {
+    name: string,
+    sale_date: string,
+    sales_count: number,
+}
+
 const mapInventoryToOrders = (ing: Inventory): Options => {
     return{
         value: ing.inventory_id,
@@ -69,6 +77,11 @@ function OrderTrends() {
     const [selectedInventory, setSelectedInventory] = useState<MultiValue<Options>>([]);
     // selected ingredients for a new dish
     const [newInventory, setNewInventory] = useState<MultiValue<Options>>([]);
+    // chart states
+    const [chartDishes, setChartDishes] = useState<MultiValue<Options>>([]);
+    const [chartData, setChartData] = useState<ChartData | null>(null);
+    const [startDate, setStartDate] = useState<Date>(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
+    const [endDate, setEndDate] = useState<Date>(new Date());
 
     // hook that fetches the data
     useEffect(() => {
@@ -136,16 +149,83 @@ function OrderTrends() {
         }
     };
 
-    const dishChartData: ChartData = {
-        labels: dishes.map(d => d.name),
-        datasets: [{
-            label: 'Price',
-            data: dishes.map(d => d.price),
-            borderColor: 'rgba(75, 75, 75, 1)',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            borderWidth: 2,
-        },],
-    };
+    // const dishChartData: ChartData = {
+    //     labels: dishes.map(d => d.name),
+    //     datasets: [{
+    //         label: 'Price',
+    //         data: dishes.map(d => d.price),
+    //         borderColor: 'rgba(75, 75, 75, 1)',
+    //         backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    //         borderWidth: 2,
+    //     },],
+    // };
+
+    const fetchSalesData = async() => {
+        const selectedIds = chartDishes.map(d => d.value).join(',');
+
+        if(selectedIds.length === 0 || !startDate || !endDate){
+            alert('Please select at least one dish and a valid date range.');
+            return;
+        }
+
+        // convert date object to YYYY-MM-DD
+        const start = startDate.toISOString().split('T')[0];
+        const dayAfterEnd = new Date(endDate);
+        dayAfterEnd.setDate(endDate.getDate() + 1);
+        const end = dayAfterEnd.toISOString().split('T')[0];
+
+        try{
+            const res = await fetch(`${API_BASE}/api/manager/dish/sales?dishIds=${selectedIds}&startDate=${start}&endDate=${end}`);
+
+            if(!res.ok){
+                throw new Error('Failed to fetch dish sales data');
+            }
+
+            const data: DishSalesData[] = await res.json();
+
+            // put into chartjs format :)
+            const processedData: { [date: string]: { [dishName: string]: number } } = {};
+            const dishNames = new Set<string>();
+
+            data.forEach(item => {
+                if(!processedData[item.sale_date]){
+                    processedData[item.sale_date] = {};
+                }
+                processedData[item.sale_date][item.name] = item.sales_count;
+                dishNames.add(item.name);
+            });
+
+            const uniqueDates = Object.keys(processedData).sort();
+            const uniqueDishNames = Array.from(dishNames);
+
+            const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6610f2'];
+            let colorIndex = 0;
+
+            const newChartData: ChartData = {
+                labels: uniqueDates,
+                datasets: uniqueDishNames.map(name => {
+                    const color = colors[colorIndex % colors.length];
+                    colorIndex++;
+
+                    return{
+                        label: name,
+                        data: uniqueDates.map(date => processedData[date][name] || 0),
+                        borderColor: color,
+                        backgroundColor: `${color}40`,
+                        borderWidth: 2,
+                        fill: false,
+                    };
+                }),
+            };
+
+            setChartData(newChartData);
+
+        } catch(error){
+            console.error('Error fetching sales data:', error);
+            alert('Could not fetch sales data.');
+            setChartData(null);
+        }
+    }
 
     const dishColumns: ColumnDefinition<Dish>[] = [
         {header: 'Dish Id', accessor: (d) => d.dish_id },
@@ -377,12 +457,59 @@ function OrderTrends() {
         setNewInventory(selectedItems);
     }
 
+    const handleChartDishSelection = (selectedItems: MultiValue<Options>) => {
+        setChartDishes(selectedItems);
+    }
+
+    const dishOptions: Options[] = dishes.map(d => ({ value: d.dish_id, label: d.name }));
+
 	return(
 		<div className='orderTrends'>
             <div className='dishDisplays'>
-                <div className='dishChart'>
-                    <Line data={dishChartData} />
+                <div className='actualChart'>
+                    {chartData ? (
+                        <Line data={chartData} />
+                    ) : (
+                        <p>Select dishes, a date range, and click 'Update Chart' to view trend data.</p>
+                    )}
                 </div>
+                <div className='dishChart'>
+                    <h2>Dish Sales Trend</h2>
+                    <div className='chartLayout'></div>
+                    <div>
+                        <label className='dateLabel'>Start Date:</label>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date: Date | null) => {
+                                if(date){
+                                    setStartDate(date);
+                                }
+                            }}
+                            dateFormat='yyyy/MM/dd'
+                        />
+                    </div>
+                    <div>
+                        <label className='dateLabel'>End Date: </label>
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date: Date | null) => {
+                                if(date){
+                                    setEndDate(date);
+                                }
+                            }}
+                            dateFormat='yyyy/MM/dd'
+                        />
+                    </div>
+                </div>
+                <div className='chartPillBox'>
+                    <PillBox 
+                        availableOptions={dishOptions}
+                        initialOptions={chartDishes}
+                        placeholder='Select Dishes to Chart...'
+                        onSelectionChange={handleChartDishSelection}
+                    />
+                </div>
+                <button onClick={fetchSalesData} className='man-btn'>Update Chart</button>
                 <div className='tableContainer'>
                     <Table data={dishes} columns={dishColumns}/>
                 </div>

@@ -1,2 +1,5 @@
-
-/* fire commnet */
+.employeeManage{
+    display: flex;
+    flex-direction: row;
+    width: 99vw;
+}
