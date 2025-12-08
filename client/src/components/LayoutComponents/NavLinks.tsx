@@ -18,6 +18,7 @@ export function GuestLinks() {
       <NavLink className="nav-item" to="/customer/customerhome">Order</NavLink>
       <NavLink className="nav-item" to="/customer/customercheckout"> Cart{count > 0 ? ` ${count}` : ""} </NavLink>
       <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
+      <NavLink className="nav-item" to="/any/weather">Weather</NavLink>
       <div className="nav-spacer"></div>
       <NavLink className="nav-item" to="/any/login">Login</NavLink>
     </div>
@@ -35,6 +36,7 @@ export function CustomerLinks({ onLogout }: LogoutProps) {
       <NavLink className="nav-item" to="/customer/customerhome">Order</NavLink>
       <NavLink className="nav-item" to="/customer/customercheckout">Cart{count > 0 ? ` ${count}` : ""}</NavLink>
       <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
+      <NavLink className="nav-item" to="/any/weather">Weather</NavLink>
 
       <div className="nav-spacer"></div>
 
