@@ -68,7 +68,7 @@ export const OrderCard: React.FC<OrderCardProps>
 
                 try{
                     const res = await fetch(
-                        fetch(`${API_BASE}/api/dishes/${dish.dish_id}/ingredients`)
+                        `${API_BASE}/api/dishes/${dish.dish_id}/ingredients`
                     );
                     if(!res.ok) continue;
 
