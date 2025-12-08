@@ -99,10 +99,10 @@ export const OrderCard: React.FC<OrderCardProps>
         }// if someone tries to go left while at 0, ignore for time being, maybe erro handling in future?
     }
 
+    /*<h3 className="order-card-number">ORDER #{name}</h3>*/
     return (
         <div className="order-card" >
             <ul className="order-card-text">
-                <h3 className="order-card-number">ORDER #{name}</h3>
                 {items.map((dish, index) => (
                                 <li key={index}>
                                     <h3 className="ingredient-title">{dish.name}</h3>
