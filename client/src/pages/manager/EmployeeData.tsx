@@ -58,7 +58,7 @@ function EmployeeData() {
         datasets: [
             {
             label: 'Employee Wages',
-            data: employees.sort((a, b) => a.wage - b.wage).map(e => e.wage),
+            data: employees.map(e => e.wage),
             borderColor: employees.map(e => e.ismanager ? 'rgba(75, 205, 75, 1)' : 'rgba(75, 75, 205, 1)'),
             backgroundColor: employees.map(e => e.ismanager ? 'rgba(0, 75, 0, 0.5)' : 'rgba(0, 0, 75, 0.5)'),
             borderWidth: 2,
