@@ -1,6 +1,6 @@
 import type {OrderCardProps} from '../components/KitchenComponents/OrderCard.tsx'
 import {OrderBox} from '../components/KitchenComponents/OrderBox.tsx'
-import './Kitchen.css';
+import './kitchen.css';
 
 type Order = OrderCardProps;
 const Orders : Order[] = [];
