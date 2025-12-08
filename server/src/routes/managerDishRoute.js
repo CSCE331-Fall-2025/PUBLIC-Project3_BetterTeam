@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 // one again need to import any routes you want to use
-import { createDish, getDishes, updateDishController, deleteDishController, getDishInventoryController, updateDishInventoryController } from "../controllers/managerDishController.js";
+import { createDish, getDishes, updateDishController, deleteDishController, getDishInventoryController, updateDishInventoryController, getSalesDishController } from "../controllers/managerDishController.js";
 
 // create an express router
 const router = Router();
@@ -14,5 +14,7 @@ router.delete("/:dish_id", deleteDishController);
 
 router.get("/dishInventory", getDishInventoryController);
 router.put("/:dish_id/ingredients", updateDishInventoryController);
+
+router.get("/sales", getSalesDishController)
 
 export default router;

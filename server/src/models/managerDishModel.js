@@ -94,3 +94,29 @@ export async function updateDishInventory(dishId, inventoryIds) {
         client.release();
     }
 }
+
+export async function getDishSalesByTime(dishIds, startDate, endDate) {
+    const dishIdPlaceholders = dishIds.map((_, i) => `$${i + 3}`).join(', ');
+    const query = `
+            SELECT
+                d.name,
+                DATE(t.time) AS sale_date,
+                COUNT(td.fk_dish) AS sales_count
+            FROM
+                transactiondish td
+            JOIN
+                dish d ON td.fk_dish = d.dish_id
+            JOIN 
+                transaction t ON td.fk_transaction = t.transaction_id
+            WHERE
+                td.fk_dish IN (${dishIdPlaceholders})
+                AND t.time >= $1
+                AND t.time < $2
+            GROUP BY
+                d.name, sale_date
+            ORDER BY 
+                sale_date;`;
+    const params = [startDate, endDate, ...dishIds];
+    const result = await pool.query(query, params);
+    return result.rows;
+}

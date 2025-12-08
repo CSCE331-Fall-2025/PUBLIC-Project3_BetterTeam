@@ -1,5 +1,5 @@
 // NEED TO IMPORT WHATEVER MODEL YOU WANT TO BE ABLE TO CALL
-import { newDish, getAllDishes, updateDish, deleteDish, getDishInventory, updateDishInventory } from "../models/managerDishModel.js";
+import { newDish, getAllDishes, updateDish, deleteDish, getDishInventory, updateDishInventory, getDishSalesByTime } from "../models/managerDishModel.js";
 
 export async function createDish(req, res){
     try{
@@ -96,5 +96,27 @@ export async function updateDishInventoryController(req, res){
     } catch(err){
         console.error("Error updating dish inventory:", err);
         res.status(500).json({error: "Failed to update dish inventory"});
+    }
+}
+
+export async function getSalesDishController(req, res) {
+    try {
+        const {dishIds, startDate, endDate } = req.query;
+
+        if(!dishIds ||  !startDate || !endDate){
+            return res.status(400).json({error: "Missing required query parameters: dishIds, startDate, endDate."});
+        }
+        
+        const dishIdArray = dishIds.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id));
+
+        if(dishIdArray.length === 0){
+            return res.status(400).json({error: "No valid dish IDs provided."});
+        }
+
+        const salesData = await getDishSalesByTime(dishIdArray, startDate, endDate);
+        res.json(salesData);
+    } catch (err) {
+        console.error("Error fetching dish sales:", err);
+        res.status(500).json({ error: "Failed to fetch dish sales" });
     }
 }

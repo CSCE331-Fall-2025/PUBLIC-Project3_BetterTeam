@@ -2,6 +2,10 @@
     display: flex;
     flex-direction: row;
     width: 99vw;
+
+    .tableContainer{
+        padding-top: 10px;
+    }
 }
 
 .dishDisplays{
@@ -9,8 +13,32 @@
 }
 
 .dishChart{
+    color: white;
+    padding-bottom: 10px;
+}
+
+.actualChart{
     flex: 1;
     background-color: whitesmoke;
     min-width: 0;
-    height: 450px;
+}
+
+.chartLayout{
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.dateLabel{
+    margin-right: 5px;
+    margin-left: 50px;
+}
+
+.chartPillBox{
+    padding: 10px;
+}
+
+.react-datepicker__day-name, .react-datepicker__day{
+    width: 2.5rem;
 }
