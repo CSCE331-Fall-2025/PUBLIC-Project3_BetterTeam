@@ -4,6 +4,8 @@ import Button from "../ButtonComponents/Button.tsx";
 import './OrderCard.css';
 import { useEffect, useState } from 'react';
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 export interface OrderCardProps {
     name: string;//mostly for testing rn
     slot: number;//0,1,2 for columns L->R
