@@ -27,6 +27,19 @@ function EmployeeManage() {
         password: '',
     })
 
+    const authUser = localStorage.getItem('auth_user');
+    let managerId = null;
+
+    if(authUser){
+        try{
+            const user = JSON.parse(authUser);
+            managerId = user.id;
+        } catch(e){
+            console.error('Failed to parse auth_user from localStorage:', e);
+            alert('Could not identify manager.');
+        }
+    }
+
     // hook that fetches the data
     useEffect(() => {
         const fetchEmployees = async () => {
@@ -111,6 +124,21 @@ function EmployeeManage() {
             return;
         }
 
+        if(managerId === selectedEmployeeID && managerId !== 28){
+            alert('Cannot update yourself');
+            return;
+        }
+
+        if(selectedEmployee?.ismanager && managerId !== 28){
+            alert('Cannot update another manager');
+            return;
+        }
+
+        if(managerId === 28 && selectedEmployeeID === 28 && editedEmployee.ismanager === false){
+            alert('Super manager cannot be regular employee');
+            return;
+        }
+
         if(!editedEmployee.name || editedEmployee.wage <= 0 || editedEmployee.name.length > 255){
             alert('Please enter a valid name and wage.');
             return;
@@ -146,6 +174,21 @@ function EmployeeManage() {
     };
 
     const handleDeletion = async () => {
+        if(managerId === selectedEmployeeID){
+            alert('Cannot delete yourself.');
+            return;
+        }
+
+        if(selectedEmployeeID === 28){
+            alert('Cannot delete super manager');
+            return;
+        }
+
+        if(selectedEmployee?.ismanager && managerId !== 28){
+            alert('Cannot delete another manager');
+            return;
+        }
+
         if (!window.confirm('Delete this employee?')) {
             alert('employee saved...');
         } else{
