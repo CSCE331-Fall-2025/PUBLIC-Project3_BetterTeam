@@ -48,6 +48,12 @@ interface DishSalesData {
     sales_count: number,
 }
 
+interface InventoryUsage {
+    inventory_id: number,
+    item: string,
+    quantity_used: number,
+}
+
 const mapInventoryToOrders = (ing: Inventory): Options => {
     return{
         value: ing.inventory_id,
@@ -82,6 +88,10 @@ function OrderTrends() {
     const [chartData, setChartData] = useState<ChartData | null>(null);
     const [startDate, setStartDate] = useState<Date>(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
     const [endDate, setEndDate] = useState<Date>(new Date());
+    const [displayMode, setDisplayMode] = useState<'price' | 'quantity'>('quantity');
+    const [rawChartData, setRawChartData] = useState<DishSalesData[] | null>(null);
+
+    const [invUsage, setInvUsage] = useState<InventoryUsage[]>([]);
 
     // hook that fetches the data
     useEffect(() => {
@@ -149,17 +159,6 @@ function OrderTrends() {
         }
     };
 
-    // const dishChartData: ChartData = {
-    //     labels: dishes.map(d => d.name),
-    //     datasets: [{
-    //         label: 'Price',
-    //         data: dishes.map(d => d.price),
-    //         borderColor: 'rgba(75, 75, 75, 1)',
-    //         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    //         borderWidth: 2,
-    //     },],
-    // };
-
     const fetchSalesData = async() => {
         const selectedIds = chartDishes.map(d => d.value).join(',');
 
@@ -183,42 +182,7 @@ function OrderTrends() {
 
             const data: DishSalesData[] = await res.json();
 
-            // put into chartjs format :)
-            const processedData: { [date: string]: { [dishName: string]: number } } = {};
-            const dishNames = new Set<string>();
-
-            data.forEach(item => {
-                if(!processedData[item.sale_date]){
-                    processedData[item.sale_date] = {};
-                }
-                processedData[item.sale_date][item.name] = item.sales_count;
-                dishNames.add(item.name);
-            });
-
-            const uniqueDates = Object.keys(processedData).sort();
-            const uniqueDishNames = Array.from(dishNames);
-
-            const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6610f2'];
-            let colorIndex = 0;
-
-            const newChartData: ChartData = {
-                labels: uniqueDates,
-                datasets: uniqueDishNames.map(name => {
-                    const color = colors[colorIndex % colors.length];
-                    colorIndex++;
-
-                    return{
-                        label: name,
-                        data: uniqueDates.map(date => processedData[date][name] || 0),
-                        borderColor: color,
-                        backgroundColor: `${color}40`,
-                        borderWidth: 2,
-                        fill: false,
-                    };
-                }),
-            };
-
-            setChartData(newChartData);
+            setRawChartData(data);
 
         } catch(error){
             console.error('Error fetching sales data:', error);
@@ -227,12 +191,158 @@ function OrderTrends() {
         }
     }
 
+    useEffect(() => {
+        if(!rawChartData || rawChartData.length === 0){
+            setChartData(null);
+            return;
+        }
+
+        const dishPrices: { [dish_id: number]: number } = dishes.reduce((acc, dish) => {
+            acc[dish.dish_id] = dish.price;
+            return acc;
+        }, {} as { [dish_id: number]: number });
+
+        const dishOptionsMap = new Map(chartDishes.map(d => [d.label, d.value]));
+
+        // put into chartjs format :)
+        const processedData: { [date: string]: { [dishName: string]: number } } = {};
+        const dishNames = new Set<string>();
+
+        rawChartData.forEach(item => {
+            if(!processedData[item.sale_date]){
+                processedData[item.sale_date] = {};
+            }
+
+            const dishId = dishOptionsMap.get(item.name);
+            const priceValue = dishId !== undefined ? dishPrices[dishId] : 1;
+            let calculatedValue = item.sales_count;
+
+            if(displayMode === 'price' && dishId !== undefined){
+                calculatedValue = item.sales_count * priceValue;
+            }
+
+            processedData[item.sale_date][item.name] = calculatedValue;
+            dishNames.add(item.name);
+        });
+
+        const uniqueDates = Object.keys(processedData).sort();
+        const uniqueDishNames = Array.from(dishNames);
+
+        const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6610f2'];
+        let colorIndex = 0;
+
+        const newChartData: ChartData = {
+            labels: uniqueDates,
+            datasets: uniqueDishNames.map(name => {
+                const color = colors[colorIndex % colors.length];
+                colorIndex++;
+
+                return{
+                    label: name,
+                    data: uniqueDates.map(date => processedData[date][name] || 0),
+                    borderColor: color,
+                    backgroundColor: `${color}40`,
+                    borderWidth: 2,
+                    fill: false,
+                };
+            }),
+        };
+
+        setChartData(newChartData);
+
+    }, [rawChartData, displayMode, dishes, chartDishes])
+
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context: any) {
+                        let label = context.dataset.label || '';
+
+                        if(label) {
+                            label += ': ';
+                        }
+                        if(context.parsed.y !== null){
+                            if(displayMode === 'price'){
+                                label += '$' + context.parsed.y.toFixed(2); 
+                            } else{
+                                label += Math.round(context.parsed.y);
+                            }
+                        }
+                        return label;
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                ticks: {
+                    callback: function(value: any) {
+                        if(displayMode === 'price'){
+                            return '$' + Number(value).toFixed(2);
+                        } else{
+                            return Math.round(value);
+                        }
+                    }
+                }
+            }
+        }
+    };
+
     const dishColumns: ColumnDefinition<Dish>[] = [
         {header: 'Dish Id', accessor: (d) => d.dish_id },
         {header: 'Dish Name', accessor: (d) => d.name },
         {header: 'Dish Price', accessor: (d) => d.price },
         {header: 'Category', accessor: (d) => d.type },
     ];
+
+    useEffect(() => {
+        if(!rawChartData || rawChartData.length === 0 || !junction || junction.length === 0){
+            setInvUsage([]);
+            return;
+        }
+        const inventoryMap = new Map(inventory.map(i => [i.value, i.label]));
+        const usageMap = new Map<number, number>();
+        const dishSalesMap = new Map<string, number>();
+
+        rawChartData.forEach(item => {
+            const total = dishSalesMap.get(item.name) || 0;
+            dishSalesMap.set(item.name, total + Number(item.sales_count));
+        });
+
+        const dishIdMap = new Map(dishes.map(d => [d.name, d.dish_id]));
+
+        dishSalesMap.forEach((salesCount, dishName) => {
+            const dishId = dishIdMap.get(dishName);
+
+            if(dishId !== undefined){
+                const ingredientsForDish = junction.filter(j => j.fk_dish === dishId);
+
+                ingredientsForDish.forEach(j => {
+                    const inventoryId = j.fk_inventory;
+                    const usedAmount = Number(salesCount);
+                    const total = usageMap.get(inventoryId) || 0;
+                    usageMap.set(inventoryId, total + usedAmount);
+                });
+            }
+        });
+
+        const finalUsageData: InventoryUsage[] = Array.from(usageMap.entries()).map(([id, quantity]) => ({
+            inventory_id: id,
+            item: inventoryMap.get(id) || `Unknown Item (${id})`,
+            quantity_used: quantity,
+        }));
+
+        setInvUsage(finalUsageData);
+
+    }, [rawChartData, junction, inventory, dishes]);
+
+    const invUsageColumns: ColumnDefinition<InventoryUsage>[] = [
+        {header: 'Inventory ID', accessor: (i) => i.inventory_id },
+        {header: 'Inventory Item', accessor: (i) => i.item },
+        {header: 'Total Used', accessor: (i) => i.quantity_used },
+    ]
 
     const handleFieldChange = (field: 'name' | 'price' | 'type', newValue: string ) => {
         if(!editedDish) return;
@@ -461,6 +571,18 @@ function OrderTrends() {
         setChartDishes(selectedItems);
     }
 
+    const handlePriceQuanButton = (mode: 'price' | 'quantity') => {
+        setDisplayMode(mode);
+    }
+
+    const handleSelectAll = () => {
+        setChartDishes(dishOptions);
+    }
+
+    const handleDeselectAll = () => {
+        setChartDishes([]);
+    }
+
     const dishOptions: Options[] = dishes.map(d => ({ value: d.dish_id, label: d.name }));
 
 	return(
@@ -468,7 +590,7 @@ function OrderTrends() {
             <div className='dishDisplays'>
                 <div className='actualChart'>
                     {chartData ? (
-                        <Line data={chartData} />
+                        <Line data={chartData} options={chartOptions} />
                     ) : (
                         <p>Select dishes, a date range, and click 'Update Chart' to view trend data.</p>
                     )}
@@ -501,17 +623,27 @@ function OrderTrends() {
                         />
                     </div>
                 </div>
-                <div className='chartPillBox'>
-                    <PillBox 
-                        availableOptions={dishOptions}
-                        initialOptions={chartDishes}
-                        placeholder='Select Dishes to Chart...'
-                        onSelectionChange={handleChartDishSelection}
-                    />
+                <div className='pillBoxContainer'>
+                    <div className='chartPillBox'>
+                        <PillBox 
+                            availableOptions={dishOptions}
+                            initialOptions={chartDishes}
+                            placeholder='Select Dishes to Chart...'
+                            onSelectionChange={handleChartDishSelection}
+                        />
+                    </div>                    
+                    <button onClick={handleSelectAll} className='man-btn'>Select All</button>
+                    <button onClick={handleDeselectAll} className='man-btn'>Deselect All</button>
                 </div>
-                <button onClick={fetchSalesData} className='man-btn'>Update Chart</button>
+                <div className='dishChartBtnContainer'>
+                    <button onClick={fetchSalesData} className='man-btn'>Update Chart</button>
+                    <button onClick={() => handlePriceQuanButton('price')} className='man-btn'>Price</button>
+                    <button onClick={() => handlePriceQuanButton('quantity')} className='man-btn'>Quantity</button>
+                </div>
+                
                 <div className='tableContainer'>
                     <Table data={dishes} columns={dishColumns}/>
+                    <Table data={invUsage} columns={invUsageColumns}/>
                 </div>
             </div>
             <div className='textContainer'>

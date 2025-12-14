@@ -140,11 +140,18 @@ function Inventory() {
         }
     };
 
+    const sortedInventory = inventory.slice().sort((a, b) => {
+        const ratioA = a.current_inventory / a.target_inventory;
+        const ratioB = b.current_inventory / b.target_inventory;
+        return ratioA - ratioB;
+    })
+
     const inventoryColumns: ColumnDefinition<Inventory>[] = [
         {header: 'Inventory Id', accessor: (i) => i.inventory_id },
         {header: 'Inventory Name', accessor: (i) => i.item },
         {header: 'Current Quantity', accessor: (i) => i.current_inventory },
         {header: 'Reccomended Quantity', accessor: (i) => i.target_inventory },
+        {header: 'Stock Ratio', accessor: (i) => ((i.current_inventory / i.target_inventory) * 100).toFixed(2) + '%' },
     ];
 
     const handleFieldChange = (field: 'item' | 'current_inventory' | 'target_inventory', newValue: string ) => {
@@ -189,7 +196,7 @@ function Inventory() {
             return;
         }
 
-        if(!editedInventory.item || editedInventory.current_inventory <= 0 || editedInventory.target_inventory <=0 || editedInventory.item.length > 255){
+        if(!editedInventory.item || editedInventory.current_inventory < 0 || editedInventory.target_inventory <=0 || editedInventory.item.length > 255){
             alert('Please enter a valid name and current and target inventories.');
             return;
         }
@@ -302,7 +309,7 @@ function Inventory() {
     };
 
     const handleAdd = async () => {
-        if(!newInventory.item || newInventory.current_inventory <= 0 || newInventory.target_inventory <=0 || newInventory.item.length > 255){
+        if(!newInventory.item || newInventory.current_inventory < 0 || newInventory.target_inventory <=0 || newInventory.item.length > 255){
             alert('Please enter a valid name and current and target inventories.');
             return;
         }
@@ -357,7 +364,7 @@ function Inventory() {
                     <Chart ref={chartRef} type='line' data={chartData} />
                 </div>
                 <div className='tableContainer'>
-                    <Table data={inventory} columns={inventoryColumns}/>
+                    <Table data={sortedInventory} columns={inventoryColumns}/>
                 </div>
             </div>
             <div className='textContainer'>
