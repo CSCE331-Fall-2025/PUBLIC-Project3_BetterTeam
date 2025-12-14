@@ -1,19 +1,21 @@
+
 .menu-box {
     background-color: #BB2719;
     padding: 0.5rem;
     border-radius: 0.75rem;
     overflow-y: auto;
-    margin: 0 auto;
+    margin: 1rem;
 }
 
 .menu-box-title {
-    font-size: 1.25rem;
+    font-size: 2rem;
     font-weight: bold;
     text-align: center;
 }
 
 .menu-box-grid {
+    display: flex;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.20rem;
+    gap: 1rem;
 }
