@@ -1,5 +1,5 @@
 import type {OrderCardProps} from '../components/KitchenComponents/OrderCard.tsx'
-import {OrderBox} from '../components/KitchenComponents/OrderBox.tsx'
+import {OrderBox} from '../../components/KitchenComponents/OrderBox.tsx'
 import './kitchen.css';
 
 type Order = OrderCardProps;

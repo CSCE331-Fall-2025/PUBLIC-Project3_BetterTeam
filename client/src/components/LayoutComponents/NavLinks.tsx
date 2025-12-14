@@ -53,7 +53,7 @@ export function CashierLinks({ onLogout }: LogoutProps) {
       <span className="nav-section-title">Cashier</span>
 
       <NavLink className="nav-item" to="/cashier/cashierhome">Home</NavLink>
-      <NavLink className="nav-item" to="/kitchen">Kitchen</NavLink>
+      <NavLink className="nav-item" to="/cashier/kitchen">Kitchen</NavLink>
       <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
 
       <div className="nav-spacer"></div>
@@ -75,7 +75,7 @@ export function ManagerLinks({ onLogout }: LogoutProps) {
       <NavLink className="nav-item" to="/manager/employeemanage">Manage Staff</NavLink>
       <NavLink className="nav-item" to="/manager/inventory">Inventory</NavLink>
       <NavLink className="nav-item" to="/manager/ordertrends">Dishes</NavLink>
-      <NavLink className="nav-item" to="/kitchen">Kitchen</NavLink>
+      <NavLink className="nav-item" to="/cashier/kitchen">Kitchen</NavLink>
       <NavLink className="nav-item" to="/any/menuboard">Menu</NavLink>
 
       <div className="nav-spacer"></div>
