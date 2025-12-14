@@ -151,7 +151,7 @@ function Inventory() {
         {header: 'Inventory Name', accessor: (i) => i.item },
         {header: 'Current Quantity', accessor: (i) => i.current_inventory },
         {header: 'Reccomended Quantity', accessor: (i) => i.target_inventory },
-        {header: 'Stock Ratio', accessor: (i) => (i.current_inventory / i.target_inventory).toFixed(3) },
+        {header: 'Stock Ratio', accessor: (i) => ((i.current_inventory / i.target_inventory) * 100).toFixed(2) + '%' },
     ];
 
     const handleFieldChange = (field: 'item' | 'current_inventory' | 'target_inventory', newValue: string ) => {
