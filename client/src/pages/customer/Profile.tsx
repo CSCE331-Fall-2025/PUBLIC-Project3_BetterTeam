@@ -57,6 +57,7 @@ function Profile() {
     const { user } = useAuth();
     const [profile, setProfile] = useState<Customer | null>(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [confirmPass, setConfirmPass] = useState('');
 
     const API_BASE = import.meta.env.VITE_API_BASE;
 
@@ -74,11 +75,21 @@ function Profile() {
     async function saveChanges() {
         if (!profile) return;
 
-        if(profile.password){
-            if(profile.password.length < 6){
-                alert('Password must be at least 6 characters long.');
-                return;
-            }
+        const newPassword = profile.password?.trim();
+
+        if(!newPassword || newPassword.length === 0){
+            alert('Password required to save changes.');
+            return;
+        }
+        
+        if(profile.password.length < 6){
+            alert('Password must be at least 6 characters long.');
+            return;
+        }
+
+        if(newPassword !== confirmPass){
+            alert('Password and conformation password do not match.');
+            return;
         }
 
         const res = await fetch(`${API_BASE}/api/customers/${user!.id}`, {
@@ -136,6 +147,16 @@ function Profile() {
                     <input
                         type="password"
                         onChange={(e) => setProfile({ ...profile, password: e.target.value })}
+                    />
+                ) : (
+                    <p>********</p>
+                )}
+
+                <label>Confirm Password:</label>
+                {isEditing ? (
+                    <input
+                        type="password"
+                        onChange={(e) => setConfirmPass(e.target.value)}
                     />
                 ) : (
                     <p>********</p>
