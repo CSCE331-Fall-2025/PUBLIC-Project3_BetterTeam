@@ -37,7 +37,7 @@ interface ChartData {
     }[];
 }
 
-interface DishInventoryJunction {
+export interface DishInventoryJunction {
     fk_dish: number,
     fk_inventory: number,
 }

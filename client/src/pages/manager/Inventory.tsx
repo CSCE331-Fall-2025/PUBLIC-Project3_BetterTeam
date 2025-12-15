@@ -14,6 +14,7 @@ import {
 import type {ChartArea, ChartData } from 'chart.js';
 import { Chart } from 'react-chartjs-2'
 import Textbox from '../../components/TextboxComponents/Textbox.tsx'
+import type { DishInventoryJunction } from './OrderTrends.tsx';
 import './Inventory.css'
 
 ChartJS.register(
@@ -65,23 +66,34 @@ function Inventory() {
         labels: [],
         datasets: [],
     });
+    const [dishInventory, setDishInventory] = useState<DishInventoryJunction[]>([]);
 
     // hook that fetches the data
     useEffect(() => {
         const fetchInventory = async () => {
             try {
                 // sends a fetch request to the backend route
-                const response = await fetch(`${API_BASE}/api/manager/inventory`);
+                const [inventoryRes, junctionRes] = await Promise.all([
+                    fetch(`${API_BASE}/api/manager/inventory`),
+                    fetch(`${API_BASE}/api/manager/dish/dishInventory`),
+                ]);
 
-                if(!response.ok){
-                    const errorText = await response.text();
+                if(!inventoryRes.ok){
+                    const errorText = await inventoryRes.text();
                     throw new Error(`Failed to fetch inventory: ${errorText}`);
                 }
 
+                if(!junctionRes.ok){
+                    const errorText = await junctionRes.text();
+                    throw new Error(`Failed to fetch dishinventory: ${errorText}`);
+                }
+
                 // this parses the json and converts it into an inventory array
-                const data:Inventory[] = await response.json();
+                const data:Inventory[] = await inventoryRes.json();
+                const juncData:DishInventoryJunction[] = await junctionRes.json();
 
                 setInventory(data);
+                setDishInventory(juncData);
 
             } catch (error) {
                 console.error('Error:', error);
@@ -250,6 +262,36 @@ function Inventory() {
                 return;
             }
 
+            const dishesUsingInventory = dishInventory.filter( (j) => j.fk_inventory === selectedInventoryID);
+
+            const dishToInvMap = dishInventory.reduce((acc, junction) => {
+                const dishId = junction.fk_dish;
+                if(!acc[dishId]) {
+                    acc[dishId] = [];
+                }
+                acc[dishId].push(junction.fk_inventory);
+                return acc;
+            }, {} as Record<number, number[]>);
+
+            let blocked = false;
+            let blockedDish = '';
+
+            for(const junction of dishesUsingInventory){
+                const dishId = junction.fk_dish;
+                const totalInvForDish = dishToInvMap[dishId].length;
+
+                if(totalInvForDish === 1){
+                    blocked = true;
+                    blockedDish = `Dish ID ${dishId}`;
+                    break;
+                }
+            }
+
+            if(blocked){
+                alert(`Cannot delete ${editedInventory.item}. It is the only ingredient for ${blockedDish}.`);
+                return;
+            }
+
             try{
                 const response = await fetch(`${API_BASE}/api/manager/inventory/${selectedInventoryID}`, {
                     method: 'DELETE',
@@ -263,6 +305,10 @@ function Inventory() {
 
                 setInventory(prevInventory =>
                     prevInventory.filter(i => i.inventory_id !== selectedInventoryID)
+                );
+
+                setDishInventory(prevInventory =>
+                    prevInventory.filter(i => i.fk_inventory !== selectedInventoryID)
                 );
 
                 setSelectedInventoryID(null);
