@@ -30,14 +30,35 @@ export const CustomerModel = {
         return res.rows[0];
     },
 
-    async getOrdersForCustomer(id) {
+    async getOrdersForCustomer(customerId) {
         const res = await pool.query(
-            `SELECT t.transaction_id, t.time, t.cost
-             FROM transaction t
-             WHERE t.fk_customer = $1
-             ORDER BY t.time DESC`,
-            [id]
+            `
+            SELECT
+                t.transaction_id,
+                t.time,
+                t.cost,
+                COALESCE(
+                    json_agg(
+                        json_build_object(
+                            'dish_id', d.dish_id,
+                            'name', d.name,
+                            'price', d.price
+                        )
+                    ) FILTER (WHERE d.dish_id IS NOT NULL),
+                    '[]'
+                ) AS dishes
+            FROM transaction t
+            LEFT JOIN transactiondish td
+                ON td.fk_transaction = t.transaction_id
+            LEFT JOIN dish d
+                ON d.dish_id = td.fk_dish
+            WHERE t.fk_customer = $1
+            GROUP BY t.transaction_id
+            ORDER BY t.time DESC
+            `,
+            [customerId]
         );
+
         return res.rows;
     }
 };

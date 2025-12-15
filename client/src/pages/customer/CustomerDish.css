@@ -9,7 +9,8 @@
 
 .dish-box-row{
     display: flex;
-    gap: 1rem;
+    gap: 5rem;
+    row-gap: 3rem;
     flex-wrap: wrap;
     justify-content: center;
 }
@@ -50,7 +51,7 @@
 }
 
 .qty-num {
-    font-size: 1.4rem;
+    font-size: 1.7rem;
     font-weight: bold;
     width: 2.5rem;
     text-align: center;

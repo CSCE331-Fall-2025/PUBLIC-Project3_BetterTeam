@@ -87,6 +87,8 @@ function CustomerCheckout(){
     }, [cart]);
 
     const handlePlaceOrder = async () => {
+        if(isProcessing) return;
+        setIsProcessing(true);
         try{
             const flatCart = cart.flat();
             const fk_customer = user ? user.id : 26;
@@ -134,6 +136,8 @@ function CustomerCheckout(){
         } catch(err){
             console.error(err);
             alert("Failed to place order");
+        } finally {
+            setIsProcessing(false);
         }
     };
 

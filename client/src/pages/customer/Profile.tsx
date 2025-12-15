@@ -10,15 +10,22 @@ interface Customer {
     password?: string;
 }
 
+interface OrderDish {
+    dish_id: number;
+    name: string;
+    price: number;
+}
+
 interface CustomerOrder {
     transaction_id: number;
     cost: number;
     time: string;
+    dishes: OrderDish[];
 }
-
 function OrderHistory() {
     const { user } = useAuth();
     const [orders, setOrders] = useState<CustomerOrder[]>([]);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
 
     const API_BASE = import.meta.env.VITE_API_BASE;
 
@@ -31,7 +38,14 @@ function OrderHistory() {
         const res = await fetch(`${API_BASE}/api/customers/${user!.id}/orders`);
         const data = await res.json();
         setOrders(data);
+        if (data.length > 0) {
+            setSelectedId(data[0].transaction_id);
+        }
     }
+
+    const selectedOrder = orders.find(
+        o => o.transaction_id === selectedId
+    );
 
     return (
         <div className="order-history">
@@ -39,19 +53,44 @@ function OrderHistory() {
 
             {orders.length === 0 && <p>No past orders.</p>}
 
-            <ul>
-                {orders.map((order) => (
-                    <li key={order.transaction_id}>
-                        <strong>Order #{order.transaction_id}</strong> — ${order.cost.toFixed(2)}  
-                        <br />
-                        <span>{new Date(order.time).toLocaleString()}</span>
-                    </li>
-                ))}
-            </ul>
+            {orders.length > 0 && (
+                <>
+                    <select
+                        className="order-select"
+                        value={selectedId ?? ""}
+                        onChange={(e) => setSelectedId(Number(e.target.value))}
+                    >
+                        {orders.map(order => (
+                            <option
+                                key={order.transaction_id}
+                                value={order.transaction_id}
+                            >
+                                Order #{order.transaction_id} —{" "}
+                                {new Date(order.time).toLocaleString()}
+                            </option>
+                        ))}
+                    </select>
+                    {selectedOrder && (
+                        <div className="order-receipt">
+                            <ul className="dish-list">
+                                {selectedOrder.dishes.map(dish => (
+                                    <li key={dish.dish_id} className="dish-line">
+                                        <span>{dish.name}</span>
+                                        <span>${dish.price.toFixed(2)}</span>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <div className="order-total">
+                                Total: ${selectedOrder.cost.toFixed(2)}
+                            </div>
+                        </div>
+                    )}
+                </>
+            )}
         </div>
     );
 }
-
 
 function Profile() {
     const { user } = useAuth();

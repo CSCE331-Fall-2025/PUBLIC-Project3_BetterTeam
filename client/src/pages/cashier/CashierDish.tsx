@@ -40,6 +40,7 @@ function CashierDish(){
     const [ingredientsByDish, setIngredientsByDish] = useState<Record<number, IngredientOption[]>>({});
     const [customization, setCustomization] = useState<Record<number, Record<number, CustomLevel>>>({});
     const [mealQty, setMealQty] = useState(1);
+    const [isAdding, setIsAdding] = useState(false);
 
     useEffect(() => {
         async function loadDishesAndIngredients(){
@@ -139,15 +140,18 @@ function CashierDish(){
     };
 
     const handleAddToCart = () => {
+    if (isAdding) return;
+    setIsAdding(true);
 
-        if(type === "entree"){
+    try {
+        if (type === "entree") {
             const requiredCount = entreeCount + 1;
-            if(selected.length !== requiredCount){
+            if (selected.length !== requiredCount) {
                 alert("Please select all entrees and a side before adding to cart.");
                 return;
             }
         } else {
-            if(selected.length !== 1){
+            if (selected.length !== 1) {
                 alert("Please select an item before adding to cart.");
                 return;
             }
@@ -172,10 +176,9 @@ function CashierDish(){
             }
         }
 
-
         const expanded: Dish[] = [];
 
-        for(let i = 0; i < mealQty; i++){
+        for (let i = 0; i < mealQty; i++) {
             selected.forEach(dish => {
                 expanded.push({
                     ...dish,
@@ -183,10 +186,15 @@ function CashierDish(){
                 });
             });
         }
+
         navigate("/Cashier/CashierHome", {
             state: { cart: [...cart, ...expanded] }
         });
-    };
+
+    } finally {
+        setIsAdding(false);
+    }
+};
 
     const handleBack = () => navigate('/Cashier/CashierHome', { state: { cart } });
 
@@ -245,8 +253,8 @@ function CashierDish(){
             </div>
 
             <div className="button-row">
-                <Button name="Cancel" onClick={handleBack}/>
-                <Button name="Add to Cart" onClick={handleAddToCart}/>
+                <Button name="Cancel" onClick={handleBack} disabled={isAdding}/>
+                <Button name="Add to Cart" onClick={handleAddToCart} disabled={isAdding}/>
             </div>
         </div>
     );

@@ -33,7 +33,7 @@
 
 .dish-card-title,
 .dish-card-price {
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     margin: 0;
     color: white;
 }
@@ -47,7 +47,7 @@
     all: unset;
     height: 1rem;
     padding: 0 6px;
-    font-size: 0.65rem;
+    font-size: 0.85rem;
     background: #BB2719;
     color: white;
     border-radius: 6px;
@@ -66,14 +66,14 @@
     width: max-content;
     border: 1px solid #BB2719;
     border-radius: 6px;
-    padding: 6px;
+    padding: 9px;
     margin-top: 4px;
     box-shadow: 0 2px 8px rgba(255, 0, 0, 0.2);
-    font-size: 0.6rem;
+    font-size: 0.85rem;
 }
 
 .custom-panel-title {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     margin: 0 0 4px 0;
     font-weight: bold;
     color: #FFCCCC;
@@ -88,7 +88,7 @@
 }
 
 .ing-name {
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     color: #eee;
     width: 40%;
 }
@@ -100,9 +100,9 @@
 
 .level-btn {
     all: unset;
-    padding: 2px 4px;
+    padding: 4px 6px;
     border-radius: 4px;
-    font-size: 0.55rem;
+    font-size: 0.65rem;
     cursor: pointer;
     border: 1px solid #333;
     background: #222;
