@@ -1,3 +1,8 @@
+.dish-box,
+.dish-box-grid {
+    overflow: visible;
+}
+
 .dish-box {
     background: #1a1a1a;
     border: 2px solid #BB2719;
