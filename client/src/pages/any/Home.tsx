@@ -21,7 +21,7 @@ function Home() {
 
                 <div className="home-buttons">
                     <button onClick={() => navigate("/Customer/CustomerHome")}>Begin Operation (Order)</button>
-                    <button onClick={() => navigate("/any/login")}>Request Clearanace (Login)</button>
+                    <button onClick={() => navigate("/any/login")}>Request Clearance (Login)</button>
                 </div>
 
             </div>
