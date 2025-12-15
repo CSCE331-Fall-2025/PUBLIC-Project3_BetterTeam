@@ -16,6 +16,7 @@ interface IngredientOption{
     inventory_id: number;
     name: string;
 }
+
 function getMealName(meal: Dish[]){
     const types = meal.map(d => d.type);
     const entreeCount = types.filter(t => t === "entree").length;

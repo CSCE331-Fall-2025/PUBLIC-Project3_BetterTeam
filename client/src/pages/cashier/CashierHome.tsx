@@ -202,9 +202,9 @@ function CashierHome() {
             <CategoryTile title="Plate" subtitle="2 Entrées + Side" onClick={() => goToDishPage('entree', 2)} />
             <CategoryTile title="Big Plate" subtitle="3 Entrées + Side" onClick={() => goToDishPage('entree', 3)} />
 
-            <CategoryTile title="Appetizers" image="/assets/rangoon.png" onClick={() => goToDishPage('appetizer')} />
-            <CategoryTile title="Sides" image="/assets/ricefried.png" onClick={() => goToDishPage('side')} />
-            <CategoryTile title="Drinks" image="/assets/coke.png" onClick={() => goToDishPage('drink')} />
+            <CategoryTile title="Appetizers" onClick={() => goToDishPage('appetizer')} />
+            <CategoryTile title="Sides" onClick={() => goToDishPage('side')} />
+            <CategoryTile title="Drinks" onClick={() => goToDishPage('drink')} />
 
             {seasonal.length > 0 && (
             <CategoryTile

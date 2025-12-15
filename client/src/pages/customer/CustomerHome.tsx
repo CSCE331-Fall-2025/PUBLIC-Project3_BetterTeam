@@ -38,6 +38,7 @@ function CustomerHome() {
 
   return (
     <div className="customer-home">
+      <div className="customer-home-content">
       <h1 className="mission-title">Agent, Choose Your Operation</h1>
         <div className="tile-grid">
           <CategoryTile title="Bowl" image="/assets/bowl.png" subtitle="1 Entrée + Side" onClick={() => goToDishPage('entree', 1)} />
@@ -60,6 +61,7 @@ function CustomerHome() {
         <div className="checkout-buttons">
             <Button name="Mission Briefing (Checkout)" onClick={goToCheckout} />
         </div>
+      </div>
     </div>
   );
 }
