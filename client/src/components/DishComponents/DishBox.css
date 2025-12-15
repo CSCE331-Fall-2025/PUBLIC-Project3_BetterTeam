@@ -11,7 +11,7 @@
 }
 
 .dish-box-title {
-    font-size: 1.15rem;
+    font-size: 1.35rem;
     font-weight: 700;
     text-align: center;
     margin-bottom: 0.8rem;
@@ -23,5 +23,5 @@
 .dish-box-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.6rem;
+    gap: 1rem;
 }

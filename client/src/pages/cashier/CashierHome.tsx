@@ -75,6 +75,7 @@ function CashierHome() {
   const meals = groupIntoMeals(cart);
   const total = cart.reduce((sum, d) => sum + Number(d.price), 0);
   const [ingredientNames, setIngredientNames] = useState<Record<number, Record<number, string>>>({});
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const { user } = useAuth();
   const employeeID = user?.id ?? 29;
@@ -123,6 +124,9 @@ function CashierHome() {
   };
 
   const handlePlaceOrder = async () => {
+    if(isProcessing) return;
+    setIsProcessing(true);
+
     try {
 
       const response = await fetch(`${API_BASE}/api/transactions`, {
@@ -168,6 +172,8 @@ function CashierHome() {
     } catch (err) {
       console.error(err);
       alert("Failed to place order.");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -253,8 +259,8 @@ function CashierHome() {
           )}
 
           <div className="checkout-buttons">
-            <Button name="Clear Order" onClick={handleClearCart} disabled={cart.length === 0} />
-            <Button name="Place Order" onClick={handlePlaceOrder} disabled={cart.length === 0} />
+            <Button name="Clear Order" onClick={handleClearCart} disabled={cart.length === 0 || isProcessing} />
+            <Button name="Place Order" onClick={handlePlaceOrder} disabled={cart.length === 0 || isProcessing} />
           </div>
         </div>
       </div>

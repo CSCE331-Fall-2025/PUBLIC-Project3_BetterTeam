@@ -27,6 +27,7 @@ function CustomerDish() {
     const navigate = useNavigate();
     const location = useLocation();
     const { addMeal } = useCart();
+    const [isAdding, setIsAdding] = useState(false);
 
     const state = location.state as {
         dishType: DishType;
@@ -185,47 +186,58 @@ function CustomerDish() {
 
     const handleBack = () => navigate("/Customer/CustomerHome");
     const handleAddToCart = () => {
-        if(type === "entree"){
-            const requiredCount = entreeCount + 1;
-            if(selected.length !== requiredCount){
-                alert("Please select all entrees and a side before adding to cart.");
-                return;
-            }
-        } else {
-            if(selected.length !== 1){
-                alert("Please select an item before adding to cart.");
-                return;
-            }
-        }
-        for (const dish of selected) {
-            if (dish.type !== "drink") {
-                const ing = customization[dish.dish_id];
-                const ingList = ingredientsByDish[dish.dish_id] || [];
+        if (isAdding) return;
+        setIsAdding(true);
 
-                if (ingList.length > 0) {
-                    const allNone = ingList.every((ingObj) => {
-                        const level = ing?.[ingObj.inventory_id] || "normal";
-                        return level === "none";
-                    });
+        try {
+            if (type === "entree") {
+                const requiredCount = entreeCount + 1;
+                if (selected.length !== requiredCount) {
+                    alert("Please select all entrees and a side before adding to cart.");
+                    return;
+                }
+            } else {
+                if (selected.length !== 1) {
+                    alert("Please select an item before adding to cart.");
+                    return;
+                }
+            }
 
-                    if (allNone) {
-                        alert(`You cannot set all ingredients of ${dish.name} to None.`);
-                        return;
+            for (const dish of selected) {
+                if (dish.type !== "drink") {
+                    const ing = customization[dish.dish_id];
+                    const ingList = ingredientsByDish[dish.dish_id] || [];
+
+                    if (ingList.length > 0) {
+                        const allNone = ingList.every((ingObj) => {
+                            const level = ing?.[ingObj.inventory_id] || "normal";
+                            return level === "none";
+                        });
+
+                        if (allNone) {
+                            alert(`You cannot set all ingredients of ${dish.name} to None.`);
+                            return;
+                        }
                     }
                 }
             }
-        }
 
-        const baseMealItems: Dish[] = selected.map(dish => ({
-            ...dish,
-            customization: customization[dish.dish_id] || {}
-        }));
+            const baseMealItems: Dish[] = selected.map(dish => ({
+                ...dish,
+                customization: customization[dish.dish_id] || {}
+            }));
 
-        for(let i = 0; i < mealQty; i++){
-            addMeal(baseMealItems);
+            for (let i = 0; i < mealQty; i++) {
+                addMeal(baseMealItems);
+            }
+
+            navigate("/Customer/CustomerHome");
+
+        } finally {
+            setIsAdding(false);
         }
-        navigate("/Customer/CustomerHome");
     };
+
 
     return (
         <div className="meal-builder-wrapper">
@@ -240,8 +252,8 @@ function CustomerDish() {
             </div>
 
             <div className="button-row">
-                <Button name="Cancel" onClick={handleBack} />
-                <Button name="Add Mission" onClick={handleAddToCart} />
+                <Button name="Cancel" onClick={handleBack} disabled={isAdding}/>
+                <Button name="Add Mission" onClick={handleAddToCart} disabled={isAdding}/>
             </div>
         </div>
     );
