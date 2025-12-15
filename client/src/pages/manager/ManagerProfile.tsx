@@ -38,7 +38,7 @@ function Profile() {
             return;
         }
 
-        if(profile.password.length < 6){
+        if(newPassword.length < 6){
             alert('Password must be at least 6 characters long.');
             return;
         }
