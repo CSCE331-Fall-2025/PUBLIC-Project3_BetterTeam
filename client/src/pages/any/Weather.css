@@ -7,6 +7,8 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   text-align: center;
   font-family: system-ui, sans-serif;
+  justify-content: center;
+  align-items: center;
 }
 
 .weather-page h1 {
@@ -36,4 +38,10 @@
   width: 80px;
   height: 80px;
   margin-top: 15px;
+}
+
+.weatherbutton {
+  display: block;
+  margin-top: 8px;
+  margin: 8px auto 0;
 }
