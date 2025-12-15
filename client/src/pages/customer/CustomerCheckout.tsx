@@ -1,6 +1,6 @@
 import Button from '../../components/ButtonComponents/Button.tsx'
 import type { Dish } from './CustomerDish';
-import type {OrderCardProps} from '../../components/KitchenComponents/OrderCard.tsx';
+import type { Order } from '../../components/KitchenComponents/OrderCard.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext.tsx';
@@ -10,7 +10,6 @@ import './CustomerCheckout.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
-type Order = OrderCardProps;
 
 interface IngredientOption{
     inventory_id: number;

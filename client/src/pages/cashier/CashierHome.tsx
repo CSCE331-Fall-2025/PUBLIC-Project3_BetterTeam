@@ -9,9 +9,8 @@ import './CashierHome.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
-import type {OrderCardProps} from '../../components/KitchenComponents/OrderCard.tsx';
+import type { Order } from '../../components/KitchenComponents/OrderCard.tsx';
 
-type Order = OrderCardProps;
 
 type DishType = 'entree' | 'appetizer' | 'drink' | 'side' | 'season';
 
