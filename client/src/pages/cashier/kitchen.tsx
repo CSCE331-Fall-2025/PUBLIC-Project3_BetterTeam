@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import type { OrderCardProps } from "../components/KitchenComponents/OrderCard";
+import type { Order } from "../../components/KitchenComponents/OrderCard";
 import { OrderBox } from "../../components/KitchenComponents/OrderBox";
 import "./kitchen.css";
 
-type Order = OrderCardProps;
 
 function Kitchen() {
   const [orders, setOrders] = useState<Order[]>([]);
