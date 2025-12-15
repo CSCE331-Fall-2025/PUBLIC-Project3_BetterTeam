@@ -39,7 +39,7 @@ function CustomerHome() {
   return (
     <div className="customer-home">
       <div className="customer-home-content">
-      <h1 className="mission-title">Agent, Choose Your Operation</h1>
+      <h1 className="mission-title">Agent, Choose Your Operation (Meal)</h1>
         <div className="tile-grid">
           <CategoryTile title="Bowl" image="/assets/bowl.png" subtitle="1 Entrée + Side" onClick={() => goToDishPage('entree', 1)} />
           <CategoryTile title="Plate" image="/assets/plate.png" subtitle="2 Entrées + Side" onClick={() => goToDishPage('entree', 2)} />
@@ -51,15 +51,15 @@ function CustomerHome() {
 
           {seasonal.length > 0 && (
           <CategoryTile
-            title="Seasonal Operations"
-            subtitle="⚠ Limited Time Mission  ⚠"
+            title="Seasonal Menu"
+            subtitle="⚠ Limited Time Mission ⚠"
             highlight
             onClick={() => goToDishPage('season')}
           />)}
         </div>
 
         <div className="checkout-buttons">
-            <Button name="Mission Briefing (Checkout)" onClick={goToCheckout} />
+            <Button name="Mission Checkout" onClick={goToCheckout} />
         </div>
       </div>
     </div>
