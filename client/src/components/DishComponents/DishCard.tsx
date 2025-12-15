@@ -57,7 +57,7 @@ export const DishCard: React.FC<DishCardProps> = ({
     const noIce = ice && ice.current_inventory <= 0;
 
     return (
-        <div className={`dish-card-wrapper ${disabled ? "disabled-card" : ""}`}>
+        <div className={`dish-card-wrapper ${showOptions ? "open" : ""} ${disabled ? "disabled-card" : ""}`}>
             {disabled && <div className="oos-banner">OUT OF STOCK</div>}
 
             <div
@@ -96,7 +96,7 @@ export const DishCard: React.FC<DishCardProps> = ({
             </div>
 
             {showOptions && isSelected && !disabled && !noIce && (
-                <div className="custom-panel">
+                <div className="custom-panel" onClick={(e) => e.stopPropagation()}>
                     <h4 className="custom-panel-title">Ingredients</h4>
 
                     {ingredients.map((ing) => {
@@ -110,7 +110,10 @@ export const DishCard: React.FC<DishCardProps> = ({
                                         <button
                                             key={level}
                                             className={`level-btn ${currentLevel === level ? "active" : ""}`}
-                                            onClick={() => choose(ing.inventory_id, level)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                choose(ing.inventory_id, level);
+                                            }}
                                         >
                                             {level === "extra" && ing.inventory_id !== 58 ? "extra (+$0.50)": level}
                                         </button>
