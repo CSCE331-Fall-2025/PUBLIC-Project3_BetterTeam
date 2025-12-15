@@ -20,19 +20,6 @@ html, body {
     overflow: hidden;
 }
 
-.meal-builder-wrapper::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-
-    background: url("/assets/chinese.png") center / cover no-repeat;
-
-    filter: blur(6px) brightness(0.6);
-    transform: scale(1.05);
-
-    z-index: -1;
-}
-
 .dish-box-row{
     display: flex;
     gap: 5rem;

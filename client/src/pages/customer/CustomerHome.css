@@ -21,7 +21,7 @@ html, body {
     position: absolute;
     inset: -20px;
 
-    background: url("/assets/customerbackground.png") center/cover no-repeat;
+    background: url("/assets/spy.png") center/cover no-repeat;
 
     filter: blur(6px) brightness(0.6);
     transform: scale(1.05);
